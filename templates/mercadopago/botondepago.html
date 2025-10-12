@@ -1,0 +1,21 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<div class="cho-container"></div>
+<script>
+    const mp = new MercadoPago("{{ public_key }}", {
+        locale: "es-CL"
+    });
+                
+    mp.checkout({
+        preference: {
+            id: "{{ preference }}"
+        },
+        render: {
+            container: ".cho-container",
+            label: "Pagar"
+        }
+    });
+</script>
+{% endblock %}

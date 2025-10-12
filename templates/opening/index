@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Opening{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<input type="hidden" name="paso" id="paso" value="{{ paso }}"/>
+<div class="container mt-5" id="features">
+  <div class="row mb-4">
+    <div class="col-md-9">
+      <h4>Bienvenido(a) a la familia <strong>{{ company }}</strong></h4>
+      <h4>Programa <strong>{{ programa }}</strong></h4>
+      <h4>Colegio - Curso <strong>{{ curso }}</strong></h4>
+    </div>
+    <div class="col-md-3">
+      <h4>Fecha Último Abono <strong>{{ fechaultimo }}</strong></h4>
+      <h4>Fecha Salida <strong>{{ fechasalida }}</strong></h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="main_heading text-center">
+        <h1>Tus Opciones</h1>
+        <div class="text-center"><span class="underline"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4 col-sm-6">
+      <div class="features-div card h-100 shadow-sm p-3">
+        <i class="fa fa-user mb-3"></i>
+        <h3><strong>Alumno</strong></h3>
+        <p>Paso 1 Ingresar Alumno</p>
+        <a class="btn btn-primary mt-3" href="/opening/student">Ir</a>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+      <div class="features-div card h-100 shadow-sm p-3">
+        <i class="fa fa-file-text mb-3"></i>
+        <h3><strong>Contrato</strong></h3>
+        <p>Paso 2 Aceptar Contrato</p>
+        {% if session['user_curso_id'] != "" %}
+        <a class="btn btn-primary mt-3" href="/opening/contrat_travel">Ir</a>
+        {% else %}
+        <button class="btn btn-secondary mt-3" disabled>Ir</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+      <div class="features-div card h-100 shadow-sm p-3">
+        <i class="fa fa-credit-card mb-3"></i>
+        <h3><strong>Pagos</strong></h3>
+        <p>Paso 3 Pagar Reserva</p>
+        {% if session['user_contrato'] != "" %}
+        <a class="btn btn-primary mt-3" href="/opening/pay/formpayment_rsv">Ir</a>
+        {% else %}
+        <button class="btn btn-secondary mt-3" disabled>Ir</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/opening/index.js"></script>
+{% endblock %}

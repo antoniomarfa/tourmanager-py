@@ -1,0 +1,184 @@
+
+input[type="text"]:focus{
+     border: 2px solid #4a4a4a;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     background-color:#ffefca; 
+     font-size: 12px;
+}
+
+input[type="text"] {
+     border: 2px solid #4a4a4a !important;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     font-size: 12px;
+}
+
+input[type="date"]:focus{
+     border: 2px solid #4a4a4a;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     background-color:#ffefca; 
+     font-size: 12px;
+}
+
+input[type="date"] {
+     border: 2px solid #4a4a4a !important;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     font-size: 12px;
+}
+
+select {
+     border: 2px solid #4a4a4a !important; /* gris oscuro o cualquier color agradable */
+     border-radius: 4px !important;
+     padding: 6px 12px !important;
+     color: #333 !important;
+     outline: none !important;
+  /*   font-size: 14px !important; */
+  font-size: 12px !important;
+}
+
+
+input[type="password"] {
+     border: 2px solid #4a4a4a !important;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     font-size: 12px;
+}
+
+input[type="password"]:focus{
+     border: 2px solid #4a4a4a;     /* borde negro */
+     outline: none;              /* elimina el borde azul al hacer foco */
+     padding: 6px;               /* un poco de espacio interno */
+     border-radius: 4px;         /* esquinas redondeadas (opcional) */
+     background-color:#ffefca; 
+     font-size: 12px;
+}     
+
+textarea:focus {
+  background-color: #ffefca;
+  font-size: 12px;
+ }
+
+ .box_select:focus{
+    border:1px solid blue;
+    background-color:#ffefca;
+  font-size: 12px;
+} 
+
+input[type="checkbox"] {
+/*    all: unset; * Resetea estilos heredados que podrían ocultarlo */
+    display: inline-block; 
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    accent-color: green;  /* Cambia el color del checkbox si tu navegador lo soporta */
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+
+/* nuevos originado para python */
+
+html, body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.42857143;
+    width: 100%;  
+    margin: 0;
+  } 
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container-md {
+    flex: 1 0 auto; /* Ocupa el espacio restante */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+
+/* Contenedor del switch */
+.make-switch {
+  --w: 70px;      /* ancho del switch */
+  --h: 32px;      /* alto */
+  --knob: 26px;   /* tamaño del knob */
+  position: relative;
+  display: inline-block;
+  width: var(--w);
+  height: var(--h);
+}
+
+.make-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background-color: #ccc;
+  border-radius: var(--h);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+/* knob */
+.slider::after {
+  content: "";
+  position: absolute;
+  height: var(--knob);
+  width: var(--knob);
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* texto OFF (izquierda) */
+.slider::before {
+  content: attr(data-off-label);
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  transition: opacity 0.3s ease;
+}
+
+/* estado ON */
+.make-switch input:checked + .slider {
+  background-color: #28a745;
+}
+
+/* knob se mueve a la derecha */
+.make-switch input:checked + .slider::after {
+  transform: translateX(calc(var(--w) - var(--knob) - 6px));
+}
+
+/* cambiar texto al ON */
+.make-switch input:checked + .slider::before {
+  content: attr(data-on-label);
+  left: auto;
+  right: 10px;
+}
+

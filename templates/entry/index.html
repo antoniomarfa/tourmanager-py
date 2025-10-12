@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Ingresos{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Ingresos</li>
+  </ol>
+</nav>
+
+<h3>Listado de Ingresos</h3>
+<br />
+
+<div class="clearfix"></div>
+
+ {% if cant_access["can_insert"] %}
+<div class="form-group text-right">
+    <a href="/{{ empresa }}/manager/entry/create" type="button" class="btn btn-success"><i class="fa fa-file-text"></i> Nuevo</a>
+</div>
+{% endif %}
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="table-ing">
+        <thead>
+        <tr>
+            <th>Nro Comp.</th>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Nro Venta</th>
+            <th>Alumno</th>
+            <th>Apoderado</th>
+            <th>Colegio</th>
+            <th>Curso</th>
+            <th>Monto</th>
+            <th>Forma Pago</th>
+            <th>Estado</th>
+            <th width="20%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/entry/index.js"></script>
+{% endblock %}

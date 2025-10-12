@@ -1,0 +1,97 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-sm-10">
+      <div class="row g-4">
+
+        <!-- Card Pagar Reserva -->
+        <div class="col-sm-6">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <i class="fa fa-money text-success"></i> Pagar Reserva
+              </h4>
+              <hr>
+              <strong>
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Valor Reserva</label>
+                  </div>
+                  <div class="col-md-8">
+                    <p class="form-control-plaintext">$ {{ valorv }}</p>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Otro Valor</label>
+                  </div>
+                  <div class="col-md-8">
+                    <p class="form-control-plaintext">$ {{ valorv }}</p>
+                    <input type="hidden" id="mpagar" name="mpagar" value="{{ apagar }}">
+                  </div>
+                </div>
+              </strong>
+              <div class="text-center mt-4">
+                <a href="/{{ empresa }}/manager/opening" class="btn btn-primary">
+                  <i class="fa fa-angle-double-left"></i> Cancelar y Volver
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Elige Forma de Pago -->
+        <div class="col-sm-6">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <h4 class="card-title">
+                <i class="fa fa-credit-card text-primary"></i> Elige Forma de Pago
+              </h4>
+              <hr>
+
+              <!-- Formas de pago según gateways -->
+              <div class="row g-3">
+                {% for gtw in gatewaysc %}
+                  {% if gtw.existe == 'S' %}
+                  <div class="col-6 text-center">
+                    <form method="post" action="/{{ empresa }}/manager/{{ gtw.gateway_url }}">
+                      <input type="hidden" name="mpagar" value="{{ apagar }}">
+                      <button type="submit" class="btn p-0 border-0 bg-transparent">
+                        <img src="{{ gtw['image'] }}" class="img-fluid rounded shadow-sm" style="max-width:220px; max-height:160px;" alt="Pagos">
+                      </button>
+                    </form>
+                  </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <!-- Fin formas de pago -->
+
+              <!-- Voucher -->
+              <form role="form" id="pagosvou" method="post" action="/{{ empresa }}/manager/opening/procesarpago" class="mt-5">
+              <div class="row mb-3">
+                <label for="voucher" class="form-label">Si pagó la Reserva,<br>Ingrese el Nro de Comprobante</label>
+                <div class="col-md-5">
+                  <input type="text" class="form-control" id="voucher" name="voucher" value="">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <button type="submit" class="btn btn-success">
+                    <i class="fa fa-angle-double-right"></i> Continuar
+                  </button>
+                </div>
+              </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

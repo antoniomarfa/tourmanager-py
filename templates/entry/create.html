@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Ingresos{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/entry/index">Ingresos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Nuevo Ingreso</li>
+  </ol>
+</nav>
+
+<h3>Ingreso</h3>
+<br />
+
+<div class="clearfix"></div>
+
+<form role="form" id="form" method="post" action="/{{ empresa }}/manager/entry/create" enctype="multipart/form-data" class="custom-validate form-groups-bordered">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs left-aligned"><!-- available classes "bordered", "right-aligned" -->
+                <li class="active"><a href="#tab1" data-toggle="tab">
+                        <span><i class="fa fa-info" aria-hidden="true"></i></span>
+                        <span>Detalle</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="card border-primary">
+                        <div class="card-body">
+
+                            <!-- Fecha y Nro Venta -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <label for="fecha" class="form-label">Fecha Ingreso</label>
+                                    <input type="date" class="form-control" id="fecha" name="fecha" value="{{ fecha_hoy }}" max="{{ fecha_hoy }}">
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <label for="nroventa" class="form-label">Nro Venta</label>
+                                    <input type="text" class="form-control" name="nroventa" id="nroventa" readonly maxlength="20">
+                                    <input type="hidden" name="curso_id" id="curso_id">
+                                </div>
+                            </div>
+
+                            <!-- Apoderado -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <label for="rutapoderado" class="form-label">Rut Apoderado</label>
+                                    <input type="text" class="form-control rut" name="rutapoderado" id="rutapoderado" maxlength="20" required>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-6">
+                                    <label for="nombreapoderado" class="form-label">Nombre Apoderado</label>
+                                    <input type="text" class="form-control" name="nombreapoderado" id="nombreapoderado" maxlength="100" readonly required>
+                                </div>
+                            </div>
+
+                            <!-- Alumno -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <label for="rutalumno" class="form-label">Rut Alumno</label>
+                                    <input type="text" class="form-control rut" name="rutalumno" id="rutalumno" maxlength="20" required>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-6">
+                                    <label for="nombrealumno" class="form-label">Nombre Alumno</label>
+                                    <input type="text" class="form-control" name="nombrealumno" id="nombrealumno" maxlength="100" readonly required>
+                                </div>
+                            </div>
+
+                            <!-- Valores y Forma de Pago -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="vviaje" class="form-label">Valor Programa</label>
+                                    <input type="text" class="form-control" name="vviaje" id="vviaje" maxlength="100" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="vsaldo" class="form-label">Saldo a Pagar</label>
+                                    <input type="text" class="form-control" name="vsaldo" id="vsaldo" maxlength="100" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fpago" class="form-label">Forma de Pago</label>
+                                    <select class="form-select" name="fpago" id="fpago" required>
+                                        <option value="">Seleccionar</option>
+                                        {% for index, value in fpago.items() %}
+                                            <option value="{{ index }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Documento y Valor -->
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <label for="voucher" class="form-label">Nro Voucher</label>
+                                    <input type="text" class="form-control text-end grupo-obligatorio" name="voucher" id="voucher" maxlength="10">
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <label for="apagar" class="form-label">Valor</label>
+                                    <input type="text" class="form-control text-end grupo-obligatorio" name="apagar" id="apagar" maxlength="10" required>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <!-- fin panel -->
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-group d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
+                    <a href="/{{ empresa }}/manager/entry" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+            </div>           
+        </div>
+    </div>
+</form>  
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/entry/create.js"></script>
+{% endblock %}

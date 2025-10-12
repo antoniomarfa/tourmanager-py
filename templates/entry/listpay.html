@@ -1,0 +1,107 @@
+<style>
+    content-wrapper{
+        font-size:12px;
+    }
+    table {
+        font-size: 12px;
+    }
+    td.details-control {
+             background: url('../../assets/imagenes/collapsed.png') no-repeat center center;
+             cursor: pointer;
+    }
+    tr.shown td.details-control {
+             background: url('../../assets/imagenes/expanded.png') no-repeat center center;
+    }
+    </style> 
+{% extends "base.html" %}
+
+{% block title %}Listado de Pagos{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/entry/index">Ingresos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Listado Pagos</li>
+  </ol>
+</nav>
+
+<h3>Listado de Pagos</h3>
+<br />
+
+<div class="clearfix"></div>
+<hr>
+<div class="row" style="margin-top:20px;margin-bottom:20px;margin-right:5%">
+    <div class="col-md-2 col-sm-6 col-xs-12">
+        <div class="form-group">
+            <label class="control-label">Ventas</label>
+            <select class="form-control" name="ventas" id="ventas">
+                <option value="">Todas</option>
+                    {% for sale in sales %}
+                    {% set activo = "selected='selected'" if session['filter_sales'] == sale.id else '' %}
+                    {% set typesale = "Gira Estudio" if sale.type_sale == 'GE' else 'Viaje Grupal' %}
+                      <option value="{{ sale.id }}" {{ activo }}>{{ typesale }} - {{ sale.id }} </option>
+                    {% endfor %}
+                </select>
+        </div>
+    </div>
+    <button type="button" class="btn btn-success pull-right mr-3" id="export-report"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Informe </button>  
+</div>
+<form role="form" id="form1" method="post">
+
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover nowrap datatable" id="table-pay">
+
+                <thead>
+                <tr>
+                    <th>Ingresos</th>
+                    <th>Colegio</th>
+                    <th>Curso</th>
+                    <th>Rut Apoderado</th>
+                    <th>Nombre Apoderado</th>
+                    <th>Nombre Alumno</th>
+                    <th>Apagar</th>
+                    <th>Pagado</th>
+                    <th>Saldo</th>
+                    <th>Nro Utl. pago</th>
+                    <th>Fec Utl. pago</th>
+                    <th>Monto Utl. pago</th>
+                    <th>Nro Vta</th>
+                    <th>rut al</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</form>
+<br />
+<div class="modal fade modal-super" id="modal-compact-view">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Detalle de Pagos</h4>
+            </div>
+
+            <div class="modal-body"></div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/entry/listpay.js"></script>
+{% endblock %}

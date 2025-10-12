@@ -1,0 +1,100 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+
+<style>
+/* Contenedor principal del call-to-action */
+.bs-calltoaction {
+    position: relative;
+    width: 100%;
+    padding: 20px;
+    margin: 1rem 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+/* Variante de peligro (error) */
+.bs-calltoaction.bs-calltoaction-danger {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    color: #fff;
+}
+
+/* Contenido del texto */
+.cta-contents {
+    flex: 1;
+}
+
+.cta-title {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.cta-desc p {
+    margin-bottom: 0.5rem;
+}
+
+/* Contenedor del botón */
+.cta-button {
+    flex-shrink: 0;
+}
+
+/* Botón */
+.btn-danger {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-danger:hover {
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bs-calltoaction {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cta-button {
+        margin-top: 10px;
+    }
+}
+</style>
+
+   
+<div class="container">
+    <div class="col-12 mt-3">
+        <!-- Caja de error con fondo rojo -->
+        <div class="card text-white bg-danger border-0 shadow-sm">
+            <div class="card-body">
+                <h1 class="h4 fw-bold mb-3">Error en Transacción</h1>
+                <p class="mb-1">{{ mensage1 }}</p>
+                <p class="mb-0">{{ mensage2 }}</p>
+            </div>
+        </div>
+
+        <!-- Botón de volver -->
+        <div class="text-center mt-3">
+            {% if session["position"]=="General" %}
+                <a href="/{{ empresa }}/manager/opening/index" class="btn btn-danger">Volver</a>
+            {% else %}
+                <a href="/{{ empresa }}/manager/payment/index" class="btn btn-danger">Volver</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

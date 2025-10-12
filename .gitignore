@@ -1,0 +1,32 @@
+# Archivos de configuración
+*.local
+.env
+
+# Directorios generados por compilación o IDE
+node_modules/
+build/
+dist/
+
+# Archivos de registro
+*.log
+npm-debug.log*
+
+# Archivos de caché
+.cache/
+__pycache__/
+
+# Archivos de sistema operativo o IDE
+.DS_Store
+Thumbs.db
+
+# Archivos específicos de proyectos (ej. Python)
+*.pyc
+*.pyo
+.venv/
+
+# Variables de entorno
+.env
+
+# Archivos binarios o builds (opcional)
+bin/
+dist/

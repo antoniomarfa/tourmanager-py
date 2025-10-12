@@ -1,0 +1,11 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+    <body>
+        <h1>{{ message }}</h1>
+        <p>ID de pago: {{ payment }}</p>
+        <p>Monto: {{ transaction_amount }}</p>
+        <p>Referencia: {{ external_reference }}</p>
+    </body>
+
+    {% endblock %}

@@ -1,0 +1,167 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+<style>
+/* Panel personalizado */
+.panel-custom {
+    max-width: 40rem;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.panel-title-custom {
+    font-size: 28px;
+    color: #48267f;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.panel-body-custom {
+    font-size: 18px;
+    color: #48267f;
+    line-height: 1.5;
+    font-weight: normal;
+    padding: 15px 0;
+}
+
+.panel-heading-custom {
+    font-size: 18px;
+    color: white;
+    background-color: #4d078c;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.panel-info-custom td {
+    font-size: 16px;
+    color: #48267f;
+    font-weight: bold;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px;
+}
+
+.panel-monto-custom {
+    background-color: #ff0080;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.panel-medios-custom {
+    background-color: #ededed;
+    color: #4d078c;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.btnn-custom {
+    background-color: #4d078c;
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 15px 30px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btnn-custom:hover {
+    background-color: #6a0e9c;
+}
+</style>
+
+<div class="panel-custom text-center">
+    <form id="downloadForm" method="post">
+        <div class="panel-body-custom">
+
+            <!-- Título -->
+            <div class="mb-3">
+                <div class="panel-title-custom">CONFIRMACIÓN DE PAGO</div>
+                <div class="panel-body-custom">¡Hola!</div>
+                <div class="panel-body-custom">Tu pago a través de nuestro sitio web fue exitoso.</div>
+            </div>
+
+            <!-- Encabezado detalle -->
+            <div class="panel-heading-custom">Este es el detalle:</div>
+
+            <!-- Información de la transacción -->
+            <table class="table table-borderless mx-auto mb-3">
+                <tbody>
+                    <tr>
+                        <td class="panel-info-custom">Número de Comprobante:&nbsp;</td>
+                        <td class="panel-info-custom">{{ form_view.comprobante }}</td>
+                    </tr>
+                    {% if form_view.rut != "" %}
+                    <tr>
+                        <td class="panel-info-custom">Rut:&nbsp;</td>
+                        <td class="panel-info-custom">{{ form_view.rut }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="panel-info-custom">Fecha de pago:&nbsp;</td>
+                        <td class="panel-info-custom">{{ form_view.fecha }}</td>
+                    </tr>
+                    <tr>
+                        <td class="panel-info-custom">Hora de pago:&nbsp;</td>
+                        <td class="panel-info-custom">{{ form_view.hora }}</td>
+                    </tr>
+                    <tr>
+                        <td class="panel-info-custom">Transacción Nro:&nbsp;</td>
+                        <td class="panel-info-custom">{{ form_view.transaccion }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Monto Pagado -->
+            <table class="table panel-monto-custom mx-auto mb-3">
+                <tbody>
+                    <tr>
+                        <td>Monto pagado:&nbsp;</td>
+                        <td>{{ form_view.monto }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Medio de Pago -->
+            <table class="table panel-medios-custom mx-auto mb-3">
+                <tbody>
+                    <tr>
+                        <td>Medio de pago:&nbsp;</td>
+                        <td>{{ form_view.media }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Inputs ocultos -->
+            <input type="hidden" name="comprobante" value="{{ form_view.comprobante }}">
+            <input type="hidden" name="rut" value="{{ form_view.rut }}">
+            <input type="hidden" name="fecha" value="{{ form_view.fecha }}">
+            <input type="hidden" name="hora" value="{{ form_view.hora }}">
+            <input type="hidden" name="transaccion" value="{{ form_view.transaccion }}">
+            <input type="hidden" name="monto" value="{{ form_view.monto }}">
+            <input type="hidden" name="media" value="{{ form_view.media }}">
+
+            <!-- Botones -->
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-3">
+                {% if session["position"]=='General' %}
+                <a href="/{{ empresa }}/manager/opening/index" class="btn btnn-custom btn-lg w-100 w-md-auto">Continuar</a>
+                {% else %}
+                <a href="/{{ empresa }}/manager/payment/index" class="btn btnn-custom btn-lg w-100 w-md-auto">Continuar</a>
+                {% endif %}
+                <a href="javascript:void(0);" id="downloadLink" class="btn btnn-custom btn-lg w-100 w-md-auto">Descargar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('downloadLink').addEventListener('click', function () {
+    document.getElementById('downloadForm').submit();
+});
+</script>
+{% endblock %}

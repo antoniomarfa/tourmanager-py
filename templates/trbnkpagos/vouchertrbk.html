@@ -1,0 +1,162 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+
+<style>
+    .card-custom {
+        max-width: 40rem;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #4d078c;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-title {
+        font-size: 28px;
+        color: #48267f;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 18px;
+        color: #48267f;
+    }
+
+    .table td {
+        color: #48267f;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+
+    .table tr td:first-child {
+        width: 50%;
+    }
+
+    .table-monto {
+        background-color: #ff0080;
+        color: white;
+    }
+
+    .table-medios {
+        background-color: #ededed;
+        color: #4d078c;
+    }
+
+    .btn-custom {
+        background-color: #4d078c;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 12px 25px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #6a0e9c;
+        color: white;
+    }
+</style>
+
+<div class="card card-custom">
+    <div class="card-body text-center">
+        <h2 class="card-title">CONFIRMACIÓN DE PAGO</h2>
+        <p class="card-text">¡Hola!</p>
+        <p class="card-text">Tu pago a través de nuestro sitio web fue exitoso.</p>
+    </div>
+
+    <div class="card-header">Este es el detalle:</div>
+
+    <div class="card-body">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Número de Comprobante:</td>
+                    <td>{{ comprobante }}</td>
+                </tr>
+                {% if rut != "" %}
+                <tr>
+                    <td>Rut:</td>
+                    <td>{{ rut }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td>Fecha de pago:</td>
+                    <td>{{ fecha }}</td>
+                </tr>
+                <tr>
+                    <td>Hora de pago:</td>
+                    <td>{{ hora }}</td>
+                </tr>
+                <tr>
+                    <td>Transacción Nro:</td>
+                    <td>{{ transaccion }}</td>
+                </tr>
+                <tr>
+                    <td>Nro Tarjeta:</td>
+                    <td>{{ nrotarjeta }}</td>
+                </tr>
+                <tr>
+                    <td>Tipo de Pago:</td>
+                    <td>{{ tipopago }}</td>
+                </tr>
+                <tr>
+                    <td>Nro de Cuotas:</td>
+                    <td>{{ nrocuotas }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-monto text-center">
+            <tbody>
+                <tr>
+                    <td>Monto pagado:</td>
+                    <td>{{ monto }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-medios text-center">
+            <tbody>
+                <tr>
+                    <td>Medio de pago:</td>
+                    <td>{{ media }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form id="downloadForm" method="post" action="/{{ empresa }}/manager/trbkpagos/descargarComprobante">
+            <input type="hidden" name="comprobante" value="{{ comprobante }}">
+            <input type="hidden" name="rut" value="{{ rut }}">
+            <input type="hidden" name="fecha" value="{{ fecha }}">
+            <input type="hidden" name="hora" value="{{ hora }}">
+            <input type="hidden" name="transaccion" value="{{ transaccion }}">
+            <input type="hidden" name="monto" value="{{ monto }}">
+            <input type="hidden" name="media" value="{{ media }}">
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                {% if session["position"]=="General" %}
+                <a href="/{{ empresa }}/manager/opening/index" class="btn btn-custom">Continuar</a>
+                {% else %}
+                <a href="/{{ empresa }}/manager/payment/index" class="btn btn-custom">Continuar</a>
+                {% endif %}
+                <a href="javascript:void(0);" id="downloadLink" class="btn btn-custom">Descargar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('downloadLink').addEventListener('click', function () {
+        document.getElementById('downloadForm').submit();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+<style>
+.bs-calltoaction {
+    position: relative;
+    width: auto;
+    padding: 15px 25px;
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.cta-contents {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.cta-title {
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+.cta-desc {
+    padding: 0;
+}
+
+.cta-desc p:last-child {
+    margin-bottom: 0;
+}
+
+.cta-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+@media (max-width: 991px) {
+    .cta-contents {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+}
+
+.bs-calltoaction.bs-calltoaction-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.bs-calltoaction.bs-calltoaction-danger .cta-button .btn {
+    border-color: #fff;
+}
+</style>
+
+<div class="container">
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="bs-calltoaction bs-calltoaction-danger" id="errortrbk">
+                <div class="row align-items-center">
+                    <div class="col-md-9 cta-contents">
+                        <h1 class="cta-title">Error en Transaccion</h1>
+                        <div class="cta-desc">
+                            <p>{{ mensage1 }}</p>
+                            <p>{{ mensage2 }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 cta-button">
+                        {% if session["position"]=='General' %}
+                        <a href="/{{ empresa }}/manager/payment/formpayment_rsv" class="btn btn-danger btn-lg d-block w-100">Volver</a>
+                        {% else %}
+                        <a href="/{{ empresa }}/manager/payment/formpayment" class="btn btn-danger btn-lg d-block w-100">Volver</a>
+                        {% endif %}                     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

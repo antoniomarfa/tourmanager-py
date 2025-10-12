@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Venta{% endblock %}
+
+{% block content %}
+
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/quotes">Venta</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Crear Venta</li>
+  </ol>
+</nav>
+
+<div class="container mt-5">
+  <h2>Venta Gira de Estudios</h2>
+
+<form role="form" id="form" method="post" action="/{{ empresa }}/manager/sales/create">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="tab-content tab-validate">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-body form-groups-bordered">
+                        <div class="row">
+                             <div class="col-md-2">
+                                 <div class="form-group">
+                                     <div class="input-group">
+                                         <label class="control-label">Desde Cotizacion</label>
+                                         <select class="form-control box_select" name="sel_cotizacion" id="sel_cotizacion">
+                                             <option value="">Seleccionar</option>
+                                                {% for quote in quotes %}
+                                                <option value="{{ quote.id }}">{{ quote.id }}</option>
+                                                 {% endfor %}
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div>                            
+                             <div class="col-md-4">
+                                 <label class="control-label" for="fecha">Fecha Contrato</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div>
+                                  <!--       <input type="text" name="fecha" id="fecha" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}" required> -->
+                                         <input
+                                            type="date"
+                                            id="fecha"
+                                            name="fecha"
+                                            value="{{ sales_date }}" 
+                                            max="{{ sales_date }}" 
+                                            required
+                                         />   
+                                         <!---                               
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="fa fa-calendar"></i></a>
+                                         </div>
+                                        -->
+                                     </div>
+                                 </div>
+                             </div>  
+                             <div class="col-md-2">
+                                 <div class="form-group">
+                                     <label class="control-label">Tipo Cambio</label>
+                                     <input type="text" class="form-control text-right" name="tipocambio" id="tipocambio" onkeypress="return valideKey(event)" maxlength="10" required/>
+                                 </div>
+                             </div>
+                        </div>                        
+                        <div class="row">
+                             <div class="col-md-6">
+                                 <div class="form-group">
+                                     <div class="input-group">
+                                         <label class="control-label">Vendedor</label>
+                                         <select class="form-control box_select" name="sel_vendedor" id="sel_vendedor" required>
+                                             <option value="">Seleccionar</option>
+                                                {% for seller in sellers %}
+                                                {% if seller.rol.description == 'Vendedor' or seller.rol.description == 'Administrador' or seller.rol.description == 'Captador' %}
+                                                <option value="{{ seller.id }}">{{ seller.name }}</option>
+                                                 {% endif %}
+                                                 {% endfor %}
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="control-label">Colegio</label>
+                                        <select class="form-control box_select" name="sel_colegio" id="sel_colegio" required>
+                                            <option value="">Seleccionar</option>
+                                                {% for school in schools %}
+                                                <option value="{{ school.id }}">{{ school.nombre }}</option>
+                                                 {% endfor %}
+                                        </select>
+                                        </div>
+                                    </div>
+                              </div>
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Curso</label>
+                                      <input type="text" class="form-control text-right" name="curso" id="curso" maxlength="10"  required/>
+                                  </div>
+                              </div>
+                              <div class="col-md-2 offset-md-1">
+                                  <div class="form-group">
+                                      <label class="control-label">Ident</label>
+                                      <input type="text" class="form-control text-right" name="idcurso" id="idcurso" maxlength="5" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                  </div>
+                             </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Nro Alumnos</label>
+                                      <input type="text" class="form-control text-right" name="nroalumno" id="nroalumno" maxlength="10" required/>
+                                  </div>
+                              </div>
+                             <div class="col-md-4">
+                                 <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="control-label">Programa</label>
+                                        <select class="form-control box_select" name="sel_programa" id="sel_programa" required>
+                                            <option value="0">Seleccionar</option>
+                                                {% for program in programs %}
+                                                <option value="{{ program.id }}">{{ program.name }}</option>
+                                                 {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Liberados</label>
+                                      <input type="text" class="form-control text-right" name="liberado" id="liberado" readonly maxlength="10" />
+                                  </div>
+                              </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Monto</label>
+                                      <input type="text" class="form-control text-right" name="vprograma" id="vprograma" readonly maxlength="10" />
+                                  </div>
+                              </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Descuento</label>
+                                      <input type="text" class="form-control text-right" name="vdescuento" id="vdescuento" onkeypress="return FunctioonlyNum(event)" maxlength="10" />
+                                  </div>
+                             </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Total</label>
+                                      <input type="text" class="form-control text-right" name="vtotalprog" id="vtotalprog" readonly maxlength="10" />
+                                  </div>
+                             </div>
+                            <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Nro Cuotas</label>
+                                      <input type="text" class="form-control text-right" name="cuotas" id="cuotas"  maxlength="10" value="1"/>
+                                  </div>
+                              </div>  
+                              <div class="col-md-4">
+                                 <label class="control-label">Fecha Inicio Cobro</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div class="input-group">
+                                    <!--   <input type="text" name="fechacuota" id="fechacuota" class="form-control datepicker" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
+                                         <input
+                                            type="date"
+                                            id="fechacuota"
+                                            name="fechacuota"
+                                            value="{{ sales_date }}" 
+                                            max="{{ sales_date }}" 
+                                         />   
+                                         <!--
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="fa fa-calendar"></i></a>
+                                         </div>
+                                        -->
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-md-4">
+                                 <label class="control-label">Fecha Fin Pagos</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div>
+                                  <!--       <input type="text" name="fecha_ultpag" id="fecha_ultpag" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
+                                         <input
+                                            type="date"
+                                            id="fecha_ultpag"
+                                            name="fecha_ultpag"
+                                            value="{{ sales_date }}" 
+                                            max="{{ sales_date }}" 
+                                            required
+                                         />   
+                                        <!--
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="fa fa-calendar"></i></a>
+                                         </div> -->
+                                     </div>
+                                 </div>
+                             </div>
+                            <div class="col-md-4">
+                                 <label class="control-label">Fecha Salida</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div>
+                                   <!--      <input type="text" name="fechasal" id="fechasal" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
+                                         <input
+                                            type="date"
+                                            id="fechasal"
+                                            name="fechasal"
+                                            value="{{ sales_date }}" 
+                                            max="{{ sales_date }}" 
+                                            required
+                                         />
+                                        <!--    
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="fa fa-calendar"></i></a>
+                                         </div> -->
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                        <div class="row mt-3">
+                             <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label class="control-label">Coordinador</label>
+                                      <input type="text" class="form-control" name="encargado" id="encardado" maxlength="100"  required/>
+                                  </div>
+                              </div>   
+                              <div class="col-md-4 offset-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Correo Coordinador</label>
+                                      <input type="text" class="form-control" name="correo_encargado" id="correo_encargado" maxlength="100" required/>
+                                  </div>
+                             </div>
+                        </div>
+                        <div class="row">
+                             <div class="col-md-2">
+                                 <div class="form-group">
+                                     <label class="control-label">% Comision Venta</label>
+                                     <input type="text" class="form-control text-right" name="comision" onkeypress="return valideKey(event)" id="comision" maxlength="10" value="0" required />
+                                 </div>
+                             </div>
+                            <div class="col-md-4 offset-md-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="control-label box_select">Estado</label>
+                                        <select class="form-control" name="status" id="status" required>
+                                            <option value="">Seleccionar</option>
+                                            <option value="V">Venta</option>
+                                            <option value="F">Cerrado</option>
+                                            <option value="R">Rechazado</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <div class="form-group" style="width: 100%;">
+                                      <label class="control-label">Observacion</label><br>
+                                      <textarea name="obs" id="obs" cols="60" rows="5" style="width:100%"></textarea>
+                                 </div>
+                            </div>                           
+                         </div>
+                        <div class="row">                         
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                <label class="control-label">Codigo Ingreso</label>
+                                <input type="text" class="form-control" name="accesscode" id="accesscode" maxlength="20" readonly  required/>
+                                </div>
+                            </div>    
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                <button type="button" class="btn btn-primary btn-generaCodigo" style="margin-top:20px"><i class="fa fa-gears"></i> Genera Codigo</button>
+                               </div>
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="form-group d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
+                        <a href="/{{ empresa }}/manager/sales" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                        <input type="hidden" name="typesale" value="GE">
+                    </div>
+                </div>
+        </div>
+     </div>
+</form>            
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/sales/createge.js"></script>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends "opening/base_index.html" %}
+
+{% block payment_content %}
+<div class="container mt-5"  style="float:center">
+<form role="form" id="form1" method="post" action="/{{ empresa }}/manager/payment/update" enctype="multipart/form-data" class="custom-validate form-groups-bordered">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                <i class="fa fa-info"></i> Pasajero
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">
+                <i class="fa fa-info"></i> Dirección
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">
+                <i class="fa fa-info"></i> Valores
+                </button>
+            </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Ventas</label>
+                                            <select class="form-control box_select" name="venta_id" id="venta_id">
+                                                <option value="{{ sale.id }}" >{{colegio }} / {{sale.curso}}-{{sale.idcurso}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Rut Alumno</label>
+                                        <input type="text" class="form-control required rut" name="rutalumno" id="rutalumno" maxlength="20" readonly value="{{ course.rutalumno }}/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Pasaprte Alumno</label>
+                                        <input type="text" class="form-control required" name="pasaportealumno" id="pasaportealumno" maxlength="20" readonly value="{{ course.pasaporte }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre Alumno</label>
+                                        <input type="text" class="form-control required" name="nombrealumno" id="nombrealumno" maxlength="100" readonly value="{{ course.nombrealumno }}"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="control-label">Fecha Nacimiento</label><br>
+                                    <div class="col-md-7 no-padding">
+                                        <div class="input-group">
+                                            <input type="text" name="fechanac" id="fechanac" class="form-control datepicker" data-format="dd-mm-yyyy" value="{{ helper.formatear(course.fechanac) }}">
+                                            <div class="input-group-addon">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                  
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Rut Apoderado</label>
+                                        <input type="text" class="form-control required rut" name="rutapoderado" id="rutapoderado" maxlength="20" readonly value="{{ course.rutapod }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre Apoderado</label>
+                                        <input type="text" class="form-control required" name="nombreapoderado" id="nombreapoderado" maxlength="100" readonly value="{{ course.nombreapod }}"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab2">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Calle</label>
+                                        <input type="text" class="form-control required" name="calle" id="calle" maxlength="100" value="{{ course.dircalle }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Numero</label>
+                                        <input type="text" class="form-control required" name="numdir" id="numdir" maxlength="100" value="{{ course.dirnumero }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Depto</label>
+                                        <input type="text" class="form-control" name="numdepto" id="numdepto" maxlength="100" value="{{ course.nrodepto }}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Región</label>
+                                            <select class="form-control required box_select" name="region_id" id="region_id">
+                                                <option value="">Seleccionar</option>
+                                                <?php
+                                                if(count($this->regions) > 0) {
+                                                    foreach ($this->regions AS $region) {
+														$selected = ($region['id'] == $this->course['region_id'])? 'selected="selected"' : '';
+                                                        ?>
+                                                        <option value="<?php echo $region['id']; ?>" <?php echo $selected; ?>><?php echo $region['description']; ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Comuna</label>
+                                            <select class="form-control required box_select" name="commune_id" id="commune_id">
+                                                <option value="">Seleccionar</option>
+                                                <?php
+                                                if(count($this->communes) > 0) {
+                                                    foreach ($this->communes AS $commune) {
+														$selected = ($commune['id'] == $this->course['comuna_id'])? 'selected="selected"' : '';
+                                                        ?>
+                                                        <option value="<?php echo $commune['id']; ?>" <?php echo $selected; ?>><?php echo $commune['description']; ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>	
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Fono</label>
+                                        <input type="text" class="form-control required" name="fono" id="fono" maxlength="100" value="{{ course.fono }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Celular</label>
+                                        <input type="text" class="form-control" name="celular" id="celular" maxlength="100" value="{{ course.celular }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Correo</label>
+                                        <input type="text" class="form-control required email" name="correo" id="correo" maxlength="100" value="{{ course.correo }}"/>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab3">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                             <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Valor</label>
+                                        <input type="text" class="form-control text-right" name="apagar" id="apagar" maxlength="100" value="{{ helper.formato_numero(course.vpagar) }}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Descuento</label>
+                                        <input type="text" class="form-control text-right" name="descto" id="descto" maxlength="100" value="{{ helper.formato_numero(course.descto) }}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">A Pagar</label>
+                                        <input type="text" class="form-control text-right" name="a_pagar" id="a_pagar" maxlength="100" value="{{ helper.formato_numeor(course.apagar) }}" readonly/>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="row">
+                                 <div class="form-group">
+                                       <label class="control-label">¿Liberado?</label>
+                                        <div class="col-md-12 no-padding">
+                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                            <input type="checkbox" name="liberado" id="liberado" value="1" {% if course.liberado == 1 %}checked{% endif %}>
+                                            <span class="slider"></span>
+                                        </label>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div  class="form-group d-flex justify-content-end">
+                <button type="submit" class="btn btn-blue me-3"><i class="fa fa-save"></i> Guardar</button>
+                <a href="/{{ empresa }}/manager/payment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <input type="hidden" name="id" id="id" value="{{ course.id }}"/>
+            </div>            
+        </div>
+    </div>            
+</form>    
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/payment/student_e.js"></script>
+{% endblock %}

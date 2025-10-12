@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Colegios</li>
+  </ol>
+</nav>
+
+<div class="container mt-5">
+  <h2>Lista de Colegios</h2>
+  <hr>
+    {% if msg %}
+    <div class="alert alert-success alert-dismissible show" role="alert">
+    {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    {% endif %}    
+  <div class="form-group text-right">
+        {% if cant_access["can_insert"] %}
+        <a href="/{{ empresa }}/manager/schools/create" class="btn btn-success mb-3"><i class="fa fa-file-text" aria-hidden="true"></i> Nuevo</a>
+        {% endif %}
+  </div>
+
+  <table class="table table-bordered" id="colegioTable">
+        <thead>
+        <tr class="replace-inputs">
+            <th>Codigo</th>
+            <th>Nombre</th>
+            <th>Direccion</th>
+            <th>Comuna</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for school in schools %} 
+                <tr>
+                    <td>{{ school.codigo }}</td>
+                    <td>{{ school.nombre }}</td>
+                    <td>{{ school.direccion }}</td>
+                    <td>{{ school.comuna }}</td>
+                    <td>
+                        {% if cant_access["can_update"] %}
+                        <a href="/{{ empresa }}/manager/schools/edit/{{ school.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+                        {% endif %}
+                        {% if cant_access["can_delete"] %}
+                        <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ school.id }}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/schools/index.js"></script>
+{% endblock %}

@@ -1,0 +1,72 @@
+/* Si */
+.main_heading {
+  margin: 50px 0;
+}
+
+.main_heading h1 {
+  font-size: 25px;
+  font-weight: 300;
+  text-align: center;
+  line-height: 45px;
+  color: #777;
+}
+
+.underline {
+  display: inline-block;
+  width: 160px;
+  height: 2px;
+  background: linear-gradient(-20deg, #fec12a 0%, #ffefca 100%);
+}
+
+.features-div {
+  text-align: center;
+  transition: all .15s linear;
+  border-radius: 8px;
+}
+
+.features-div:hover {
+  transform: translateY(-5px);
+}
+
+.features-div i {
+  font-size: 35px;
+  font-weight: 300;
+  color: #fec12a;
+}
+
+.features-div h3 {
+  color: #393939;
+  font-weight: 600;
+}
+
+.features-div p {
+  color: #636363;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 25px;
+}
+
+.call-action-color .main_heading h1 {
+  color: #fff;
+}
+
+.call-action-color .underline {
+  background-color: #fff;
+}
+
+.navbar-custom {
+  height: 150px;
+  background-color: black;
+}
+
+.button-out {
+  margin-top: 50px;
+  margin-right: 2%;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .features-div {
+    margin-top: 20px;
+  }
+}

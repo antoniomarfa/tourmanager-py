@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Pasarrelas de Pago{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Pasarela de Pagos</li>
+  </ol>
+</nav>
+
+<style>
+  .payment-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background-color: #fff;
+  }
+  .payment-logo {
+    width: 100px;
+    height: auto;
+  }
+  .integrated-icon {
+    color: green;
+    font-size: 1.4rem;
+    margin-left: 10px;
+  }
+  .integration-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+  }
+</style>
+
+<div class="bg-light py-5">
+  <div class="container">
+    <h2 class="mb-4 text-center">Integraciones de Pasarelas de Pago</h2>
+    <hr><br><br>
+
+   {% for gatewayc in gatewaysc %}
+
+      {% if gatewayc.existe=='S' %}
+        <div class="payment-card row align-items-center" style="background-color:#f2f2f2;">
+      {% else %}
+        <div class="payment-card row align-items-center">
+      {% endif %}
+
+        <div class="col-md-2 text-center">
+          <img src="http://localhost:8000/static/{{ gatewayc.gateway_image }}" class="payment-logo" alt="Gateway Logo">
+        </div>
+        <div class="col-md-7">
+          {% if gatewayc.existe=='S' %}
+            <h4 class="mb-1 integrated-icon">Esta integrado con : {{gatewayc.gateway_type }}</h4>
+          {% else %}
+            <h4 class="mb-1">Integrarse con : {{ gatewayc.gateway_type }}</h4>
+          {% endif %}
+          <p class="mb-1">{{ gatewayc.gateway_description }}</p>
+        </div>
+        <div class="col-md-3 integration-actions">
+          {% if gatewayc.existe =='S' %}
+            <a href="#" class="btn btn-primary btn-sm" title="Elimiar" data-original-title="Quitar" data-id="{{ gatewayc.id }}">Quitar Integracion</a>
+
+          {% else %}
+            <button 
+              type="button" 
+              class="btn btn-success btn-sm" 
+              data-bs-toggle="modal" 
+              data-bs-target="#Modaldato"
+              data-gateway-id="{{ gatewayc.id }}"
+              data-gateway-type="{{ gatewayc.gateway_type }}">
+              Integrar
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Modal Bootstrap 5 -->
+<div class="modal fade" id="Modaldato"> 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form role="form" id="form" method="post" action="/{{ empresa }}/manager/gateways/create" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModaldatoLabel">Modal title</h5>
+          <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Cerrar">
+            <i class="fas fa-times"></i> <!-- si usas FontAwesome -->
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="gateway_id" id="gateway_id"/>      
+
+          <div class="card d-none panel-flow">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="apikey" class="form-label">Api Key</label>
+                  <input type="text" class="form-control" name="apikey" id="apikey" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="secretkey" class="form-label">Secret Key</label>
+                  <input type="text" class="form-control" name="secretkey" id="secretkey" />
+                </div>
+              </div>
+            </div>        
+          </div>        
+
+          <div class="card d-none panel-trbk">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="comercialcode" class="form-label">Código Comercial</label>
+                  <input type="text" class="form-control" name="comercialcode" id="comercialcode" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="keysecret" class="form-label">Secret Key</label>
+                  <input type="text" class="form-control" name="keysecret" id="keysecret" />
+                </div>
+              </div>
+            </div>
+          </div> 
+
+          <div class="card d-none panel-mp">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="usersid" class="form-label">ID Usuario</label>
+                  <input type="text" class="form-control" name="usersid" id="usersid" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="publickey" class="form-label">Public Key</label>
+                  <input type="text" class="form-control" name="publickey" id="publickey" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="accesstoken" class="form-label">Access Token</label>
+                  <input type="text" class="form-control" name="accesstoken" id="accesstoken" />
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Continuar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/gateways/index.js"></script>
+{% endblock %}

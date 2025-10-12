@@ -1,0 +1,83 @@
+    {% extends "base.html" %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Vouchers</li>
+  </ol>
+</nav>
+
+
+  <h2>Ingreso de Vouchers</h2>
+{% if cant_access["can_insert"] %}
+    <div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+
+        <div class="panel panel-primary">
+            <div class="panel-body with-table">
+                <div class="row bs-callout bs-callout-danger">
+
+                    <div class="col-md-3">
+                        <span class="control-label">Venta</span><br>
+                            <div class="input-group">
+                                <select class="form-control" name="search_venta" id="search_venta">
+                                    <option value="">Seleccionar</option>
+                                     {% for sale in sales %}
+                                      {% set activo =  'selected="selected"' if session['filter_sale']|string == sale.id|string else '' %}
+                                        {% set typesale = "Gira Estudio" if sale.type_sale == 'GE' else 'Viaje Grupal' %}
+                                         <option value="{{ sale.id }}" {{ activo }}>{{ typesale }} - {{ sale.id }}</option>
+                                      {% endfor %}
+                                </select>
+                            </div>
+                    </div>
+
+                    <div class="col-md-4 offset-md-3">
+                        <span class="control-label">Nro Voucher</span><br>
+                        <div class="col-md-6 no-padding">
+                            <div class="input-group">
+                                 <input type="text" class="form-control required" name="voucher" id="voucher" maxlength="20" />
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="col-md-2">
+                            <span class="control-label">&nbsp;</span><br>
+                            <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
+                                <button type="button" class="btn btn-success btn-add"><i class="fa fa-save"></i> Agregar</button>
+                            </div>
+                        </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+{% endif %}
+
+
+<div>
+    <table class="table table-bordered" id="table-voucher">
+        <thead>
+        <tr>
+            <th>Venta</th>
+            <th>Nro Vocher</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+
+    </table>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/voucher/index.js"></script>
+{% endblock %}

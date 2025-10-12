@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Programas</li>
+  </ol>
+</nav>
+
+<div class="container mt-5">
+  <h2>Lista de Programas</h2>
+  <hr>
+  <div class="form-group text-right">
+        {% if cant_access["can_insert"] %}    
+        <a href="/{{ empresa }}/manager/programs/create" class="btn btn-success mb-3"><i class="fa fa-file-text" aria-hidden="true"></i> Nuevo</a>
+        {% endif %}
+  </div>
+    <table class="table table-bordered datatable" id="programsTable">
+        <thead>
+        <tr class="replace-inputs">
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+            <th>Fecha Actualizacion</th>
+            <th>Modificador</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for program in programs %}
+                {% set class_status = "text-bg-success" if program.active == 1 else "text-bg-secondary" %} 
+                {% set text_status = "Activo" if program.active == 1 else "Inactivo" %}
+                <tr>
+                    <td>{{ program.code }}</td>
+                    <td>{{ program.name }}</td>
+                    <td width="7%" align="center"><a style="cursor: pointer;" class="change-status" id="{{ program.id }}"><span class="badge {{ class_status }}">{{text_status}}</span></a></td>
+                    <td width="15%">{{ helper.formatear(program.UpdatedDate) }}</td>
+                    <td width="15%">{{ program.author }}</td>
+                    <td width="15%">
+                        {% if cant_access["can_update"] %}                        
+                        <a href="/{{ empresa }}/manager/programs/edit/{{ program.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+                        {% endif %}
+                        {% if cant_access["can_delete"] %}
+                        <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ program.id }}"><i class="fa fa-trash"></i></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/programs/index.js"></script>
+{% endblock %}

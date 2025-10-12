@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %} Editar Usuarios{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/users">Usuarios</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Editar Usuarios</li>
+  </ol>
+</nav>
+
+
+<div class="container mt-5">
+  <h2>Editar Usuario</h2>
+  <form id="form" method="post" action="/{{ empresa }}/manager/users/update">
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs left-aligned"><!-- available classes "bordered", "right-aligned" -->
+                <li class="active"><a href="#tab1" data-toggle="tab">
+                        <span><i class="fa fa-info" aria-hidden="true"></i></span>
+                        <span>Detalle</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel panel-primary">
+                        <div class="panel-body form-groups-bordered">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                     <div class="form-group">
+                                        <label class="control-label">Perfil</label>
+                                        <input type="text" class="form-control" name="perfil" id="perfil" value="{{ user.rol.description }}" readonly="true" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Compañia</label>
+                                        <input type="text" class="form-control" name="company" id="company"  value="{{ company.razonsocial }}" readonly="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Usuario</label>
+                                        <input type="text" class="form-control" name="user" id="user" maxlength="12" value="{{ user.username }}" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre</label>
+                                        <input type="text" class="form-control" name="name" id="name" maxlength="100" value="{{ user.name }}"  required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Email</label>
+                                        <input type="text" class="form-control email" name="email" id="email" maxlength="100" value="{{ user.email }}"  required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Fono</label>
+                                        <input type="text" class="form-control" name="phone" id="phone"  value="{{ user.phone }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Modificar Clave?</label>
+                                        <div class="col-md-12 no-padding">
+                                            <div id="label-switch" class="make-switch" data-on-label="SI" data-off-label="NO">
+                                                <input type="checkbox" name="change_password" id="change_password" value="1">
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Clave</label>
+                                        <input type="password" class="form-control" name="password" id="password" maxlength="10" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">¿Activar Registro?</label>
+                                        <div class="col-md-12 no-padding">
+                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                            <input type="checkbox" name="active" id="active" value="1" {% if programac.active == 1 %}checked="checked"{% endif %}>
+                                            <span class="slider"></span>
+                                        </label>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                <a href="/{{ empresa }}/manager/users" type="button" class="btn btn-primary bm-3"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <input type="hidden" name="id" value="{{user.id }}" />
+            </div>
+        </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/users/edit.js"></script>
+{% endblock %}

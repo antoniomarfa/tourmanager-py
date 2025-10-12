@@ -1,0 +1,123 @@
+{% extends "payment/base_index.html" %}
+
+{% block payment_content %}
+<style>
+hr.n4 {
+  border: 1px solid black;
+}
+</style>
+
+<div class="container text-center">
+  <form role="form" id="form" method="post" action="/{{ empresa }}/manager/payment/update_fm" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+    <div class="row">
+      <div class="col-md-12">
+
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#tab1" data-bs-toggle="tab" id="tab1-tab" role="tab" aria-controls="tab1">
+              <span><i class="fa fa-info"></i></span>
+              <span>Antecedentes Personales</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#tab2" data-bs-toggle="tab" id="tab2-tab" role="tab" aria-controls="tab2">
+              <span><i class="fa fa-info"></i></span>
+              <span>Antecedentes Médicos</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          <!-- TAB 1 -->
+          <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+            <div class="card mt-3">
+              <div class="card-body bg-light">
+
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Colegio</label>
+                    <input type="text" class="form-control" name="colegio" id="colegio" maxlength="20" readonly value="{{ info_index['colegio'] }}">
+                  </div>
+                  <div class="col-md-2 mb-3">
+                    <label class="form-label">Curso</label>
+                    <input type="text" class="form-control" name="curso" id="curso" maxlength="100" readonly value="{{ info_index['nomcurso'] }}">
+                  </div>
+                  <div class="col-md-2 mb-3">
+                    <label class="form-label">Fecha Salida</label>
+                    <input type="text" class="form-control" name="fecha" id="fecha" readonly value="{{ info_index['fechasalida'] }}">
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Destino</label>
+                    <input type="text" class="form-control" name="destino" id="destino" readonly value="{{ info_index['programa'] }}">
+                  </div>
+                </div>
+
+                <!-- ejemplo de input-group corregido -->
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha Nacimiento</label>
+                    <div class="input-group">
+                      <input type="text" name="fecnac" id="fecnac" class="form-control" value="{{ info_index['fechanac'] }}">
+                      <span class="input-group-text"><i class="entypo-calendar"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label">Nacionalidad</label>
+                    <input type="text" class="form-control" name="nacionalidad" id="nacionalidad">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2 -->
+          <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+            <div class="card mt-3">
+              <div class="card-body bg-light">
+
+                <div class="row mb-3">
+                  <div class="col-md-2">
+                    <label class="form-label">Factor Sanguíneo</label>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="text" class="form-control" name="factorsang" id="factorsang" value="{{ ficha.dato13 }}">
+                  </div>
+                </div>
+
+                <hr class="n4">
+
+                <!-- ejemplo de switch -->
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="switch_psico" name="switch_psico" value="1" {% if ficha.dato141 == 1 %}checked{% endif %}>
+                  <label class="form-check-label" for="switch_psico">
+                    ¿Se encuentra bajo tratamiento médico, psicológico o psiquiátrico?
+                  </label>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Cual(es)?</label>
+                  <input type="text" class="form-control" name="psicol" id="psicol" value="{{ ficha.dato142 }}">
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botones -->
+        <div class="mt-3">
+          <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+          <a href="//{{ empresa }}/manager/payment" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+          <input type="hidden" name="id" value="{{ ficha.id }}">
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

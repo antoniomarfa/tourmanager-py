@@ -1,0 +1,221 @@
+<form role="form" id="form1" method="post" action="<?php echo BASE_URL . URL_FRIENDLY_BASE . $this->module; ?>/update" enctype="multipart/form-data" class="custom-validate form-groups-bordered">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs left-aligned"><!-- available classes "bordered", "right-aligned" -->
+                <li class="active"><a href="#tab1" data-toggle="tab">
+                        <span><i class="fa fa-info" aria-hidden="true"></i></span>
+                        <span>Detalle</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel panel-primary">
+                        <div class="panel-body form-groups-bordered">
+                        <div class="row">
+                             <div class="col-md-4">
+                                 <label class="control-label">Fecha Contrato</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div class="input-group">
+                                         <input type="text" name="fecha" id="fecha" class="form-control required datepicker" data-format="dd-mm-yyyy" value="<?php echo date("d-m-Y", strtotime($this->sale['fecha'])); ?>">
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>  
+                             <div class="col-md-2">
+                                 <div class="form-group">
+                                     <label class="control-label">Tipo Cambio</label>
+                                     <input type="text" class="form-control  required text-right" name="tipocambio" id="tipocambio" onkeypress="return valideKey(event)" value="<?php  echo $this->sale['tipocambio']; ?>" maxlength="10" />
+                                 </div>
+                             </div>
+                             <div class="col-md-4">
+                                 <div class="form-group">
+                                     <div class="input-group">
+                                         <label class="control-label">Vendedor</label>
+                                         <select class="form-control required box_select" name="sel_vendedor" id="sel_vendedor">
+                                             <option value="">Seleccionar</option>
+                                             <?php
+                                                foreach ($this->sellers['data'] AS $seller) {
+                                                $selected = $this->sale['seller_id']==$seller['id'] ? 'selected="selected"' : ''   
+                                             ?>
+                                                <option value="<?php  echo $seller['id']; ?>" <?php echo $selected; ?> ><?php  echo $seller['name']; ?></option>
+                                             <?php
+                                                 }
+                                             ?>
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-md-2">
+                                 <div class="form-group">
+                                     <label class="control-label">% Comision Venta</label>
+                                     <input type="text" class="form-control required text-right" name="comision" onkeypress="return valideKey(event)" id="comision" maxlength="10" value="<?php echo $this->sale['comision']; ?>" />
+                                     <input type="hidden" name="comision_pagada" id="comision_pagada" value="<?php echo $this->sale['comision_pagada']; ?>" >
+                                 </div>
+                             </div>   
+                          </div>
+                        <div class="row">
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Nro Pasajeros</label>
+                                      <input type="text" class="form-control  required text-right" name="nroalumno" id="nroalumno" maxlength="10" value="<?php echo $this->sale['nroalumno']; ?>" />
+                                  </div>
+                              </div>
+                              <div class="col-md-2">
+                                 <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="control-label">Programa</label>
+                                        <select class="form-control required box_select" name="sel_programa" id="sel_programa">
+                                            <option value="">Seleccionar</option>
+                                            <?php
+                                              foreach ($this->programs AS $program) {
+                                                $selected = $this->sale['program_id']==$program['id'] ? 'selected="selected"' : ''   
+                                            ?>
+                                                <option value="<?php  echo $program['id']; ?>" <?php echo $selected; ?> ><?php  echo $program['name']; ?></option>
+                                            <?php
+                                                 }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Monto</label>
+                                      <input type="text" class="form-control text-right" name="vprograma" id="vprograma" value="<?php echo $this->sale['subtotal']; ?>" readonly maxlength="10" />
+                                  </div>
+                              </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Descuento</label>
+                                      <input type="text" class="form-control text-right" name="vdescuento" id="vdescuento" onkeypress="return FunctioonlyNum(event)" maxlength="10" value="<?php echo $this->sale['descm']; ?>" />
+                                  </div>
+                             </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Total</label>
+                                      <input type="text" class="form-control text-right" name="vtotalprog" id="vtotalprog" value="<?php echo $this->sale['vprograma']; ?>" readonly maxlength="10" />
+                                  </div>
+                             </div>
+                             <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Liberados</label>
+                                      <input type="text" class="form-control text-right" name="liberado" id="liberado" value="<?php echo $this->sale['liberados']; ?>" readonly maxlength="10" />
+                                  </div>
+                              </div>                             
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                  <div class="form-group">
+                                      <label class="control-label">Nro Cuotas</label>
+                                      <input type="text" class="form-control text-right" name="cuotas" id="cuotas" value="<?php echo $this->sale['cuotas']; ?>"  maxlength="10" />
+                                  </div>
+                              </div>
+                              <div class="col-md-3">
+                                 <label class="control-label">Fecha Inicio Cobro</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div class="input-group">
+                                         <input type="text" name="fechacuota" id="fechacuota" class="form-control datepicker" data-format="dd-mm-yyyy" value="<?php echo date("d-m-Y", strtotime($this->sale['fechacuota'])); ?>">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                              <div class="col-md-3">
+                                 <label class="control-label">Fecha Salida</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div class="input-group">
+                                         <input type="text" name="fechasal" id="fechasal" class="form-control datepicker" data-format="dd-mm-yyyy" value="<?php echo date("d-m-Y", strtotime($this->sale['fechasalida'])); ?>">
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                              <div class="col-md-4">
+                                 <label class="control-label">Fecha Fin Pagos</label><br>
+                                 <div class="col-md-7 no-padding">
+                                     <div class="input-group">
+                                         <input type="text" name="fecha_ultpag" id="fecha_ultpag" class="form-control datepicker" data-format="dd-mm-yyyy" value="<?php echo date("d-m-Y", strtotime($this->sale['fecha_ultpag'])); ?>" >
+                                         <div class="input-group-addon">
+                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>                             
+                        </div>
+                        <div class="row">
+                             <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label class="control-label">Coordinador</label>
+                                      <input type="text" class="form-control required" name="encargado" id="encardado" value="<?php echo $this->sale['encargado']; ?>" maxlength="100" />
+                                  </div>
+                              </div>
+                             <div class="col-md-2">
+                             </div>    
+                              <div class="col-md-4">
+                                  <div class="form-group">
+                                      <label class="control-label">Correo Coordinador</label>
+                                      <input type="text" class="form-control required" name="correo_encargado" id="correo_encargado" value="<?php echo $this->sale['correo_encargado']; ?>" maxlength="100" />
+                                  </div>
+                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                 <div class="form-group" style="width: 100%;">
+                                      <label class="control-label">Observacion</label><br>
+                                      <textarea name="obs" id="obs" cols="60" rows="5" style="widht:100%"><?php echo $this->sale['obs']; ?></textarea>
+                                 </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="control-label">Estado</label>
+                                        <select class="form-control required box_select" name="status" id="status">
+                                            <option value="">Seleccionar</option>
+                                            <option value="V" <?php echo $this->sale['state']=='V' ? 'selected="selected"' : '' ?>>Venta</option>
+                                            <option value="F" <?php echo $this->sale['state']=='F' ? 'selected="selected"' : '' ?>>Cerrado</option>
+                                            <option value="R" <?php echo $this->sale['state']=='R' ? 'selected="selected"' : '' ?>>Rechazado</option>
+
+                                        </select>
+                                        </div>
+                                    </div>
+                              </div> 
+                              <div class="row">                         
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                    <label class="control-label">Codigo Ingreso</label>
+                                    <input type="text" class="form-control required" name="accesscode" id="accesscode" maxlength="20"  value="<?php echo $this->accesscode; ?>" />
+                                    </div>
+                                </div>    
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    <button type="button" class="btn btn-primary btn-generaCodigo" style="margin-top:20px"><i class="fa fa-gears"></i> Genera Codigo</button>
+                                    </div>
+                                </div>
+                               <div class="col-md-7">
+                               </div>
+                             </div>
+                         </div>
+
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-blue"><i class="fa fa-save"></i> Guardar</button>
+                        <a href="<?php echo BASE_URL . URL_FRIENDLY_BASE . $this->module; ?>" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                        <input type="hidden" name="id" value="<?php echo $this->sale['id']; ?>" />
+                        <input type="hidden" name="identificador" value="<?php echo $this->sale['identificador']; ?>" />
+                        <input type="hidden" name="typesale" id="typesale" value="VG" >
+                    </div>
+
+                </div>
+            </div>        
+
+        </div>
+     </div>
+</form>            

@@ -1,0 +1,50 @@
+{% extends "opening/base_index.html" %}
+
+{% block opening_content %}
+
+<div class="col-md-6" style="margin-left:30%">
+    <div>
+        <h4><i class="fa fa-table"></i> Continuar con Pago TransBank</h4>
+    </div> 
+    <br>
+     <div>
+        <form role="form" name="form_continuapagotrb" id="form_continuapagotrb" method="post" action="/{{ empresa }}/manager/trbnkpagos/inicioPagoTrbnk">        
+            <div class="form-group row">
+                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Nro Ingreso</strong></label>
+                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;">{{ identificador }}</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Fecha Pago</strong></label>
+                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;">{{ fecha }}</label>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Monto a Pagar</strong></label>
+                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;" id="mpagar">$ {{mpagar}}</label>
+                <input type="hidden" name="mpagar" value="<?php echo $this->mpagar; ?>" />
+                <input type="hidden" name="valorcuota" value="<?php echo $this->valorcuota; ?>" />
+                <input type="hidden" name="nrocuotas" value="<?php echo $this->nrocuotas; ?>" />
+                <input type="hidden" name="fechainicial" value="<?php echo $this->fechainicial; ?>" /> 
+                <input type="hidden" name="identificador" value="<?php echo $this->identificador; ?>" />
+            </div>
+
+
+            <button type="submit" class="btn btn-blue btn-sm" >Continuar Pago</button>
+            <?php if(Application\Helper::sessionSystemValue('position')=='General'){  ?>
+                <a href="<?php echo BASE_URL . URL_FRIENDLY_BASE; ?>pay/formpayment_rsv" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+            <?php }else{ ?>
+                <?php if (Application\Session::get('encuotas')=='S'){ ?>
+                    <a href="<?php echo BASE_URL . URL_FRIENDLY_BASE; ?>pay/formpayment_ct" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <?php }else{ ?>
+                    <a href="<?php echo BASE_URL . URL_FRIENDLY_BASE; ?>pay/formpayment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <?php } ?>
+            <?php } ?>
+        </form>
+     </div>
+</div> 
+<br>
+
+<div class="clearfix"></div>
+
+
+
+{% endblock %}

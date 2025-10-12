@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Opening{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<input type="hidden" name="paso" id="paso" value="{{ paso }}"/>
+<div class="container mt-5" id="features">
+  <div class="row mb-4">
+    <div class="col-md-9">
+      <h4>Bienvenido(a) a la familia <strong>{{ info_index["company"] }}</strong></h4>
+      <h4>Programa <strong>{{ info_index["programa"] }}</strong></h4>
+      <h4>Colegio - Curso <strong>{{ info_index['curso'] }}</strong></h4>
+    </div>
+    <div class="col-md-3">
+      <h4>Fecha Último Abono <strong>{{ info_index['fechaultimo'] }}</strong></h4>
+      <h4>Fecha Salida <strong>{{ info_index["fechasalida"] }}</strong></h4>
+    </div>
+  </div>
+ <hr style="height: 2px;background-color: black;">
+  <!-- Aquí se carga el contenido dinámico -->
+  {% block opening_content %}{% endblock %}
+
+</div>
+{% endblock %}
+

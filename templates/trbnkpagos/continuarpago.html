@@ -1,0 +1,6 @@
+    <form id="postForm" action="{{ next_page }}" method="post">
+         <input type="hidden" name="token_ws" value="{{ token }}">
+    </form>
+    <script type="text/javascript">
+        document.getElementById("postForm").submit();
+    </script>

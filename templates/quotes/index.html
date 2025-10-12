@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Cotizaciones</li>
+  </ol>
+</nav>
+
+<div class="container mt-2">
+  <h2>Cotizaciones</h2>
+  <hr>
+  {% if cant_access["can_insert"] %}
+    <div class="mb-3 text-end">
+        <div class="btn-group">
+            <button type="button" class="btn btn-success">
+                <i class="fa fa-plus"></i> Nueva Cotización
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-center">
+                <li>
+                    <a class="dropdown-item" href="/quotes/create/ge">
+                    <i class="fa fa-file-text"></i> Gira Estudio
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/quotes/create/vg">
+                    <i class="fa fa-file-text"></i> Viaje Grupal
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+  {% endif %}
+
+{% if cant_access["can_export"] %}
+    <button type="button" class="btn btn-success" id="export-report"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Informe </button>
+{% endif %}
+
+
+<div class="clearfix"></div>
+
+<hr>
+<form role="form" id="form" method="post">
+
+<div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <span class="control-label">Fecha Desde</span><br>
+                        <div class="col-md-6 no-padding">
+                            <div>
+                             <!--   <input type="text" name="start_date" id="start_date" class="form-control" data-format="dd-mm-yyyy" value="{{ start_date }}"> -->
+                                <input
+                                    type="date"
+                                    id="start_date"
+                                    name="start_date"
+                                    value="{{ start_date }}" 
+                                    max="{{ now_date }}" 
+                                /> 
+                                <!--                            
+                                <div class="input-group-addon">
+                                    <a href="#"><i class="fa fa-calendar"></i></a>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <span class="control-label">Fecha Hasta</span><br>
+                        <div class="col-md-6 no-padding">
+                            <div>
+                            <!--    <input type="text" name="end_date" id="end_date" class="form-control" data-format="dd-mm-yyyy" value="{{ end_date }}"> -->
+                                <input
+                                    type="date"
+                                    id="end_date"
+                                    name="end_date"
+                                    value="{{ end_date }}" 
+                                    max="{{ now_date }}" 
+                                />    
+                                <!--                           
+                                <div class="input-group-addon">
+                                    <a href="#"><i class="fa fa-calendar"></i></a>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">Vendedor</label>
+                            <select class="form-control box_select" name="vendedor" id="vendedor">
+                                <option value="">Todas</option>
+                                    {% for seller in sellers %}
+                                    {% if seller.rol.description == 'Vendedor' or seller.rol.description == 'Captador' or seller.rol.description == 'Administrador' %}
+                                    {% set activo = 'selected="selected"' if request.session["filter_seller"] == seller.id else '' %}
+                                    <option value="{{ seller.id }}" {{ activo }}>{{ seller.name }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <span class="control-label">&nbsp;</span><br>
+                        <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
+                            <button type="button" class="btn btn-primary search"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-md-12">
+
+            <table class="table table-bordered nowrap" id="table-sale">
+                <thead>
+                <tr>
+                    <th>Cotizacion</th>
+                    <th>Identificador</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Vendedor</th>
+                    <th>Colegio</th>
+                    <th>N Pasajeros</th>
+                    <th>programa</th>
+                    <th>Subtotal</th>
+                    <th>Descuento</th>
+                    <th>Total</th>
+                    <th>Contacto</th>
+                    <th>Fono</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Autor</th>
+                    <th>Modificador</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+    </div>
+</div>
+
+<br />
+</form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/quotes/index.js"></script>
+{% endblock %}

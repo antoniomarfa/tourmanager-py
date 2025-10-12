@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Pasajeros{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a herf="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Pasajeros</li>
+  </ol>
+</nav>
+
+
+  <h2>Listado Pasajeros</h2>
+
+  {% if cant_access["can_insert"] %}
+    <div class="form-group text-right">
+        <a href="/{{ empresa }}/manager/pasajeros/create" type="button" class="btn btn-success"><i class="fa fa-file-text"></i> Nuevo</a>
+    </div>
+  {% endif %}
+
+  <div class="row" style="margin-top:20px;margin-bottom:20px">
+      <div class="col-md-2 col-sm-6 col-xs-12">
+          <div class="form-group">
+              <label class="control-label">Ventas</label>
+              <select class="form-control box_select" name="ventas" id="ventas">
+                  <option value="">Todas</option>
+                    {% for sale in sales %}
+                    {% set activo = "selected='selected'" if session['filter_sales'] == sale.id else '' %}
+                    {% set typesale = "Gira Estudio" if sale.type_sale == 'GE' else 'Viaje Grupal' %}
+                      <option value="{{ sale.id }}" {{ activo }}>{{ typesale }} - {{ sale.id }} </option>
+                      {% endfor %}
+              </select>
+          </div>
+      </div>
+  </div>
+
+    
+  <div class="clearfix"></div>
+
+  <div class="table-responsive">
+      <table class="table table-bordered nowrap" id="table-course">
+          <thead>
+          <tr>
+              <th>Numero Venta</th>
+              <th>Tipo Venta</th>
+              <th>Rut Pasajero</th>
+              <th>Nombre Pasajero</th>
+              <th>Rut Apoderado</th>
+              <th>Nombre Apoderado</th>
+              <th>Celular</th>
+              <th>Email</th>
+              <th>Valor</th>
+              <th>Descto</th>
+              <th>A Pagar</th>
+              <th>Contrato</th>
+              <th>Ficha Medica</th>
+              <th>Correo</th>
+              <th>Accion</th>
+          </tr>
+          </thead>
+          <tbody>
+      </table>
+  </div>
+  
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pasajeros/index.js"></script>
+{% endblock %}

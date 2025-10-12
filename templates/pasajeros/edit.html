@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}editar pasajero{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/pasajeros">Pasajeros</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Editar Pasajeros</li>
+  </ol>
+</nav>
+
+<!-- <div class="container mt-5"> -->
+  <h2>Editar Pasajeros</h2>
+  <hr>
+<form role="form" id="form" method="post" action="/{{ empresa }}/manager/pasajeros/update">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                <i class="fa fa-info"></i> Alumnos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">
+                <i class="fa fa-info"></i> Dirección
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab" aria-controls="tab3" aria-selected="false">
+                <i class="fa fa-info"></i> Valores
+                </button>
+            </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Ventas</label>
+                                            <select class="form-control box_select" name="venta_id" id="venta_id">
+                                                    {% for sale in sales %}
+                                                    {% if course.sale_id == sale.id %}    
+                                                    {% set typesale = "Gira Estudio" if sale.type_sale == 'GE' else 'Viaje Grupal' %}
+                                                                                                            
+                                                    <option value="{{ sale.id }}"></option>{{ typesale }} - {{sale.id }}></option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Rut Alumno</label>
+                                        <input type="text" class="form-control required rut" name="rutalumno" id="rutalumno" maxlength="20" readonly value="{{ course.rutalumno }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Pasaprte Alumno</label>
+                                        <input type="text" class="form-control required rut" name="pasaportealumno" id="pasaportealumno" maxlength="20" readonly value="{{ course.pasaporte }}" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre Alumno</label>
+                                        <input type="text" class="form-control required" name="nombrealumno" id="nombrealumno" maxlength="100" readonly value="{{ course.nombrealumno }}"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="control-label">Fecha Nacimiento</label><br>
+                                    <div class="col-md-7 no-padding">
+                                        <div class="input-group">
+<!---                                            <input type="text" name="fechanac" id="fechanac" class="form-control" data-format="dd-mm-yyyy" value="{{ fecha_hoy }}"> -->
+                                                <input
+                                                type="date"
+                                                id="fechanac"
+                                                name="fechanac"
+                                                value="{{ fecha_hoy }}" 
+                                                max="{{ fecha_hoy }}" 
+                                                />
+                                            <!--    
+                                            <div class="input-group-addon">
+                                            <a href="#"><i class="fa fa-calendar"></i></a>
+                                            </div>
+                                        -->
+                                        </div>
+                                    </div>
+                                </div>                                  
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Rut Apoderado</label>
+                                        <input type="text" class="form-control required rut" name="rutapoderado" id="rutapoderado" maxlength="20" readonly value="{{ course.rutapod }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre Apoderado</label>
+                                        <input type="text" class="form-control required" name="nombreapoderado" id="nombreapoderado" maxlength="100" readonly value="{{ course.nombreapod }}"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab2">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Calle</label>
+                                        <input type="text" class="form-control required" name="calle" id="calle" maxlength="100" value="{{ course.dircalle }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Numero</label>
+                                        <input type="text" class="form-control required" name="numdir" id="numdir" maxlength="100" value="{{ course.dirnumero }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Depto</label>
+                                        <input type="text" class="form-control" name="numdepto" id="numdepto" maxlength="100" value="{{ course.nrodepto }}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Región</label>
+                                            <select class="form-control required box_select" name="region_id" id="region_id">
+                                                <option value="">Seleccionar</option>
+                                                    {% for region in regions %} 
+													{% set activo = 'selected="selected"' if region.id == course.region_id else '' %}
+                                                        <option value="{{ region.id }}" {{activo}}>{{ region.description }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label class="control-label">Comuna</label>
+                                            <select class="form-control required box_select" name="commune_id" id="commune_id">
+                                                <option value="">Seleccionar</option>
+                                                    {% for commune in communes %}
+														{% set activo = 'selected="selected"' if commune.id == course.comuna_id  else '' %}
+                                                        <option value="{{commune.id}}" {{ activo }}>commune.description</option>
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>	
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Fono</label>
+                                        <input type="text" class="form-control required" name="fono" id="fono" maxlength="100" value="{{ course.fono }}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Celular</label>
+                                        <input type="text" class="form-control" name="celular" id="celular" maxlength="100" value="{{ course.celular }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Correo</label>
+                                        <input type="text" class="form-control required" name="correo" id="correo" maxlength="100" value="{{ course.correo }}"/>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab3">
+                    <div class="panel panel-primary">
+                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                             <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Valor</label>
+                                        <input type="text" class="form-control" name="apagar" id="apagar" maxlength="100" value="{{ course.vpagar }}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Descuento</label>
+                                        <input type="text" class="form-control" name="descto" id="descto" maxlength="100" value="{{ course.descto }}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">A Pagar</label>
+                                        <input type="text" class="form-control" name="a_pagar" id="a_pagar" maxlength="100" value="{{ course.apagar }}" readonly/>
+                                    </div>
+                                </div>
+                             </div>
+                             <div class="row">
+                                 <div class="form-group">
+                                        <label class="control-label">¿Liberado?</label>
+                                        <div class="col-md-12 no-padding">
+                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                            <input type="checkbox" name="liberado" id="liberado" value="1" {% if course.liberado == 1 %}checked="checked"{% endif %}>
+                                            <span class="slider"></span>
+                                        </label>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>            
+            <div class="form-group d-flex justify-content-end">
+                <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
+                <a href="/{{ empresa }}/manager/pasajeros" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <input type="hidden" name="id" id="id" value="{{ course.id }}"/>
+            </div>
+        </div>
+    </div>            
+
+</form>    
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/pasajeros/edit.js"></script>
+{% endblock %}

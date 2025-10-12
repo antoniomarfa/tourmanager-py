@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Usuarios{% endblock %}
+
+{% block content %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
+    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/users">Usuarios</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Crear Usuarios</li>
+  </ol>
+</nav>
+
+<div class="container mt-5">
+  <h2>Crear Usuario</h2>
+  <form  id="form" method="post" action="/{{ empresa }}/manager/users/create">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs left-aligned">
+            <li class="nav-item">
+                <a class="nav-link active" id="detalle-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
+                <span><i class="fa fa-info" aria-hidden="true"></i></span>
+                <span>Detalle</span>
+                </a>
+            </li>
+            </ul>
+
+            <div class="tab-content tab-validate">
+
+                <div class="tab-pane active" id="tab1">
+                    <div class="panel panel-primary">
+                        <div class="panel-body form-groups-bordered">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                      
+                                            <label class="control-label">Perfil</label>
+                                            <select class="form-control box_select" name="roles_id" id="roles_id" required>
+                                                <option value="">Seleccionar</option>
+                                                    {% for rol in roles %}
+                                                        <option value="{{rol.id}}">{{rol.description}}</option>
+                                                    {% endfor %}    
+                                            </select>
+                                     
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Compañia</label>
+                                        <select class="form-control required box_select" name="company_id" id="company_id" disabled>
+                                            {% for company in companys %}
+                                            {% set activo = "selected='selected'" if session["company"]|string == company.id|string else "" %} 
+                                            <option value="{{ company.id }}" 
+                                                             {{ activo }}>
+                                                            {{ company.razonsocial }}
+                                            </option>  
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Usuario</label>
+                                        <input type="text" class="form-control" name="user" id="user" maxlength="12" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Nombre</label>
+                                        <input type="text" class="form-control" name="name" id="name" maxlength="100" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Email</label>
+                                        <input type="text" class="form-control email" name="email" id="email" maxlength="100" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Fono</label>
+                                        <input type="text" class="form-control" name="phone" id="phone" value="" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="control-label">Clave</label>
+                                        <input type="password" class="form-control" name="password" id="password" maxlength="10" required/>
+                                    </div>
+                                </div>
+                            </div> <!-- fin row -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">¿Activar Registro?</label>
+                                        <div class="col-md-12 no-padding">
+                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                            <input type="checkbox" name="active" id="active" value="1" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+                /{{ empresa }}/manager//users" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+            </div>
+
+        </div>
+
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/users/create.js"></script>
+{% endblock %}

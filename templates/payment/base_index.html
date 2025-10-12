@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="container mt-5" id="features">
+  <div class="row">
+    <div class="col-sm-9">
+      <h4>Bienvenido(a) <strong>{{ info_index["apoderado"] }}</strong></h4>
+      <h4>Alumno <strong>{{ info_index["alumno"] }}</strong></h4>
+      <h4>Colegio <strong>{{ info_index["colegio"] }}</strong></h4>
+      <h4>Curso <strong>{{ info_index["nomcurso"] }}</strong></h4>
+      <h4>Programa <strong>{{ info_index["programa"] }}</strong></h4>
+    </div>
+    <div class="col-sm-3">
+      <h4>Fecha Último Abono <strong>{{ info_index["fechaultimo"] }}</strong></h4>
+      <h4>Fecha Salida <strong>{{ info_index["fechasalida"] }}</strong></h4>
+    </div>
+  </div>
+  <hr class="my-3" style="height: 2px; background-color: black;">
+</div>
+  <!-- Aquí se carga el contenido dinámico -->
+  {% block payment_content %}{% endblock %}
+
+</div>
+{% endblock %}

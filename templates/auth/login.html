@@ -1,0 +1,196 @@
+ <!DOCTYPE html>
+<html>
+<head>
+   <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .split-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .left-panel {
+      background-color: #f8f9fa;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .card {
+      width: 100%;
+      padding: 20px;
+      display: none;
+      animation-duration: 0.5s;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, #ffffff, #e3e8f1);
+    }
+
+    .card.fade-in {
+      display: block;
+      animation-name: fadeIn;
+    }
+
+    .form-header {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .form-control {
+      padding: 12px 15px;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .enlace-gris {
+      text-decoration: none;
+      color: gray;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body class="bg-light">  
+<div class="split-container">
+  <!-- Columna izquierda: Imagen -->
+  <div class="left-panel">
+    <img src="{{ ruta_image }}" width="600" height="600" alt="Imagen empresa" class="img-fluid">
+  </div>
+
+  <!-- Columna derecha: Login -->
+  <div class="right-panel">
+    <div class="form-wrapper">
+      <h1 class="form-header">Bienvenido</h1>
+
+      <!-- Selección inicial -->
+      <div id="selectionCard" class="card fade-in">
+        <div class="text-center mb-4">
+          <p>¿Cómo deseas ingresar?</p>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-primary" id="btnUserPass">Ingresar con Usuario y Clave</button>
+          <button type="button" class="btn btn-secondary" id="btnAccessCode">Ingresar con Código de Acceso</button>
+        </div>
+      </div>
+
+      <!-- Formulario usuario + clave -->
+      <form id="form_login" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
+        <div id="userCard" class="card fade-in">
+          <div class="mb-3">
+            <label for="username" class="form-label">Usuario</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario" required>
+            </div>
+          </div>
+          <div class="d-grid">
+            <button type="button" class="btn btn-primary" id="toPasswordCard">Siguiente</button>
+          </div>
+        </div>
+
+        <div id="passwordCard" class="card" style="display:none;">
+          <div class="mb-3">
+            <label for="password" class="form-label">Clave</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu clave" required>
+            </div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">Ingresar</button>
+          </div>
+        </div>
+        <br>
+        <div class="enlace-gris text-center">
+          <a href="#">¿Olvidaste tu clave de acceso?</a>
+        </div>     
+      </form>
+
+      <!-- Formulario código de acceso -->
+      <form id="form_access_code" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
+        <div id="accessCodeCard" class="card fade-in">
+          <div class="mb-3">
+            <label for="accesscode" class="form-label">Código de acceso</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="text" class="form-control" id="accesscode" name="accesscode" placeholder="Código de acceso" required>
+            </div>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">Ingresar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div> 
+</div>
+</body>
+</html>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const selectionCard = document.getElementById("selectionCard");
+    const formLogin = document.getElementById("form_login");
+    const formAccessCode = document.getElementById("form_access_code");
+    const userCard = document.getElementById("userCard");
+    const passwordCard = document.getElementById("passwordCard");
+
+    document.getElementById("btnUserPass").addEventListener("click", () => {
+      selectionCard.style.display = "none";
+      formLogin.style.display = "block";
+      userCard.style.display = "block";
+    });
+
+    document.getElementById("btnAccessCode").addEventListener("click", () => {
+      selectionCard.style.display = "none";
+      formAccessCode.style.display = "block";
+    });
+
+    document.getElementById("toPasswordCard").addEventListener("click", () => {
+      userCard.style.display = "none";
+      passwordCard.style.display = "block";
+      passwordCard.classList.add("fade-in");
+    });
+  });
+</script>
