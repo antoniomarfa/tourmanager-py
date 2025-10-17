@@ -16,17 +16,35 @@
   <h2>Lista de Usuarios</h2>
   <hr>
     {% if msg %}
-    <div class="alert alert-success alert-dismissible show" role="alert">
+    <!--
+    <div class="alert alert-success alert-dismissible show" role="alert">   
     {{ msg }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
     </div>
+    -->
+    <script>
+        Swal.fire({
+        title: "Usuarios",
+        text: "{{ msg }}",
+        icon: "success"
+      });
+    </script>
     {% endif %}
 
     {% if error %}
+    <!--
     <div class="alert alert-danger alert-dismissible show" role="alert">
     {{ error }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
     </div>
+    -->
+    <script>
+        Swal.fire({
+        title: "Usuarios",
+        text: "{{ error }}",
+        icon: "danger"
+      });
+    </script>
     {% endif %}   
   <div class="form-group text-right">
         {% if cant_access["can_insert"] %}
@@ -56,7 +74,7 @@
           <td width="15%"> {{ user.author }}</td>
           <td width="15%">
             {% if cant_access["can_update"] %}
-            /{{ empresa }}/manager//users/edit/{{ user.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+            <a href="/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
             {% endif %}
             {% if cant_access["can_delete"] %}
             <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ user.id }}"><i class="fa fa-trash"></i></a>
