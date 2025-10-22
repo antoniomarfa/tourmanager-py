@@ -1,7 +1,7 @@
 import httpx
 
-RENDER_ENDPOINT = "https://tourmanager-3jic.onrender.com/api/v3.5"  # reemplaza con tu URL real
-
+#RENDER_ENDPOINT = "https://tourmanager-3jic.onrender.com/api/v3.5"  # reemplaza con tu URL real
+RENDER_ENDPOINT = "https://stingray-app-trnzb.ondigitalocean.app/api/v3.5"
 class RenderRequest:
    # 
    # def __init__(self, schema=""):

@@ -136,7 +136,7 @@ async def iniciopago(request: Request):
     correo=curso['correo'] 
 
     #Configuración
-    url = 'https://api.mercadopago.com/checkout/preferences';
+    url = 'https://api.mercadopago.com/checkout/preferences'
         
     #Datos de la preferencia
     data = {
@@ -235,36 +235,37 @@ async def iniciopago(request: Request):
 # ==========================
 # Helpers de tu sistema
 # ==========================
-def session_system_value(key: str):
-    # Equivalente a Helper::sessionSystemValue()
-    return "dummy_value"
 
-def get_session(key: str):
-    # Equivalente a Session::get()
-    return "dummy_value"
+#def session_system_value(key: str):
+#    # Equivalente a Helper::sessionSystemValue()
+#    return "dummy_value"
 
-class RenderRequest:
-    def getData(self, table, fields, consulta, extra="", schema=""):
-        # Simula tu llamada a DB
-        return {
-            "data": [
-                {
-                    "additional_config": {
-                        "mp_publickey": "public_key",
-                        "mp_accesstoken": "access_token",
-                        "mp_usersid": "users_id"
-                    }
-                }
-            ]
-        }
+#def get_session(key: str):
+#    # Equivalente a Session::get()
+#    return "dummy_value"
 
-    def updateData(self, table, data, extra, id, schema):
-        print(f"✅ Update en {table}: {data} (ID={id})")
+#class RenderRequest:
+#    def getData(self, table, fields, consulta, extra="", schema=""):
+#        # Simula tu llamada a DB
+#        return {
+#            "data": [
+#                {
+#                    "additional_config": {
+#                        "mp_publickey": "public_key",
+#                        "mp_accesstoken": "access_token",
+#                        "mp_usersid": "users_id"
+#                    }
+#                }
+#            ]
+#        }
 
-    def setData(self, table, data, extra1, extra2, extra3):
-        print(f"✅ Insert en {table}: {data}")
+#    def updateData(self, table, data, extra, id, schema):
+#        print(f"✅ Update en {table}: {data} (ID={id})")
 
-render = RenderRequest()
+#    def setData(self, table, data, extra1, extra2, extra3):
+#        print(f"✅ Insert en {table}: {data}")
+
+#render = RenderRequest()
 
 # ==========================
 # Controlador principal
@@ -298,7 +299,7 @@ async def handle_webhook(request: Request, access_token, users_id):
     if data.get("type") == "payment":
         payment_id = data.get("data", {}).get("id")
         if payment_id:
-            return verify_payment(payment_id, "webhook", access_token, users_id)
+            return verify_payment(request,payment_id, "webhook", access_token, users_id)
         else:
             return Response(content="ID de pago no proporcionado", status_code=400)
     else:
@@ -308,16 +309,16 @@ async def handle_redirect(request: Request, access_token, users_id):
     params = dict(request.query_params)
 
     if "payment_id" in params:
-        return verify_payment(params["payment_id"], "redirect", access_token, users_id)
+        return verify_payment(request,params["payment_id"], "redirect", access_token, users_id)
     elif "preference_id" in params:
-        return verify_preference(params["preference_id"], access_token, users_id)
+        return verify_preference(request,params["preference_id"], access_token, users_id)
     else:
         return Response(content="Parámetros requeridos no encontrados", status_code=400)
 
 # ==========================
 # Verificar pago y preferencia
 # ==========================
-def verify_payment(payment_id, source, access_token, users_id):
+def verify_payment(request: Request,payment_id, source, access_token, users_id):
     url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
     headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -331,9 +332,9 @@ def verify_payment(payment_id, source, access_token, users_id):
     with open("payments.log", "a") as f:
         f.write(f"[{datetime.now()}] {source} - Payment ID: {payment_id}, Status: {payment['status']}\n")
 
-    return process_payment_status(payment, source, users_id)
+    return process_payment_status(request,payment, source, users_id)
 
-def verify_preference(preference_id, access_token, users_id):
+def verify_preference(request: Request,preference_id, access_token, users_id):
     url = f"https://api.mercadopago.com/checkout/preferences/{preference_id}"
     headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -347,7 +348,7 @@ def verify_preference(preference_id, access_token, users_id):
 
         if "results" in search_data and len(search_data["results"]) > 0:
             latest_payment = search_data["results"][0]
-            return process_payment_status(latest_payment, "redirect", users_id)
+            return process_payment_status(request,latest_payment, "redirect", users_id)
         else:
             return Response(content="No se encontraron pagos para esta preferencia", status_code=404)
     else:
@@ -356,7 +357,7 @@ def verify_preference(preference_id, access_token, users_id):
 # ==========================
 # Procesar estado del pago
 # ==========================
-def process_payment_status(payment, source, users_id):
+def process_payment_status(request: Request,payment, source, users_id):
     if not validate_payment(payment, users_id):
         return Response(content="Pago no válido para esta cuenta", status_code=403)
 
@@ -365,52 +366,188 @@ def process_payment_status(payment, source, users_id):
 
     if status == "approved":
         message = f"Pago aprobado! ID: {payment['id']}"
-        complete_order(payment)
+        complete_order(request,payment)
     elif status == "pending":
         message = f"Pago pendiente: {payment.get('status_detail')}"
-        pending_order(payment)
+        pending_order(request,payment)
     elif status == "rejected":
         message = f"Pago rechazado: {payment.get('status_detail')}"
-        cancel_order(payment)
+        cancel_order(request,payment)
     else:
         message = f"Estado desconocido: {status}"
 
     if source == "webhook":
         return {"status": "success", "message": message}
     else:
-        return Response(content=show_payment_status_page(payment, message), media_type="text/html")
+        return Response(show_payment_status_page(payment, message), media_type="text/html")
 
 # ==========================
 # Validaciones y lógica de negocio
 # ==========================
-def validate_payment(payment, users_id):
+def validate_payment(request: Request,payment, users_id):
     collector_id = payment.get("collector_id")
     if collector_id != users_id:
         return False
 
-    expected_amount = get_expected_amount(payment.get("external_reference"))
+    expected_amount = get_expected_amount(request,payment.get("external_reference"))
     if expected_amount and payment.get("transaction_amount") != expected_amount:
         return False
 
     return True
 
-def get_expected_amount(order_id):
-    return get_session("montopagado")
+def get_expected_amount(request: Request,order_id):
+    return request.session.get("montopagado")
 
 # ==========================
 # Funciones de órdenes
 # ==========================
-def complete_order(payment):
+async def complete_order(request:Request,payment):
     print("✅ Orden completada:", payment["id"])
+    schema_name = request.session.get("schema")
+    company_id=int(request.session.get('company'))
+    #Marcar orden como completada en tu base de datos
+
+    identificador= payment["external_reference"]
+
+    #Buscar el ingreso yla venta 
+    consulta=f'identificador={identificador}&company_id={company_id}'
+    response = await api.get_data("ingreso",query=consulta,schema=schema_name)
+    ingreso=response['data'][0] if response['status']=='success' else []
+        
+    transaccion= payment["order"]["id"]
+    montoingreso=ingreso["monto"]
+    fechaingreso = datetime.fromisoformat(payment["date_created"].replace("Z", "+00:00")).date()
+    fechatrans= datetime.fromisoformat(payment["date_created"].replace("Z", "+00:00")).date()
+    fechaauto=datetime.fromisoformat(payment["date_created"].replace("Z", "+00:00")).date()
+    codigoauto=payment["authorization_code"]
+    nrotarjeta=payment["last_four_digits"]
+    tipopago='MP'
+    media=payment["payment_method_id"]
+    NroVta=ingreso["sale_id"]
+    RutAl=ingreso["rutalum"] 
+
+    if len(ingreso)>0:
+        _ingreso=ingreso['id']
+        id=ingreso['id']
+        _venta=ingreso['sale_id']
+        _nrocuotas=ingreso['nrocuotas']
+        _valorcuota=ingreso['valorcuota']
+        _fechainicial=ingreso['fechainicial']
+     
+
+    if _nrocuotas>0:
+        _dia=_fechainicial[8:10]
+        _mes=_fechainicial[5:7]
+        _agno=_fechainicial[:4]
+
+        for i in range(_nrocuotas):
+            cuota=i+1
+            dato={
+                "tipocom":"COW",
+                "ingreso_id":_ingreso,
+                "identificador":identificador,
+                "fecha":fechaingreso,
+                "sale_id":_venta,
+                "rutalumn":RutAl,
+                "transaccion":transaccion, 
+                "tipo":tipopago,
+                "monto":_valorcuota,
+                "nrotarjeta":nrotarjeta,
+                "codigoAuto": codigoauto,
+                "fechaAuto":fechaauto,
+                "tipopago":media,
+                "nrocuota": 0,
+                "fechatransac":fechatrans,
+                "activo":1,
+                "author":"",
+                "cuotapagada":cuota,
+                "cuotafecha":_agno + _mes
+                }
+                
+            insert = await api.set_data("pagos",body=json.dumps(dato), schema=schema_name)
+            _mes+=1
+
+            if _mes>12:
+                _mes=1
+                _agno+=1
+            
+
+            _mes=_mes.zfill(2)
+
+                
+    else:
+        dato={
+            "tipocom":"COW",
+            "ingreso_id":'.$_ingreso.',
+            "identificador":"'.$nroingreso.'",
+            "fecha":"'.$fechaingreso.'",
+            "sale_id":'.$_venta.',
+            "rutalumn":"'.$RutAl.'",
+            "transaccion":"'.$transaccion.'", 
+            "tipo":"'.$tipopago.'",
+            "monto":'.$montoingreso.',
+            "nrotarjeta":"",
+            "codigoAuto":"",
+            "fechaAuto":"'.$fechaauto.'",
+            "tipopago":"'.$media.'",
+            "nrocuota": 0,
+            "fechatransac":"'.$fechatrans.'",
+            "activo":1,
+            "author":"",
+            "cuotapagada":0,
+            "cuotafecha":""
+        }
+
+        insert = await api.set_data("pagos",body=json.dumps(dato), schema=schema_name)
+
+        _status= "Pagado"
+        dato = {
+               "status_pago":_status
+            }
+
+        update = await api.update_data("ingreso",body=json.dumps(dato),id=ingreso["id"],schema=schema_name)
+            
     # Aquí implementa lógica de actualización en DB (render.updateData / render.setData)
 
-def pending_order(payment):
+async def pending_order(request: Request,payment):
     print("⌛ Orden pendiente:", payment["id"])
     # Actualiza estado a "Pendiente de Pago"
+    schema_name = request.session.get("schema")
+    company_id=int(request.session.get('company'))
 
-def cancel_order(payment):
+    identificador= payment["external_reference"]
+    consulta=f'identificador={identificador}&company_id={company_id}'
+    response = await api.get_data("ingreso",query=consulta,schema=schema_name)
+    ingreso=response['data'][0] if response['status']=='success' else []    
+
+    _status= "Pendiente de Pago "
+
+    _status= "Pagado"
+    dato = {
+               "status_pago":_status
+            }
+
+    update = await api.update_data("ingreso",body=json.dumps(dato),id=ingreso["id"],schema=schema_name)
+ 
+async def cancel_order(request: Request,payment):
     print("❌ Orden cancelada:", payment["id"])
     # Actualiza estado a "Transacción Rechazada"
+    schema_name = request.session.get("schema")
+    company_id=int(request.session.get('company'))
+
+    identificador= payment["external_reference"]
+    consulta=f'identificador={identificador}&company_id={company_id}'
+    response = await api.get_data("ingreso",query=consulta,schema=schema_name)
+    ingreso=response['data'][0] if response['status']=='success' else []    
+
+    _status= "Transaccion Rechazada "
+
+    _status= "Pagado"
+    dato = {
+               "status_pago":_status
+            }
+
+    update = await api.update_data("ingreso",body=json.dumps(dato),id=ingreso["id"],schema=schema_name)
 
 async def show_payment_status_page(request: Request,payment, message):
 
@@ -422,7 +559,7 @@ async def show_payment_status_page(request: Request,payment, message):
     form_view["external_reference"]=payment['external_reference'];    
 
     return templates.TemplateResponse(
-        "mercadopago/csuccess.html",
+        "mercadopago/success.html",
         {
             "request": request,
             "session": request.session,
