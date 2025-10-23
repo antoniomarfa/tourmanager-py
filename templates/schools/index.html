@@ -59,10 +59,10 @@
                     <td>{{ school.comuna }}</td>
                     <td>
                         {% if cant_access["can_update"] %}
-                        <a href="/{{ empresa }}/manager/schools/edit/{{ school.id }}" class="btn btn-sm btn-outline-warning"><i class="fa fa-edit"></i></a>
+                        <a href="/{{ empresa }}/manager/schools/edit/{{ school.id }}" class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
                         {% endif %}
                         {% if cant_access["can_delete"] %}
-                        <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ school.id }}"><i class="fa fa-trash"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ school.id }}" data-bs-toggle="tooltip" title="Eliminar"><i class="fa fa-trash"></i></a>
                         {% endif %}
                     </td>
                 </tr>

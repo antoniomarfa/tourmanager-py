@@ -42,126 +42,190 @@
                 </div>
              </div>
         </div>
-<!----   inicio   --->
-        <div class="panel panel-primary dynamic-element hidden">  <!-- 0 -->
-            <div class="panel-body form-groups-bordered">
+      <hr>  
+     <div class="panel panel-primary dynamic-element">  <!-- 0 -->
+         <div class="panel-body form-groups-bordered">
 
-                <div class="col-md-12 matriz-content hidden">  <!-- 0 -->
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <label class="control-label">Desde</label>
+               <div class="col-md-12 matriz-content d-none">  <!-- 0 -->
+                   <div class="row">
+                       <div class="col-lg-2 col-md-2">
+                           <div class="form-group">
+                              <label class="control-label">Desde</label>
+                           </div>
+                       </div>
+                       <div class="col-lg-2 col-md-2">
+                           <div class="form-group">
+                                <label class="control-label">Hasta</label>
+                           </div>
+                       </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                     <label class="control-label">Liberados</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                 <label class="control-label">Hasta</label>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Valor</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <label class="control-label">Liberados</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                            <label class="control-label">Monto</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3"></div>
-                    </div>
-                </div>
-                <div class="col-md-12 matriz-content hidden">  <!-- 1 -->
-                    <div class="row">
-                          <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="desde[]"  class="form-control desde-monto text-right required" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                         <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="hasta[]" class="form-control hasta-monto text-right required" onkeypress="return FunctioonlyNum(event)" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="liberado[]" class="form-control porcentaje text-right required" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                         <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="monto[]" class="form-control porcentaje text-right required" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                             <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                            <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3"></div>
                         </div>
                     </div>
-                </div>
-           </div>
-        </div>
-<!----   inicio 2   --->               
-        <div class="panel panel-primary dynamic-element">  <!-- 1 -->
-            <div class="panel-body form-groups-bordered">
+                    <div class="col-md-12 matriz-content d-none">  <!-- 1 -->
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="desde[]"  class="form-control desde-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="hasta[]" class="form-control hasta-monto text-right" onkeypress="return FunctioonlyNum(event)" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="liberado[]" class="form-control porcentaje text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+<!----   inicio 2   --->
+            {% if not programad %}                   
+            <div class="panel panel-primary dynamic-element">  <!-- 1 -->
+                <div class="panel-body form-groups-bordered">
 
-                <div class="col-md-12 matriz-content"> 
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <label class="control-label">Desde</label>
+                    <div class="col-md-12 matriz-content"> 
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Desde</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                 <label class="control-label">Hasta</label>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                     <label class="control-label">Hasta</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <label class="control-label">Liberados</label>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                     <label class="control-label">Liberado</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <label class="control-label">Monto</label>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Monto</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3"></div>
-                    </div>
-                </div>
-                <div class="col-md-12 matriz-content">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="desde[]"  class="form-control desde-monto text-right required" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="hasta[]" class="form-control hasta-monto text-right required" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="liberado[]" class="form-control porcentaje text-right required" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <div class="form-group">
-                                <input type="text" name="monto[]" class="form-control porcentaje text-right required" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-5 col-xs-4">
-                            <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                            <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3"></div>
                         </div>
                     </div>
-                </div>
-           </div>
-        </div>
+                    <div class="col-md-12 matriz-content">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="desde[]"  class="form-control desde-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="hasta[]" class="form-control hasta-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="liberado[]" class="form-control hasta-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
 <!----   display   --->
+           {% else %} 
+            <div class="panel panel-primary dynamic-element">
+                <div class="panel-body form-groups-bordered">
+
+                    <div class="col-md-12 matriz-content">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Desde</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                     <label class="control-label">Hasta</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Liberado</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">Monto</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3"></div>
+                        </div>
+                    </div>
+                    {% for program in programad %}
+                    <div class="col-md-12 matriz-content">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="desde[]"  class="form-control desde-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value="{{ program.desde }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="hasta[]" class="form-control hasta-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value="{{ program.hasta }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="liberado[]" class="form-control hasta-monto text-right" onkeypress="return FunctioonlyNum(event)" name="unidad" id="unidad" maxlength="10" value="{{ program.liberado }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value="{{ program.valor }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2">
+                                <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+               </div>
+            </div>
+           {% endif %} 
 <!----   fin   --->
+        <hr>
         <div class="panel panel-primary">
             <div class="panel-body form-groups-bordered">
 
@@ -181,7 +245,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3 col-md-offset-3">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Ciudad Destino</label>
                                 <select class="form-control required box_select" name="destination" id="destination">
@@ -206,7 +272,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-md-offset-2">
+                             <div class="col-md-2">
+                            </div>
+                           <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Aeropuerto Destino</label>
                                     <select class="form-control required box_select" name="destinationcode" id="destinationcode">
@@ -219,24 +287,25 @@
                             </div>                            
                         </div>                        
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label">¿Activar Registro?</label>
-                        <div class="col-md-12 no-padding">
-                            <span class="me-2">No</span>
-                            <label class="make-switch" data-on-label="SI" data-off-label="NO">
-                                <input type="checkbox" name="active" id="active" value="1" checked>
-                                <span class="slider"></span>
-                            </label>
-                            <span class="me-2">Si</span>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">¿Activar Registro?</label>
+                                    <div class="col-md-12 no-padding">
+                                        <span class="me-2">No</span>
+                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                            <input type="checkbox" name="active" id="active" value="1" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span class="me-2">Si</span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="clearfix"></div>
-                    </div>
                 </div>
             </div>
+            <br>
             <div class="form-group d-flex justify-content-end">
                 <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
                 <a href="/{{ empresa }}/manager/programs" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>

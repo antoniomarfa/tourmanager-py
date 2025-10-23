@@ -49,12 +49,12 @@ async def create_form(request: Request):
     response = await api.get_data("country",schema="global")  # Suponiendo que el servicio se llama 'users'    
     countrys = response["data"] if response["status"] == "success" else []    
     response = await api.get_data("airports",schema="global")  # Suponiendo que el servicio se llama 'users'    
-    airports = response["data"] if response["status"] == "success" else []    
+    airports = response["data"] if response["status"] == "success" else []      
 
-    programd = {}
+    programd = []
     response = await api.get_data("roles",schema=schema_name)  # Suponiendo que el servicio se llama 'users'    
     roles = response["data"] if response["status"] == "success" else []    
-    return templates.TemplateResponse("programs/create.html", {"request": request, "roles":roles, "countrys":countrys,"airports":airports,"programd":programd,"session": request.session,"empresa":empresa})
+    return templates.TemplateResponse("programs/create.html", {"request": request, "roles":roles, "countrys":countrys,"airports":airports,"programad":programd,"session": request.session,"empresa":empresa})
 
 
 # Crear programas vía API

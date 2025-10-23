@@ -51,7 +51,7 @@
         <a href="/{{ empresa }}/manager/users/create" class="btn btn-success mb-3"><i class="fa fa-file-text" aria-hidden="true"></i> Nuevo</a>
         {% endif %}
   </div>
-  <table class="table table-bordered" id="userTable">
+  <table class="table table-bordered table-hover" id="userTable">
     <thead>
       <th>Usuario</th>
       <th>Nombre</th>
@@ -74,10 +74,10 @@
           <td width="15%"> {{ user.author }}</td>
           <td width="15%">
             {% if cant_access["can_update"] %}
-            <a href="/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+            <a href="/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-outline-warning"data-bs-toggle="tooltip" title="Editar" ><i class="fa fa-edit"></i></a>
             {% endif %}
             {% if cant_access["can_delete"] %}
-            <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ user.id }}"><i class="fa fa-trash"></i></a>
+            <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ user.id }}" data-bs-toggle="tooltip" title="Eliminar"><i class="fa fa-trash"></i></a>
             {% endif %}
             </form>
           </td>

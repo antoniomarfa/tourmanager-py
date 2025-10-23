@@ -24,7 +24,7 @@ function FunctioonlyNum(evt) {
 
 jQuery(document).on('click', '.insert-dynamic', function() {
     $('.dynamic-element:eq(0) .matriz-content:eq(1)').clone().insertAfter($(this).closest('.matriz-content')).show();
-    $(this).closest('.panel-primary').find('.matriz-content').removeClass('hidden');
+    $(this).closest('.panel-primary').find('.matriz-content').removeClass('d-none');
 });
 
 jQuery(document).on('click', '.delete-dynamic', function() {

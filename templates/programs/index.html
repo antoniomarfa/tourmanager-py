@@ -20,9 +20,9 @@
         <a href="/{{ empresa }}/manager/programs/create" class="btn btn-success mb-3"><i class="fa fa-file-text" aria-hidden="true"></i> Nuevo</a>
         {% endif %}
   </div>
-    <table class="table table-bordered datatable" id="programsTable">
+    <table class="table table-bordered table-hover" id="programsTable">
         <thead>
-        <tr class="replace-inputs">
+        <tr>
             <th>Codigo</th>
             <th>Descripcion</th>
             <th>Estado</th>
@@ -43,10 +43,10 @@
                     <td width="15%">{{ program.author }}</td>
                     <td width="15%">
                         {% if cant_access["can_update"] %}                        
-                        <a href="/{{ empresa }}/manager/programs/edit/{{ program.id }}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+                        <a href="/{{ empresa }}/manager/programs/edit/{{ program.id }}" class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
                         {% endif %}
                         {% if cant_access["can_delete"] %}
-                        <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ program.id }}"><i class="fa fa-trash"></i></a>
+                        <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ program.id }}" data-bs-toggle="tooltip" title="Eliminar"><i class="fa fa-trash"></i></a>
                         {% endif %}
                     </td>
                 </tr>
