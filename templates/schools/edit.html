@@ -4,15 +4,23 @@
 
 {% block content %}
 
-
-<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/index">Home</a></li>
-    <li class="breadcrumb-item"><a href="/schools">Colegios</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Editar Colegios</li>
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/index">
+        <i class="bi bi-house-door-fill me-1"></i> Home
+      </a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/schools">
+        <i class="bi bi-grid me-1"></i> Colegios
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <i class="bi bi-pencil-square me-1"></i> Edita Colegios
+    </li>
   </ol>
 </nav>
-
 <div class="container mt-5">
   <h2>Editar Colegio</h2>
 <form role="form" id="form" method="post" action="/{{ empresa }}/manager/schools/update" enctype="multipart/form-data" class="custom-validate form-groups-bordered">

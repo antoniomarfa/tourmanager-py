@@ -4,10 +4,16 @@
 
 {% block content %}
 
-<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Ingresos</li>
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/index">
+        <i class="bi bi-house-door-fill me-1"></i> Home
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <i class="bi bi-pencil-square me-1"></i> Ingresos
+    </li>
   </ol>
 </nav>
 

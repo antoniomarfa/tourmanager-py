@@ -4,36 +4,50 @@
 
 {% block content %}
 
-<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/index">Home</a></li>
-    <li class="breadcrumb-item"><a href="/{{ empresa }}/manager/programs">programas</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Editar Programas</li>
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/index">
+        <i class="bi bi-house-door-fill me-1"></i> Home
+      </a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/programs">
+        <i class="bi bi-grid me-1"></i> Programas
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <i class="bi bi-pencil-square me-1"></i> Editar Programa
+    </li>
   </ol>
 </nav>
 
 <div class="container mt-5">
   <h2>Editar Programas</h2>  
 <form role="form" id="form1" method="post" action="/{{ empresa }}/manager/programs/update">
-    <div class="row"> 
-        <div class="col-md-3">    
-            <div class="form-group">
-                 <label class="control-label">Codigo</label>
-                 <input type="text" class="form-control" readonly="true" name="codigo" id="codigo" maxlength="12"  value="{{ programac.code }}"/>
-             </div>
-        </div>
-        <div class="col-md-6 offset-md-3">
-            <div class="form-group">
-                <label class="control-label">Descripcion</label>
-                <input type="text" class="form-control required" name="nombre" id="nombre" readonly="true" maxlength="100"  value="{{ programac.name }}"/>
+    <div class="panel panel-primary">
+         <div class="panel-body form-groups-bordered">    
+            <div class="row"> 
+                <div class="col-md-3">    
+                    <div class="form-group">
+                        <label class="control-label">Codigo</label>
+                        <input type="text" class="form-control" readonly="true" name="codigo" id="codigo" maxlength="12"  value="{{ programac.code }}"/>
+                    </div>
+                </div>
+                <div class="col-md-6 offset-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Descripcion</label>
+                        <input type="text" class="form-control required" name="nombre" id="nombre" readonly="true" maxlength="100"  value="{{ programac.name }}"/>
+                    </div>
+                </div>
             </div>
-         </div>
-    </div>
-    <div class="row"> 
-        <div class="col-md-2">
-            <div class="form-group">
-                <label class="control-label">Valor Reserva PP</label>
-                <input type="text" class="form-control required text-right" name="reserva" id="reserva" maxlength="12"  value="{{ programac.reserva }}"/>
+            <div class="row"> 
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label">Valor Reserva PP</label>
+                        <input type="text" class="form-control required text-right" name="reserva" id="reserva" maxlength="12"  value="{{ programac.reserva }}"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -89,7 +103,7 @@
                                     <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 d-flex gap-2">
+                            <div class="col-lg-2 col-md-2">
                                 <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
                             </div>
@@ -149,7 +163,7 @@
                                     <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value=""/>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 d-flex gap-2">
+                            <div class="col-lg-2 col-md-2">
                                 <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
                             </div>
@@ -210,7 +224,7 @@
                                     <input type="text" name="monto[]" class="form-control porcentaje text-right" onkeypress="return valideKey(event)" name="unidad" id="unidad" maxlength="10" value="{{ program.valor }}"/>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 d-flex gap-2">
+                            <div class="col-lg-2 col-md-2">
                                 <button type="button" class="btn btn-danger delete-dynamic"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                 <button type="button" class="btn btn-warning insert-dynamic"><i class="fa fa-plus" aria-hidden="true"></i></button>
                             </div>
