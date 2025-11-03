@@ -1,22 +1,24 @@
 jQuery.noConflict();
-document.addEventListener('DOMContentLoaded', function () {
-  $('#Modaldato').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Bot贸n que activ贸 el modal
-    var gatewayId = button.data('gateway-id');
-    var gatewayType = button.data('gateway-type');
-    // Asigna valores a elementos del modal
-    $('#Modaldato input[name="gateway_id"]').val(gatewayId);
-    $('#Modaldato .modal-title').text('Integrar con ' + gatewayType);
-    
-    // Mostrar u ocultar el panel seg煤n el ID
-    //  $('.panel-flow, .panel-trbk, .panel-mp').addClass('d-none');
+jQuery( document ).ready( function( $ ) {
+  document.addEventListener('DOMContentLoaded', function () {
+  //  $('#Modaldato').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Bot贸n que activ贸 el modal
+      var gatewayId = button.data('gateway-id');
+      var gatewayType = button.data('gateway-type');
+      // Asigna valores a elementos del modal
+      $('#Modaldato input[name="gateway_id"]').val(gatewayId);
+      $('#Modaldato .modal-title').text('Integrar con ' + gatewayType);
+      
+      // Mostrar u ocultar el panel seg煤n el ID
+      //  $('.panel-flow, .panel-trbk, .panel-mp').addClass('d-none');
 
-      switch (gatewayId.toString()) {
-         case "3": $('.panel-flow').removeClass('d-none'); break;
-         case "2": $('.panel-trbk').removeClass('d-none'); break;
-         case "1": $('.panel-mp').removeClass('d-none'); break;
-      }
+        switch (gatewayId.toString()) {
+          case "3": $('.panel-flow').removeClass('d-none'); break;
+          case "2": $('.panel-trbk').removeClass('d-none'); break;
+          case "1": $('.panel-mp').removeClass('d-none'); break;
+        }
 
+//    });
   });
 });
 

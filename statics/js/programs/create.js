@@ -1,3 +1,11 @@
+jQuery( document ).ready( function( $ ) {
+
+    $('#origin').select2();
+    $('#destination').select2();
+    $('#origincode').select2();
+    $('#destinationcode').select2();
+})
+
 function valideKey(evt){
     var c =(evt.which) ? evt.which : evt.keyCode;
     var rgx = /^[0-9]*\.?[0-9]*$/;

@@ -100,65 +100,91 @@
         </div>
 
         <div class="modal-body">
-          <input type="hidden" name="gateway_id" id="gateway_id"/>      
+          <input type="hidden" name="gateway_id" id="gateway_id" />
 
-          <div class="card d-none panel-flow">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="apikey" class="form-label">Api Key</label>
-                  <input type="text" class="form-control" name="apikey" id="apikey" />
+          <!-- Panel: Flow -->
+          <div class="card mb-3 shadow-sm border-0 d-none panel-flow">
+            <div class="card-header bg-primary text-white py-2">
+              <i class="bi bi-lightning-charge me-1"></i> Configuración de Flow
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="apikey" class="form-label">API Key</label>
+                  <input type="text" class="form-control" name="apikey" id="apikey" placeholder="Ingresa tu API Key" />
+                  <small class="form-text text-muted">
+                    Clave proporcionada por Flow para autenticar las solicitudes a su API.
+                  </small>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
+                <div class="col-md-6">
                   <label for="secretkey" class="form-label">Secret Key</label>
-                  <input type="text" class="form-control" name="secretkey" id="secretkey" />
+                  <input type="text" class="form-control" name="secretkey" id="secretkey" placeholder="Ingresa tu Secret Key" />
+                  <small class="form-text text-muted">
+                    Llave secreta asociada a tu cuenta de Flow. No la compartas públicamente.
+                  </small>
                 </div>
               </div>
-            </div>        
-          </div>        
+            </div>
+          </div>
 
-          <div class="card d-none panel-trbk">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="comercialcode" class="form-label">Código Comercial</label>
-                  <input type="text" class="form-control" name="comercialcode" id="comercialcode" />
+          <!-- Panel: Transbank -->
+          <div class="card mb-3 shadow-sm border-0 d-none panel-trbk">
+            <div class="card-header bg-danger text-white py-2">
+              <i class="bi bi-credit-card-2-front me-1"></i> Configuración de Transbank
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="comercialcode" class="form-label">Código de Comercio</label>
+                  <input type="text" class="form-control" name="comercialcode" id="comercialcode" placeholder="Ej: 597020000540" />
+                  <small class="form-text text-muted">
+                    Código único que identifica tu comercio ante Transbank.
+                  </small>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
+                <div class="col-md-6">
                   <label for="keysecret" class="form-label">Secret Key</label>
-                  <input type="text" class="form-control" name="keysecret" id="keysecret" />
+                  <input type="text" class="form-control" name="keysecret" id="keysecret" placeholder="Ingresa tu llave secreta" />
+                  <small class="form-text text-muted">
+                    Llave privada generada por Transbank para firmar transacciones.
+                  </small>
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
 
-          <div class="card d-none panel-mp">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
+          <!-- Panel: Mercado Pago -->
+          <div class="card mb-3 shadow-sm border-0 d-none panel-mp">
+            <div class="card-header bg-info text-white py-2">
+              <i class="bi bi-wallet2 me-1"></i> Configuración de Mercado Pago
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
                   <label for="usersid" class="form-label">ID Usuario</label>
-                  <input type="text" class="form-control" name="usersid" id="usersid" />
+                  <input type="text" class="form-control" name="usersid" id="usersid" placeholder="Ingresa tu ID de usuario" />
+                  <small class="form-text text-muted">
+                    Identificador de usuario asignado por Mercado Pago.
+                  </small>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
+                <div class="col-md-6">
                   <label for="publickey" class="form-label">Public Key</label>
-                  <input type="text" class="form-control" name="publickey" id="publickey" />
+                  <input type="text" class="form-control" name="publickey" id="publickey" placeholder="Ingresa tu Public Key" />
+                  <small class="form-text text-muted">
+                    Clave pública utilizada para inicializar el checkout o SDK de Mercado Pago.
+                  </small>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
+                <div class="col-md-6">
                   <label for="accesstoken" class="form-label">Access Token</label>
-                  <input type="text" class="form-control" name="accesstoken" id="accesstoken" />
+                  <input type="text" class="form-control" name="accesstoken" id="accesstoken" placeholder="Ingresa tu Access Token" />
+                  <small class="form-text text-muted">
+                    Token de acceso privado usado para realizar operaciones seguras en la API.
+                  </small>
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
+
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

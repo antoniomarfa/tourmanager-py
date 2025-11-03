@@ -125,7 +125,7 @@ async def create(request: Request):
 
 
 
-# Mostrar formulario de creación
+# Mostrar formulario de edicion
 @router.get("/edit/{rol_id}", response_class=HTMLResponse)
 async def create_form(request: Request,rol_id:int):
     empresa = request.state.empresa 
@@ -158,12 +158,11 @@ async def create_form(request: Request,rol_id:int):
 @router.post("/update")
 async def create(request: Request):
     empresa = request.state.empresa 
-    
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")    
     form_data = await request.form()
     schema_name = request.session.get("schema")
-    rol_id = int(form_data.get("id"))
+    role_id = int(form_data.get("id"))
 
     # --- Cabecera (rol) ---
     role_payload = {
@@ -171,19 +170,21 @@ async def create(request: Request):
         "author": request.session.get("user_name"),
     }
 
-    resp = await api.set_data("roles",id=rol_id, body=json.dumps(role_payload), schema=schema_name)
+    resp = await api.update_data("roles",id=role_id, body=json.dumps(role_payload), schema=schema_name)
     if resp.get("status") != "success":
         request.session["flash_message"] = "error"
         request.session["flash_error"] = resp.get("error", "Error al crear el rol")
         return RedirectResponse(url=f"/{empresa}/manager/roles", status_code=303)
 
-    role_id = resp["data"]["data"]["return_id"]
+    #role_id = resp["data"]["data"]["return_id"]
 
     # --- Debug útil: ver exactamente qué keys llegaron ---
     for k, v in form_data.multi_items():
         print("FORM:", k, "=>", v)
     # --- Elimina todos los permisos y lo graba nuevamente
-    delete = api.delete_data("permission", id=role_id, schema=schema_name)
+    getQuery=f"roles_id={role_id}"
+    delete = api.delete_data("permission", query= getQuery, schema=schema_name)
+    print("delete ",delete)
     # --- Detalle (permissions) ---
     for perm_key in array_permissions.keys():
         # Intenta sin [] y con []
