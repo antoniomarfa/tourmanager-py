@@ -36,7 +36,6 @@
                             <label class="control-label">Fecha Cotizacion</label><br>
                             <div class="col-md-7 no-padding">
                                 <div class="input-group">
-                                <!--    <input type="text" name="quote_date" id="quote_date" class="form-control" data-format="dd-mm-yyyy" value="{{ quote_date }}"> -->
                                     <input
                                         type="date"
                                         id="quote_date"
@@ -45,8 +44,6 @@
                                         max="{{ quote_date }}" 
                                         required
                                      />  
-                                    <!---                                 
-                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div> -->
                                 </div>
                             </div>
                         </div>
@@ -168,7 +165,7 @@
                                 <textarea name="obs" id="obs" cols="60" rows="5" style="width:100%"></textarea>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <div class="input-group">
                                     <label class="control-label">Estado</label>
@@ -184,6 +181,7 @@
                         </div>                            
                     </div>
                 </div>    
+                <br>
                 <div class="form-group d-flex justify-content-end">
                     <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
                     <a href="/{{ empresa }}/manager/quotes" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>

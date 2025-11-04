@@ -26,7 +26,7 @@ async def detectar_empresa(request: Request, call_next):
     # Si la URL comienza con /static o /uploads, no procesamos
     if empresa in ("static", "uploads"):
         return await call_next(request)
-    print("empresa 1 ",empresa)
+
     if empresa:
         request.state.empresa = empresa
 
@@ -35,7 +35,6 @@ async def detectar_empresa(request: Request, call_next):
 
 @app.get("/{empresa}/manager", response_class=HTMLResponse)
 async def login_form(request: Request,empresa: str):
-    print("empresa 2 ",empresa)
     #consulta=f"nomfantasia={empresa}"
     consulta=f"identificador={empresa}"
     respuesta = await api.get_data("company",query=consulta, schema="global")  

@@ -59,14 +59,8 @@ jQuery( document ).ready( function( $ ) {
 
     $('#sel_vendedor').select2();
     $('#sel_programa').select2();
+    $('#status').select2();
 
-    $('#quote_date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        minDate: 0,
-        autoclose: true,
-        todayHighlight: true
-    });
 });
 
 jQuery(document).on("change", "#nroalumno", function() {

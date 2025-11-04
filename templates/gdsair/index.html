@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Pasarrelas de Pago{% endblock %}
+
+{% block content %}
+
+<style>
+    .card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+</style>
+
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/index">
+        <i class="bi bi-house-door-fill me-1"></i> Home
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <i class="bi bi-pencil-square me-1"></i> Consulta Vuelos
+    </li>
+  </ol>
+</nav>
+
+<h3>Consultar Vuelos</h3>
+<br />
+
+<div class="clearfix"></div>
+
+<form role="form" id="form_air" enctype="multipart/form-data">
+    <hr>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Ciudad Origen</label>
+                <select class="form-control required box_select" name="origin" id="origin">
+                    <option value="">Seleccionar</option>
+                        {% for country in countrys %}
+                        {% set activo = "selected='selected'" if country.code == "CL" else "" %}                                             
+                         <option value="{{ country.code }}" {{ activo }} >{{ country.country }}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Ciudad Destino</label>
+                <select class="form-control required box_select" name="destination" id="destination">
+                    <option value="">Seleccionar</option>
+                    {% for country in countrys %} 
+                        <option value="{{ country.code }}">{{ country.country }}</option>
+                    {% endfor%}
+                </select>
+            </div>
+        </div>                            
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Aeropuerto Origen</label>
+                <select class="form-control required box_select" name="origincode" id="origincode">
+                    <option value="">Seleccionar</option>
+                        {% for airport in airports %} 
+                        {% set activo = "selected='selected'" if airport.iata == "SCL" else "" %}                                             
+                        <option value="{{ airport.iata }}" {{ activo }}>{{ airport.name }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Aeropuerto Destino</label>
+                <select class="form-control required box_select" name="destinationcode" id="destinationcode">
+                    <option value="">Seleccionar</option>
+                        {% for airport in airports %} 
+                            <option value="{{ airport.iata }}">{{ airport.name }}</option>
+                        {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>     
+    <div class="row">
+        <div class="col-md-4">
+            <span class="control-label">&nbsp;&nbsp;Fecha Desde</span><br>
+            <div class="col-md-6 no-padding">
+                <div>
+                    <input
+                        type="date"
+                        id="start_date"
+                        name="start_date"
+                        value="{{ start_date }}" 
+                        /> 
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+        </div>
+                    
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Cantidad de Ofertas</label>
+                <select class="form-control required box_select" name="cnt_offers" id="cnt_offers">
+                    <option value="">Seleccionar</option>
+                    {% for i in range(1, 6) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                    </select>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <span class="control-label">&nbsp;</span><br>
+            <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
+                <button id="execute_search" type="button" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Buscar</button>
+            </div>
+        </div>        
+    </div>        
+<hr>
+<div class="col-md-12" id="result">
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/gdsair/index.js"></script>
+{% endblock %}

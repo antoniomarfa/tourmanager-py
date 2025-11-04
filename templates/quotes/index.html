@@ -30,19 +30,18 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-center">
                 <li>
-                    <a class="dropdown-item" href="/quotes/create/ge">
+                    <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/ge">
                     <i class="fa fa-file-text"></i> Gira Estudio
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/quotes/create/vg">
+                    <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/vg">
                     <i class="fa fa-file-text"></i> Viaje Grupal
                     </a>
                 </li>
             </ul>
         </div>
     </div>
-
   {% endif %}
 
 {% if cant_access["can_export"] %}
@@ -62,44 +61,32 @@
 
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <span class="control-label">Fecha Desde</span><br>
+                    <div class="col-md-3">
+                        <span class="control-label">&nbsp;&nbsp;Fecha Desde</span><br>
                         <div class="col-md-6 no-padding">
                             <div>
-                             <!--   <input type="text" name="start_date" id="start_date" class="form-control" data-format="dd-mm-yyyy" value="{{ start_date }}"> -->
                                 <input
                                     type="date"
                                     id="start_date"
                                     name="start_date"
                                     value="{{ start_date }}" 
-                                    max="{{ now_date }}" 
+                                    max="{{ end_date }}" 
                                 /> 
-                                <!--                            
-                                <div class="input-group-addon">
-                                    <a href="#"><i class="fa fa-calendar"></i></a>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span class="control-label">Fecha Hasta</span><br>
                         <div class="col-md-6 no-padding">
                             <div>
-                            <!--    <input type="text" name="end_date" id="end_date" class="form-control" data-format="dd-mm-yyyy" value="{{ end_date }}"> -->
                                 <input
                                     type="date"
                                     id="end_date"
                                     name="end_date"
                                     value="{{ end_date }}" 
-                                    max="{{ now_date }}" 
+                                    max="{{ end_date }}" 
                                 />    
-                                <!--                           
-                                <div class="input-group-addon">
-                                    <a href="#"><i class="fa fa-calendar"></i></a>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>
@@ -118,19 +105,14 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span class="control-label">&nbsp;</span><br>
                         <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
                             <button type="button" class="btn btn-primary search"><i class="fa fa-search"></i> Buscar</button>
                         </div>
                     </div>
-                
                 </div>
-            </div>
-        </div>
+         </div>
     </div>
 </div>
 

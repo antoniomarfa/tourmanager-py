@@ -89,25 +89,23 @@ jQuery( document ).ready( function( $ ) {
         $('#form1').submit();
         $('#form1').attr('action', '/' + empresa + 'manages/sales');
     });    
-/*
-    $('#start_date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-      });
 
-    $('#end_date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-      });
-*/
 });
 
- 
-       
+
+     $('.search').click(function(){
+        
+        if ( $.fn.DataTable.isDataTable('#table-sale') ) {
+            $('#table-sale').DataTable().clear();
+            $('#table-sale').DataTable().destroy();
+        }
+        $('body').loadDataTableDocs();
+        /*
+       var table = $("#table-sale").DataTable();
+       table.ajax.reload();
+*/
+    })
+    
     jQuery(document).on("click", ".cancel-register", function(e) {
     e.preventDefault(); // Evita que el link navegue a "#"
     var id = jQuery(this).attr('data-id');

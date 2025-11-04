@@ -63,7 +63,7 @@ async def index(request: Request):
 @router.post("/gettable", response_class=HTMLResponse)
 async def gettable(request: Request):
     empresa = request.state.empresa 
-    
+
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")
     schema_name = request.session.get("schema")
@@ -71,8 +71,9 @@ async def gettable(request: Request):
     can_delete= await rst.access_permission("quotes", "DELETE", request.session),
 
     form_data = await request.form()
-    start_date= Helper.format_date_action(form_data.get("start_date"))
-    end_date = Helper.format_date_action(form_data.get("end_date"))
+
+    start_date= form_data.get("start_date")
+    end_date = form_data.get("end_date")
     vendedor = form_data.get("vendedor")
 
     company_id=int(request.session.get('company'))
@@ -82,8 +83,8 @@ async def gettable(request: Request):
         consulta +='&seller_id={vendedor}'
                 
     response = await api.get_data("quotes/informe", query=getQuery,schema=schema_name)
+    print("response ",response)
     quotes = response["data"] if response["status"] == "success" else []
-
     table_body = []
 
     if quotes:
@@ -136,7 +137,7 @@ async def gettable(request: Request):
 
         return JSONResponse(content={"data": table_body})
     else:
-        return JSONResponse(content={"data": []})   
+       return JSONResponse(content={"data": []})   
 
 # Mostrar formulario de creación
 @router.get("/create/{type}", response_class=HTMLResponse)
@@ -174,7 +175,7 @@ async def create_form(request: Request,type:str):
   
 
     hoy = datetime.today()
-    fecha_hoy = hoy.strftime("%d/%m/%Y")
+    fecha_hoy = hoy.strftime("%Y-%m-%d")
 
     if type == "vg":    
         return templates.TemplateResponse("quotes/createvg.html", {"request": request, "sellers":sellers, "programs":programs,"quote_date":fecha_hoy,"session": request.session,"empresa":empresa})
@@ -200,11 +201,9 @@ async def create(request:Request):
         curso=int(form_data.get('curso'))
         idcurso=form_data.get('idcurso')
 
-    # Convertir a objeto datetime
-    fecha_obj = datetime.strptime(form_data.get('quote_date'), "%d/%m/%Y")
-
-    # Formatear a m/d/Y
-    quotedate = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"   
+    fecha = form_data.get('quote_date')
+    if fecha:
+        quotedate = datetime.fromisoformat(fecha).strftime('%Y-%m-%dT00:00:00Z')
     
     data = {     
             "fecha": quotedate,

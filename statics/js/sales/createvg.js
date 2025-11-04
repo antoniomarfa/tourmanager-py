@@ -48,37 +48,7 @@ jQuery( document ).ready( function( $ ) {
     $('#sel_cotizacion').select2();
     $('#sel_vendedor').select2();
     $('#sel_programa').select2();
-/*
-    $('#fecha').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-    });
-    
-    $('#fechacuota').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-    });
-
-    $('#fechasal').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-    });
-
-    $('#fecha_ultpag').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        minDate: 0,
-        autoclose: true,
-        todayHighlight: true
-    });
-
-*/
+    $('#status').select2();
 
     $('#vdescuento').change(function(){
        var vtotalprog=0; 

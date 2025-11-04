@@ -37,6 +37,8 @@ jQuery( document ).ready( function( $ ) {
             error.insertAfter(element);
         }
     });  
+    $('#region_id').select2();
+    $('#commune_id').select2();
 });
 
 jQuery(document).on("change", "#region_id", function() {

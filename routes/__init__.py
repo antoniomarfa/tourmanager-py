@@ -17,6 +17,8 @@ from routes.mercadopago_routes import router as mercadopago_routes
 from routes.payment_routes import router as payment_routes
 from routes.gateways_routes import router as gateways_routes
 from routes.entry_routes import router as entry_routes
+from routes.gdsair_routes import router as gdsair_routes
+from routes.gdshotel_routes import router as gdshotel_routes
 
 # Lista de routers centralizada
 all_routers = [
@@ -38,5 +40,7 @@ all_routers = [
     (mercadopago_routes, "/mercadopago"),
     (payment_routes, "/payment"),
     (gateways_routes, "/gateways"),
-    (entry_routes, "/entry")
+    (entry_routes, "/entry"),
+    (gdsair_routes, "/gdsair"),
+    (gdshotel_routes, "/gdshotel")
 ]

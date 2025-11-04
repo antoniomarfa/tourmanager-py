@@ -53,7 +53,7 @@
 {% endif %}
 
 <div class="clearfix"></div>
-<form role="form" id="form" method="post" action="/sales/index">
+<form role="form" id="form" method="post">
 
 <div class="row">
     <div class="col-md-12 col-xs-12 col-sm-12">
@@ -63,32 +63,38 @@
             <div class="panel-body">
                 <div class="row">
 
-                    <div class="col-md-4">
-                        <span class="control-label">Fecha Desde</span><br>
+                    <div class="col-md-3">
+                        <span class="control-label">&nbsp;&nbsp;Fecha Desde</span><br>
                         <div class="col-md-6 no-padding">
-                            <div class="input-group">
-                                <input type="text" name="start_date" id="start_date" class="form-control datepicker" data-format="dd-mm-yyyy" value="{{ start_date }}">
-                                <div class="input-group-addon">
-                                    <a href="#"><i class="fa fa-calendar"></i></a>
-                                </div>
+                            <div>
+                                <input
+                                    type="date"
+                                    id="start_date"
+                                    name="start_date"
+                                    value="{{ start_date }}" 
+                                    max="{{ end_date }}" 
+                                /> 
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <span class="control-label">Fecha Hasta</span><br>
                         <div class="col-md-6 no-padding">
-                            <div class="input-group">
-                                <input type="text" name="end_date" id="end_date" class="form-control datepicker" data-format="dd-mm-yyyy" value="{{ end_date }}">
-                                <div class="input-group-addon">
-                                    <a href="#"><i class="fa fa-calendar"></i></a>
-                                </div>
+                            <div>
+                                <input
+                                    type="date"
+                                    id="end_date"
+                                    name="end_date"
+                                    value="{{ end_date }}" 
+                                    max="{{ end_date }}" 
+                                />    
                             </div>
                         </div>
                     </div>
 
                     <div class="row" style="margin-top:20px;margin-bottom:20px">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Vendedor</label>
                                 <select class="form-control box_select" name="vendedor" id="vendedor">
@@ -102,7 +108,7 @@
                                     </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Colegios</label>
                                 <select class="form-control box_select" name="colegio" id="colegio">
@@ -117,7 +123,7 @@
                         <div class="col-md-2">
                              <span class="control-label">&nbsp;</span><br>
                              <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
-                                 <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                <button type="button" class="btn btn-primary search"><i class="fa fa-search"></i> Buscar</button>
                              </div>
                          </div>
                      </div>
@@ -130,34 +136,33 @@
 
     <div class="col-md-12">
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover nowrap" id="table-sale">
-                <thead>
-                <tr>
-                    <th>Venta</th>
-                    <th>Tipo Venta</th>
-                    <th>Identificador</th>
-                    <th>Fecha</th>
-                    <th>Colegio</th>
-                    <th>Curso</th>
-                    <th>programa</th>
-                    <th>Pasajeros</th>
-                    <th>Liberados</th>
-                    <th>valor</th>
-                    <th>Total</th>
-                    <th>Vendedor</th>
-                    <th>Estado</th>
-                    <th>Alumnos</th>
-                    <th>Lst Pasajeros</th>
-                    <th>Correo</th>
-                    <th>Autor</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-bordered table-hove" id="table-sale">
+            <thead>
+            <tr>
+                <th>Venta</th>
+                <th>Tipo Venta</th>
+                <th>Identificador</th>
+                <th>Fecha</th>
+                <th>Colegio</th>
+                <th>Curso</th>
+                <th>programa</th>
+                <th>Pasajeros</th>
+                <th>Liberados</th>
+                <th>valor</th>
+                <th>Total</th>
+                <th>Vendedor</th>
+                <th>Estado</th>
+                <th>Alumnos</th>
+                <th>Lst Pasajeros</th>
+                <th>Correo</th>
+                <th>Autor</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
     </div>
 </div>
 

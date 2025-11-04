@@ -77,16 +77,16 @@ jQuery( document ).ready( function( $ ) {
     });    
 
     $('.search').click(function(){
-        /*
+        
         if ( $.fn.DataTable.isDataTable('#table-sale') ) {
             $('#table-sale').DataTable().clear();
             $('#table-sale').DataTable().destroy();
         }
         $('body').loadDataTableDocs();
-        */
+        /*
        var table = $("#table-sale").DataTable();
        table.ajax.reload();
-
+*/
     })
 
     jQuery(document).on("click", ".cancel-register", function(e) {
@@ -144,21 +144,7 @@ jQuery( document ).ready( function( $ ) {
         });        
         
     })
-/*
-    $('#start_date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-      });
 
-    $('#end_date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "es",
-        autoclose: true,
-        todayHighlight: true
-      });
-*/
 });
 
 jQuery(document).on("change", "select[name=vendedor]", function() {

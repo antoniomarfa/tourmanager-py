@@ -35,4 +35,6 @@ jQuery( document ).ready( function( $ ) {
             error.insertAfter(element);
         }
     });  
+
+    $('#perfil').select2();
 });

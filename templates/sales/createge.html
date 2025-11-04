@@ -35,7 +35,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-body form-groups-bordered">
                         <div class="row">
-                             <div class="col-md-2">
+                             <div class="col-md-3">
                                  <div class="form-group">
                                      <div class="input-group">
                                          <label class="control-label">Desde Cotizacion</label>
@@ -48,11 +48,10 @@
                                      </div>
                                  </div>
                              </div>                            
-                             <div class="col-md-4">
+                             <div class="col-md-3">
                                  <label class="control-label" for="fecha">Fecha Contrato</label><br>
                                  <div class="col-md-7 no-padding">
                                      <div>
-                                  <!--       <input type="text" name="fecha" id="fecha" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}" required> -->
                                          <input
                                             type="date"
                                             id="fecha"
@@ -61,11 +60,6 @@
                                             max="{{ sales_date }}" 
                                             required
                                          />   
-                                         <!---                               
-                                         <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                         </div>
-                                        -->
                                      </div>
                                  </div>
                              </div>  
@@ -173,66 +167,48 @@
                                   </div>
                               </div>  
                               <div class="col-md-4">
-                                 <label class="control-label">Fecha Inicio Cobro</label><br>
+                                 <label class="control-label" for="fecha">Fecha Inicio Cobro</label><br>
                                  <div class="col-md-7 no-padding">
-                                     <div class="input-group">
-                                    <!--   <input type="text" name="fechacuota" id="fechacuota" class="form-control datepicker" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
+                                     <div>
                                          <input
                                             type="date"
                                             id="fechacuota"
                                             name="fechacuota"
                                             value="{{ sales_date }}" 
-                                            max="{{ sales_date }}" 
+                                            required
                                          />   
-                                         <!--
-                                         <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                         </div>
-                                        -->
                                      </div>
                                  </div>
                              </div>
                         </div>
                         <div class="row">
                               <div class="col-md-4">
-                                 <label class="control-label">Fecha Fin Pagos</label><br>
+                                 <label class="control-label" for="fecha">Fecha Fin Pagos</label><br>
                                  <div class="col-md-7 no-padding">
                                      <div>
-                                  <!--       <input type="text" name="fecha_ultpag" id="fecha_ultpag" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
                                          <input
                                             type="date"
                                             id="fecha_ultpag"
                                             name="fecha_ultpag"
                                             value="{{ sales_date }}" 
-                                            max="{{ sales_date }}" 
                                             required
                                          />   
-                                        <!--
-                                         <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                         </div> -->
                                      </div>
                                  </div>
                              </div>
                             <div class="col-md-4">
-                                 <label class="control-label">Fecha Salida</label><br>
+                                 <label class="control-label" for="fecha">Fecha Salida</label><br>
                                  <div class="col-md-7 no-padding">
                                      <div>
-                                   <!--      <input type="text" name="fechasal" id="fechasal" class="form-control" data-format="dd-mm-yyyy" value="{{ sales_date }}"> -->
                                          <input
                                             type="date"
                                             id="fechasal"
                                             name="fechasal"
                                             value="{{ sales_date }}" 
-                                            max="{{ sales_date }}" 
                                             required
-                                         />
-                                        <!--    
-                                         <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                         </div> -->
+                                         />   
                                      </div>
-                                 </div>
+                                 </div>                                
                              </div>
                         </div>
                         <div class="row mt-3">
@@ -295,6 +271,7 @@
                             </div>
                         </div>
                     </div>    
+                    <br>
                     <div class="form-group d-flex justify-content-end">
                         <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
                         <a href="/{{ empresa }}/manager/sales" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>

@@ -41,11 +41,15 @@ async def index(request: Request):
 
     # Fecha de hoy
     hoy = datetime.today()
-    end_date = hoy.strftime("%d/%m/%Y")
+    now_date = hoy.strftime("%Y-%m-%d")
+
+    # Fecha de hoy
+    hoy = datetime.today()
+    end_date = hoy.strftime("%Y-%m-%d")
 
     # Fecha de hace 15 días
     menos_15 = hoy - timedelta(days=15)
-    start_date = menos_15.strftime("%d/%m/%Y")
+    start_date = menos_15.strftime("%Y-%m-%d")
      
     cant_access = {  
         "can_update": await rst.access_permission("users", "UPDATE", request.session),
@@ -67,8 +71,8 @@ async def gettable(request: Request):
     can_delete= await rst.access_permission("quotes", "DELETE", request.session),
 
     form_data = await request.form()
-    start_date= Helper.format_date_action(form_data.get("start_date"))
-    end_date = Helper.format_date_action(form_data.get("end_date"))
+    start_date= form_data.get("start_date")
+    end_date = form_data.get("end_date")
     vendedor = form_data.get("vendedor")
     colegio = form_data.get("colegion")
 
@@ -260,17 +264,21 @@ async def create(request:Request):
         idcurso=""
     print("fecha ",form_data.get('fecha'))      
     # Convertir a objeto datetime
-    fecha_obj = datetime.strptime(form_data.get('fecha'), "%Y-%m-%d")
-    saledate = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"   
+    fecha = form_data.get('fecha')
+    if fecha:
+        saledate = datetime.fromisoformat(fecha).strftime('%Y-%m-%dT00:00:00Z')
 
-    fecha_obj =  datetime.strptime(form_data.get('fechasal'), "%Y-%m-%d")
-    fechasal = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha = form_data.get('fechasal')
+    if fecha:
+        fechasal = datetime.fromisoformat(fecha).strftime('%Y-%m-%dT00:00:00Z')
 
-    fecha_obj =  datetime.strptime(form_data.get('fecha_ultpag'), "%Y-%m-%d")
-    fechaultpag = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha = form_data.get('fecha_ultpag')
+    if fecha:
+        fechaultpag = datetime.fromisoformat(fecha).strftime('%Y-%m-%dT00:00:00Z')
 
-    fecha_obj =  datetime.strptime(form_data.get('fechacuota'), "%Y-%m-%d")
-    fechacuota = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha = form_data.get('fechacuota')
+    if fecha:
+        fechacuota = datetime.fromisoformat(fecha).strftime('%Y-%m-%dT00:00:00Z')
 
     data = {       
             "fecha" : saledate,

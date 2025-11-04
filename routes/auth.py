@@ -17,14 +17,15 @@ async def login(
     accesscode: str = Form("")
 ):
     empresa = request.state.empresa 
+    request.session["code_company"]=  empresa
     schema_name = "demo"  # por defecto
     login_status = "invalid"
     code_company=request.session.get("code_company")
     error = ""
     error1 = ""
-
+    print("identificador ",code_company)
     if code_company != "GRL_999":    
-        consulta="identificador=" + code_company
+        consulta=f"identificador={code_company}"
         respuesta = await api.get_data("company",query=consulta, schema="global")  
         company=respuesta['data'][0]
         company_id=company['id']
@@ -56,8 +57,11 @@ async def login(
 
     # 1. Buscar en usuarios
     if username and password:
-        query_params = f"active=1&username={username}&password={password}"
+        #query_params = f"active=1&username={username}&password={password}&company_id={company_id}"
+        query_params = f"username={username}&password={password}&company_id={company_id}"
         response = await api.get_data("users", query=query_params, schema=schema_name)
+        print("consulat ",query_params,"shema ",schema_name)
+        print("respuesta ",response)
         if response["status"] == "success" and len(response["data"]) > 0:
             user = response["data"][0]
             request.session["authenticated"] = True
@@ -133,13 +137,14 @@ async def login(
             return RedirectResponse(url=f"/{empresa}/manager/opening", status_code=303)
         else:
             return RedirectResponse(url=f"/{empresa}/manager/index", status_code=303)
-
+    else:
+        return RedirectResponse(url=f"/{empresa}/manager", status_code=303)
     # Si no se logró login
-    urlLogin= f"127.0.0.1:8000/{empresa}/manager"
-    return templates.TemplateResponse(urlLogin, {
-        "request": request,
-        "error": error or error1 or "Usuario o contraseña incorrectos."
-    })
+    #urlLogin= f"127.0.0.1:8000/{empresa}/manager"
+    #return templates.TemplateResponse(urlLogin, {
+    #    "request": request,
+    #   "error": error or error1 or "Usuario o contraseña incorrectos."
+    #})
 
 # Ruta para logout
 @router.get("/logout")

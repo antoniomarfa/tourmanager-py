@@ -27,19 +27,23 @@ class Helper:
         return fecha_formateada
 
     @staticmethod
-    def date_format_save(fecha_str: str) -> str:
+    def format_date_action(fecha_str: str) -> str:
         """
-        Convierte una fecha 'dd-mm-YYYY' a 'YYYY-MM-DD'.
-        Si ya viene en formato 'YYYY-MM-DD', la retorna igual.
+        Convierte una fecha a formato 'YYYY-MM-DD'.
+        Acepta tanto 'YYYY-MM-DD' (formato ISO) como 'DD-MM-YYYY'.
         """
-        try:
-            # Primero intentamos dd-mm-YYYY
-            fecha_obj = datetime.strptime(fecha_str, "%d-%m-%Y")
-        except ValueError:
-            # Si falla, asumimos que ya está en formato YYYY-MM-DD
-            fecha_obj = datetime.strptime(fecha_str, "%Y-%m-%d")
-        
-        return fecha_obj.strftime("%Y-%m-%d")
+        if not fecha_str:
+            return None
+
+        for formato in ("%Y-%m-%d", "%d-%m-%Y"):
+            try:
+                fecha_obj = datetime.strptime(fecha_str, formato)
+                return fecha_obj.strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+
+        # Si no coincide con ningún formato, lanza un error claro
+        raise ValueError(f"Formato de fecha no reconocido: {fecha_str}")
 
     @staticmethod
     def formatear1(fecha_iso: str) -> str:
@@ -82,10 +86,10 @@ class Helper:
     @staticmethod
     def format_date_action(fecha_str):
         # Convertir string a objeto datetime
-        fecha_obj = datetime.strptime(fecha_str, "%d/%m/%Y")
+        fecha_obj = datetime.strptime(fecha_str, "%d-%m-%Y")
 
         # Formatear a yyyy/mm/dd
-        fecha_nueva = fecha_obj.strftime("%Y/%m/%d")
+        fecha_nueva = fecha_obj.strftime("%Y-%m-%d")
 
         return fecha_nueva
     

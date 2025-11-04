@@ -17,8 +17,8 @@ const language_datatable = {
 jQuery( document ).ready( function( $ ) {
 
     $.fn.loadDataTableDocs = function(){
-
-        var url =  '/pasajeros/gettable';
+        var empresa = "{{ empresa }}";
+        var url =  '/' + empresa + '/manager/pasajeros/gettable';
         var data = {
             venta: $('[name=ventas]').find(':selected').val(),
         }
@@ -88,13 +88,15 @@ jQuery(document).on("click", ".delete-register", function() {
 });
 
 jQuery(document).on("change", "select[name=ventas]", function() {
-    /*
+    
     if ( $.fn.DataTable.isDataTable('#table-course') ) {
         $('#table-course').DataTable().clear();
         $('#table-course').DataTable().destroy();
     }
     $('body').loadDataTableDocs();
-    */
+    
+   /*
     var table = $("#table-course").DataTable();
      table.ajax.reload();
+     */
 });

@@ -82,7 +82,9 @@
                                         <input type="text" class="form-control" name="pasaportealumno" id="pasaportealumno" maxlength="20" />
                                     </div>
                                 </div>
-                                <div class="col-md-6 offset-md-2">
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Nombre Pasajero</label>
                                         <input type="text" class="form-control required" name="nombrealumno" id="nombrealumno" maxlength="100" />
@@ -95,19 +97,13 @@
                                     <label class="control-label">Fecha Nacimiento</label><br>
                                     <div class="col-md-7 no-padding">
                                         <div>
-<!---                                            <input type="text" name="fechanac" id="fechanac" class="form-control" data-format="dd-mm-yyyy" value="{{ fecha_hoy }}"> -->
-                                                <input
-                                                type="date"
-                                                id="fechanac"
-                                                name="fechanac"
-                                                value="{{ fecha_hoy }}" 
-                                                max="{{ fecha_hoy }}" 
-                                                />
-                                            <!--    
-                                            <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                            </div>
-                                        -->
+                                            <input
+                                            type="date"
+                                            id="fechanac"
+                                            name="fechanac"
+                                            value="{{ fecha_hoy }}" 
+                                            max="{{ fecha_hoy }}" 
+                                            />
                                         </div>
                                     </div>
                                 </div>                                  
@@ -253,9 +249,10 @@
                 </div>
 
             </div>
+            <br>
             <div class="form-group d-flex justify-content-end">
                 <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
-                /{{ empresa }}/manager//pasajeros" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <a href="/{{ empresa }}/manager/pasajeros" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
                 <input type="hidden" name="typesale" id="typesale" value=""/>
             </div>
         </div>
