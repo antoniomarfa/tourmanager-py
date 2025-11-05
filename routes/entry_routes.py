@@ -173,9 +173,10 @@ async def create(request:Request):
 
     identificador = 'ING_'+ uuid.uuid1().hex
 
-    fecha_obj =  datetime.strptime(form_data.get('fecha'), "%Y-%m-%d")
-    fecha = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
-
+    fecha_obj = form_data.get('fecha')
+    if fecha_obj:
+        fecha = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
+        
     data={
         "tipocomp": "COF",
         "fecha":  fecha,

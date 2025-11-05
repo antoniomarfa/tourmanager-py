@@ -4,6 +4,7 @@ jQuery( document ).ready( function( $ ) {
     $('#destination').select2();
     $('#origincode').select2();
     $('#destinationcode').select2();
+
     
     $('#origin').change(function(){
      
@@ -83,7 +84,10 @@ jQuery( document ).ready( function( $ ) {
           cnt_offers:cnt_offers,
           start_date:start_date
           }
-  
+
+          // Mostrar spinner
+          $('#loading-overlay').removeClass('d-none');
+
           $.ajax({
               type: "POST",
               encoding: "UTF-8",
@@ -91,11 +95,13 @@ jQuery( document ).ready( function( $ ) {
               data: data,
               dataType: 'json',
               error: function() {
-                console.log('error en consulta')
-             },
+                console.log('error en consulta');
+                $('#loading-overlay').addClass('d-none');
+            },
              success: function(response) {
-                if(response.error==0){
-                    document.getElementById("result").innerHTML = response.cuerpo;
+                $('#loading-overlay').addClass('d-none');
+                if(response.error == 0){
+                    $('#result').html(response.cuerpo);
                 }
              }
           })

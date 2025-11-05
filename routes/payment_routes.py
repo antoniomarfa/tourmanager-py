@@ -134,14 +134,16 @@ async def createfm(request: Request):
       
     Dato1=form_data.get('colegio')
     Dato2=form_data.get('curso')
-    fecha_obj =  datetime.strptime(form_data.get('fecha'), "%d/%m/%Y")
-    fecha = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha_obj = form_data.get('fecha')
+    if fecha_obj:
+        fecha = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
     Dato31=fecha
     Dato32=form_data.get('destino')
     Dato4=form_data.get('alumno')
     Dato5=form_data.get('rutpass')
-    fecha_obj =  datetime.strptime(form_data.get('fecnac'), "%d/%m/%Y")
-    fecnac = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha_obj = form_data.get('fecnac')
+    if fecha_obj:
+        fecnac = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
     Dato6=fecnac
     Dato7=form_data.get('nacionalidad')
     Dato8=form_data.get('apoderado')
@@ -244,14 +246,16 @@ async def update(request: Request):
       
     Dato1=form_data.get('colegio')
     Dato2=form_data.get('curso')
-    fecha_obj =  datetime.strptime(form_data.get('fecha'), "%d/%m/%Y")
-    fecha = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha_obj = form_data.get('fecha')
+    if fecha_obj:
+        fecha = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
     Dato31=fecha
     Dato32=form_data.get('destino')
     Dato4=form_data.get('alumno')
     Dato5=form_data.get('rutpass')
-    fecha_obj =  datetime.strptime(form_data.get('fecnac'), "%d/%m/%Y")
-    fecnac = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha_obj = form_data.get('fecnac')
+    if fecha_obj:
+        fecnac = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
     Dato6=fecnac
     Dato7=form_data.get('nacionalidad')
     Dato8=form_data.get('apoderado')

@@ -1,6 +1,9 @@
-     $('#execute_search').click(function(){
+jQuery( document ).ready( function( $ ) {  
+    $('#execute_search').click(function(e){
+       e.preventDefault()
+
         var empresa = "{{ empresa }}";
-        let Url = "/" + empresa + "/manager/gdhotel/getOffers/";
+        let Url = "/" + empresa + "/manager/gdshotel/getOffers/";
          
         var origen_code =  $('#form_hotel select[name="origin"]').val();
         var adultos = $('#form_hotel select[name="adultos"]').val(); 
@@ -14,7 +17,10 @@
           start_date : start_date,
           sale:sale
           }
-  
+
+           // Mostrar spinner
+          $('#loading-overlay').removeClass('d-none');
+
           $.ajax({
               type: "POST",
               encoding: "UTF-8",
@@ -22,14 +28,37 @@
               data: data,
               dataType: 'json',
               error: function(jqXHR, textStatus, errorThrown) {
-                console.error('Error en consulta:');
-                console.error('Estado:', textStatus);
-                console.error('Error lanzado:', errorThrown);
-                console.error('Respuesta del servidor:', jqXHR.responseText);
+                $('#loading-overlay').addClass('d-none');
+                try {
+                      const data = JSON.parse(jqXHR.responseText);
+                      if (data.errors && data.errors[0].detail) {
+                          bootbox.alert({
+                              message: 'Error: ' + data.errors[0].detail,
+                              size: 'small'
+                          });
+                      } else {
+                          bootbox.alert({
+                              message: 'Error desconocido',
+                              size: 'small'
+                          });
+                      }
+                  } catch(e) {
+                      console.error('Error al parsear respuesta:', e);
+                      console.error('Respuesta cruda:', jqXHR.responseText);
+                  }                
               },
-             success: function(response) {
+             success: function(response) 
+             {
+               $('#loading-overlay').addClass('d-none');
+
                 if(response.error===0){
                     document.getElementById("result").innerHTML = response.cuerpo;
+                }
+                if(response.error===1){
+                    bootbox.alert({
+                        message: 'Error : '+response.cuerpo,
+                        size: 'small' /* or 'sm' */
+                    });                  
                 }
              }
           })
@@ -39,3 +68,4 @@
      });
      
      $('#origin').select2();
+ });     

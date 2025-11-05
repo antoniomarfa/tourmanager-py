@@ -108,8 +108,9 @@ async def create(request:Request):
     hashed = bcrypt.hashpw(RutApo.encode("utf-8"), bcrypt.gensalt())
     password = hashed.decode("utf-8")  # convertir bytes → str
 
-    fecha_obj =  datetime.strptime(form_data.get('fechanac'), "%d/%m/%Y")
-    fechanac = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+    fecha_obj = form_data.get('fechanac')
+    if fecha_obj:
+        fechanac = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
 
     data={
         "sale_id": int(form_data.get('venta_id')),  
@@ -194,9 +195,6 @@ async def contrattravel(request: Request):
 
     response = await api.get_data("company",id=int(request.session.get('company')),schema="global")
     company= response['data'] if response["status"]=="success" else []
-
-    # Supongamos que $venta['fecha'] es un string como '2025-09-01'
-    fecha_str = venta['fecha']  # ejemplo: '2025-09-01'
 
     # Convertir string a datetime
     fecha_str = venta['fecha']  # '2025-09-01T00:00:00Z'

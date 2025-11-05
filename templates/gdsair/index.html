@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Pasarrelas de Pago{% endblock %}
+{% block title %}Ticket Aereos{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,21 @@
     border-radius: 10px;
     margin-bottom: 20px;
     background-color: #f9f9f9;
-}
+    }
+    #loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 2000;
+    font-size: 18px;
+    }
 </style>
 
 <nav class="breadcrumb-container" aria-label="breadcrumb">
@@ -26,6 +40,12 @@
     </li>
   </ol>
 </nav>
+<div id="loading-overlay" class="d-none">
+  <div class="spinner-border text-primary"></div>
+  <p>Cargando resultados...</p>
+  <span id="loading-icon" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+</div>
+<br><br>
 
 <h3>Consultar Vuelos</h3>
 <br />
@@ -121,6 +141,7 @@
             <span class="control-label">&nbsp;</span><br>
             <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
                 <button id="execute_search" type="button" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Buscar</button>
+                <span id="loading-icon" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
             </div>
         </div>        
     </div>        

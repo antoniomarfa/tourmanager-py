@@ -2,9 +2,8 @@ from fastapi import FastAPI, Request, Form, Depends, APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from libraries.renderrequest import RenderRequest
-from libraries.helper import Helper
-import requests,json, uuid, os, bcrypt,re
-from datetime import datetime, timezone, timedelta
+import requests,re
+from datetime import datetime, timedelta
 from libraries.restriction import Restriction
 
 router = APIRouter()
@@ -106,7 +105,7 @@ async def getflights(request: Request):
     if response.status_code == 200:
         result = response.json()
         access_token = result["access_token"]
-        print("Access Token:", access_token)
+    #    print("Access Token:", access_token)
     else:
         print("Error:", response.status_code, response.text)
 
@@ -151,20 +150,23 @@ async def getflights(request: Request):
         html=""
         error=0
     
-        html +='<ul class="nav nav-tabs left-aligned">'
+        html +='<ul class="nav nav-tabs left-aligned" id="myTab" role="tablist">'
 
         for i in range(0,count_offers):
             if i == 0:
                 active = "active"
+                ariaselect='aria-selected="true"'
             else:
                 active = ""
+                ariaselect= ""
 
             cnt = i + 1
-            html += '''
-                <li class="nav-item">
-                    <a class="nav-link '.$active.'" href="#tab'.$i.'" data-toggle="tab">
-                        <h4>Oferta '.$cnt.'/'.$count_offers.'</h4>
-                    </a>
+            html += f'''
+                <li class="nav-item" role="presentation">
+                <a class="nav-link {active}" id="general-tab" data-bs-toggle="tab" href="#tab{i}-tab" role="tab" aria-controls="tab{i}" aria-selected="true">
+                <span><i class="fa fa-plane" aria-hidden="true"></i></span>
+                <span>Oferta {cnt}/{count_offers}</span>
+                </a>            
                 </li>
             '''
         
@@ -176,27 +178,27 @@ async def getflights(request: Request):
             itineraries=data["itineraries"]
             travelerPricings=data['travelerPricings']
             if i==0:
-               active = "active"
+               active = "show active"
             else:    
                active = ''
              
-            html+=f'<div class="tab-pane {active}" id="tab{i}">'
-                
+            html+=f'<div class="tab-pane fade {active}" id="tab{i}-tab" role="tabpanel" aria-labelledby="tab{i}-pane">'
             for indexi, itinerary in enumerate(itineraries):
                 if indexi == 0:    
                     tipoViaje = 'IDA'
                 else:
                     tipoViaje = 'VUELTA'
 
-                html += f"<h3>{tipoViaje}</h3>"
-                html += f"<p><strong>Duracion total:</strong>{format_duration(itinerary['duration'])}</p>"
+                html += "<br>"
+                html += f"<h3>{tipoViaje} {i+1}</h3>"
+                html += f"<p><strong>Duracion total : </strong>{format_duration(itinerary['duration'])}</p>"
                 
                 for segmento in itinerary['segments']:
                     airline = carriers.get(segmento['carrierCode'], 'Desconocida') 
                     airport_or = origin.get(segmento['departure']['iataCode'], 'Desconocido')
                     airport_de = destination.get(segmento['arrival']['iataCode'], 'Desconocido')
                     segmentId = segmento['id']
-                    # Ejemplo: segmento['departure']['at'] = "2025-11-04T13:45:00"
+
                     fecha_str = segmento['departure']['at']
                     fecha = datetime.fromisoformat(fecha_str)
                     fecha_dp = fecha.strftime("%d/%m/%Y %H:%M")
@@ -206,10 +208,10 @@ async def getflights(request: Request):
                     fecha_ar = fecha.strftime("%d/%m/%Y %H:%M")
  
                     html += f"""<div class='card'>
-                        <p><strong>Vuelo:</strong> {segmento['carrierCode']}{segmento['number']} $airline</p>
+                        <p><strong>Vuelo:</strong> {segmento['carrierCode']}{segmento['number']} {airline}</p>
                         <p><strong>Salida:</strong> {segmento['departure']['iataCode']} {airport_or} a las {fecha_dp}</p>
                         <p><strong>Llegada:</strong> {segmento['arrival']['iataCode']} {airport_de} a las {fecha_ar}</p>
-                        <p><strong>Duraci贸n:</strong> {format_duration(segmento['duration'])}</p>
+                        <p><strong>Duracion:</strong> {format_duration(segmento['duration'])}</p>
                         <p><strong>Aeronave:</strong> {aircraft.get(segmento['aircraft']['code'] , segmento['aircraft']['code'])}</p>
                         <p><strong>Asientos Reservables:</strong> {numberOfBookableSeats}</p>
                         <p><strong>Paradas:</strong> {segmento['numberOfStops']}</p>"""
@@ -234,7 +236,7 @@ async def getflights(request: Request):
                     for indexp, traveler in enumerate(travelerPricings):
                         pax = indexp + 1
                         html += f"""<div class='card'>
-                            <h4>Pasajero $pax ({traveler['travelerType']})</h4>
+                            <h4>Pasajero {pax} ({traveler['travelerType']})</h4>
                             <p><strong>Tarifa base:</strong> {traveler['price']['base']} {traveler['price']['currency']}</p>
                             <p><strong>Total:</strong> {traveler['price']['total']} {traveler['price']['currency']}</p>"""
                 
@@ -244,7 +246,7 @@ async def getflights(request: Request):
                                 includedCheckedBags = fareSegment.get('includedCheckedBags', {}).get('quantity', 0)
                                 includedCabinBags = fareSegment.get('includedCabinBags', {}).get('quantity' , 0)
                                 html += f"""<hr>
-                                    <p><strong>Segmento ID:</strong> $segmentId</p>
+                                    <p><strong>Segmento ID:</strong> {segmentId}</p>
                                     <p><strong>Cabina:</strong> {fareSegment['cabin']} | <strong>Clase:</strong> {fareSegment['class']}</p>
                                     <p><strong>Maletas facturadas incluidas:</strong> {includedCheckedBags}</p>
                                     <p><strong>Equipaje de mano incluido:</strong> {includedCabinBags}</p>"""

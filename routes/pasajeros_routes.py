@@ -173,8 +173,10 @@ async def create(request:Request):
     hashed = bcrypt.hashpw(RutApo, bcrypt.gensalt())
 
     password = hashed.decode('utf-8')  # guarda como string
-    fecha_obj =  datetime.strptime(form_data.get('fechanac'), "%d/%m/%Y")
-    fechanac = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+
+    fecha_obj = form_data.get('fechanac')
+    if fecha_obj:
+        fechanac = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
 
     data={
         "sale_id": form_data.get('venta_id'),  
@@ -286,8 +288,10 @@ async def create(request:Request):
     hashed = bcrypt.hashpw(RutApo, bcrypt.gensalt())
 
     password = hashed.decode('utf-8')  # guarda como string
-    fecha_obj =  datetime.strptime(form_data.get('fechanac'), "%d/%m/%Y")
-    fechanac = fecha_obj.strftime("%Y-%m-%d") + "T00:00:00Z"
+
+    fecha_obj = form_data.get('fechanac')
+    if fecha_obj:
+        fechanac = datetime.fromisoformat(fecha_obj).strftime('%Y-%m-%dT00:00:00Z')
 
     data={
         "sale_id": form_data.get('venta_id'),  

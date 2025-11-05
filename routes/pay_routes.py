@@ -182,9 +182,6 @@ async def formpaymentrsv(request: Request):
             valor_cuota = round(vprograma/cuotas,0)
             total_cuotas = valor_cuota*cuotas
             diferencia = vprograma-total_cuotas
-         
-        
-
 
     consulta=f'curso_id={pasajero}&status_pago=Pagado&activo=1'
     result= await api.get_data("ingreso/informe",query=consulta,schema=schema_name)
