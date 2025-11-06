@@ -7,6 +7,7 @@ import bcrypt
 import json
 from datetime import datetime, timezone, timedelta
 from libraries.restriction import Restriction
+from libraries.mailutil import Mailutil
 
 router = APIRouter()
 
@@ -14,6 +15,7 @@ templates = Jinja2Templates(directory="templates")
 
 api = RenderRequest()
 rst = Restriction()
+snm = Mailutil()
 
 # Ruta principal: mostrar usuarios
 @router.get("/", response_class=HTMLResponse)
@@ -23,6 +25,7 @@ async def index(request: Request):
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")
     schema_name = request.session.get("schema")
+
     response = await api.get_data("users",schema=schema_name)
     users = response["data"] if response["status"] == "success" else []
 
@@ -82,6 +85,10 @@ async def create(request: Request):
 
     if 'user' in payload:
         payload['username'] = payload.pop('user')
+     
+    #Busca la compañia  
+    response = await api.get_data("company",id=request.session.get("company"),schema="global")  # Suponiendo que el servicio se llama 'users'    
+    company = response["data"] if response["status"] == "success" else []
 
     # Hashear el password si existe
     if "password" in payload:
@@ -102,6 +109,11 @@ async def create(request: Request):
     response=await api.set_data("users", body=json_payload,schema=schema_name)
 
     if response.get("status") == "success":
+        inserted_id=response["data"]["data"]["return_id"]
+        subject = f"Habilitación de usuario - {company['nomfantasia']} (PANEL DE ADMINISTRACIÓN)"
+        title = 'Habilitación'
+        message = 'Esto es una copia de su solicitud de habilitación de usuario.'
+        respuestasnm = await snm.email_usuarios(inserted_id, payload["password"].encode('utf-8'), subject, title, message,request.session)
         Helper.flash_message(request, "success", "Usuario creado correctamente.") 
     else:
         Helper.flash_message(request, "error", response["message" ])       
@@ -126,7 +138,7 @@ async def edit_form(request: Request, user_id: int):
 
     response = await api.get_data("users", id=user_id, schema=schema_name)
     user = response["data"] if response["status"] == "success" else None
-
+    print(response)
     context={"request": request, "roles":roles, "company":company, "user":user, "session": request.session,"empresa":empresa}
     
     return templates.TemplateResponse("users/edit.html", context)
@@ -157,10 +169,15 @@ async def update(request: Request):
     # Hashear el password si existe
     if "change_password" in form_data and form_data["change_password"].strip():
         if "password" in payload:
+            snm_password = payload["password"]
             raw_password = payload["password"].encode('utf-8')
             hashed = bcrypt.hashpw(raw_password, bcrypt.gensalt())
             payload["password"] = hashed.decode('utf-8')  # guarda como string
     
+    #Busca la compañia  
+    response = await api.get_data("company",id=request.session.get("company"),schema="global")  # Suponiendo que el servicio se llama 'users'    
+    company = response["data"] if response["status"] == "success" else []
+
     payload["company_id"] = request.session.get("company")
     payload["author"] = request.session.get("user_name")
     payload["reset_token"] =""
@@ -173,6 +190,12 @@ async def update(request: Request):
     response = await api.update_data("users", id=user_id, body=json_payload, schema=schema_name)
 
     if response.get("status") == "success":
+        if "change_password" in form_data and form_data["change_password"].strip():
+            subject = f"Habilitación de usuario - {company['nomfantasia']} (PANEL DE ADMINISTRACIÓN)"
+            title = 'Habilitación'
+            message = 'Esto es una copia de su solicitud de habilitación de usuario.'
+            respuestasnm = await snm.email_usuarios(user_id, snm_password, subject, title, message,request.session)
+    
         Helper.flash_message(request, "success", "Usuario Actualizado correctamente.") 
     else:
         Helper.flash_message(request, "error", response["message" ])       

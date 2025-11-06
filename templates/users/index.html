@@ -79,7 +79,7 @@
           <td width="15%"> {{ user.author }}</td>
           <td width="15%">
             {% if cant_access["can_update"] %}
-            <a href="/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-outline-warning"data-bs-toggle="tooltip" title="Editar" ><i class="fa fa-edit"></i></a>
+            <a href="/{{ empresa }}/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-outline-warning"data-bs-toggle="tooltip" title="Editar" ><i class="fa fa-edit"></i></a>
             {% endif %}
             {% if cant_access["can_delete"] %}
             <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ user.id }}" data-bs-toggle="tooltip" title="Eliminar"><i class="fa fa-trash"></i></a>

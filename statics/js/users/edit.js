@@ -14,14 +14,14 @@ jQuery( document ).ready( function( $ ) {
         rules: {
             user: { required: true, minlength: 3 },
             name: { required: true, minlength: 3 },
-            email: { required: true, email: true },
-            password: { required: true, email: true, minlength: 6 }
+            email: { required: true, email: true }
+           // password: { required: true, minlength: 6 }
         },
         messages: {
             user: { required: "Ingrese usuario", minlength: "Mínimo 3 caracteres" },
             name: { required: "Ingrese nombre usuario", minlength: "Mínimo 3 caracteres" },
-            email: { required: "Ingrese correo", email: "Formato inválido" },
-            password: { required: "Ingrese clave", email: "Formato inválido" }
+            email: { required: "Ingrese correo", email: "Formato inválido" }
+           // password: { required: "Ingrese clave" }
         },
         highlight: function (element) {
             $(element).closest('.form-group').addClass('validate-has-error');

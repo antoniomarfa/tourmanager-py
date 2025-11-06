@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form, Depends, APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from libraries.renderrequest import RenderRequest
-import requests,re
+import requests,re,os
 from datetime import datetime, timedelta
 from libraries.restriction import Restriction
 
@@ -12,6 +12,9 @@ templates = Jinja2Templates(directory="templates")
 
 api = RenderRequest()
 rst = Restriction()
+
+GDS_CLIENTID = os.getenv("GDS_CLIENTID")
+GDS_CLIENTSECRET =os.getenv("GDS_CLIENTSECRET")
 
 # Ruta principal: mostrar usuarios
 @router.get("/", response_class=HTMLResponse)
@@ -85,8 +88,8 @@ async def getflights(request: Request):
         destination[item['iata']]=item['name'];    
         
     #obtener token    
-    client_id = 'dPNt0QeocGA7Rd9G2plAEoDDzCTkjpuw'
-    client_secret = '9icdTUq8xg4bqnQg'
+    client_id = GDS_CLIENTID
+    client_secret = GDS_CLIENTSECRET
 
     url = 'https://test.api.amadeus.com/v1/security/oauth2/token'
 
