@@ -13,7 +13,7 @@
           <p class="card-text flex-grow-1">
             Revisa y corrige la información de tu hija(o), podrán hacerlo mientras no firmes el contrato.
           </p>
-          <a class="btn btn-primary mt-3 px-4" href="/payment/student">Ir</a>
+          <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/student">Ir</a>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
             Llena los datos de la ficha médica de tu hijo(a), para nosotros estar al tanto de sus necesidades médicas.
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
-            <a class="btn btn-primary mt-3 px-4" href="/payment/medicalrecordi">Ir</a>
+            <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/medicalrecordi">Ir</a>
           {% else %}
             <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
           {% endif %}
@@ -48,7 +48,7 @@
             Aquí podrás revisar y firmar el contrato, una vez firmado ya no podrás modificar la información de tu hija(o).
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
-            <a class="btn btn-primary mt-3 px-4" href="/payment/contrat_travel">Ir</a>
+            <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/contrat_travel">Ir</a>
           {% else %}
             <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
           {% endif %}
@@ -68,9 +68,9 @@
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
             {% if info_index["cuotas"] > 1 %}
-              <a class="btn btn-primary mt-3 px-4" href="/pay/formpayment_ct">Ir</a>
+              <a class="btn btn-primary mt-3 px-4" href="/{empresa}/pay/formpayment_ct">Ir</a>
             {% else %}
-              <a class="btn btn-primary mt-3 px-4" href="/pay/formpayment">Ir</a>
+              <a class="btn btn-primary mt-3 px-4" href="/{empresa}/pay/formpayment">Ir</a>
             {% endif %}
           {% else %}
             <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>

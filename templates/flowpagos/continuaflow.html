@@ -1,4 +1,4 @@
-{% extends "opening/base_index.html" %}
+{% extends "flowpagos/base_index.html" %}
 
 {% block opening_content %}
 <div class="col-md-6" style="margin-left:30%">
@@ -18,7 +18,7 @@
             </div>
             <div class="form-group row">
                 <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Monto a Pagar</strong></label>
-                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;" id="mpagar">$ {{ helper.formato_numero(mpagar) }}</label>
+                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;" id="mpagar">$ {{ helper.number_format(mpagar, 0, ".", ",") }}</label>
                 <input type="hidden" name="mpagar" value="{{ mpagar }}" />
                 <input type="hidden" name="valorcuota" value="{{ valorcuota }}" />
                 <input type="hidden" name="nrocuotas" value="{{ nrocuotas }}" />
@@ -27,7 +27,7 @@
             </div>
 
 
-            <button type="submit" class="btn btn-blue btn-sm" >Continuar Pago</button>
+            <button type="submit" class="btn btn-success" >Continuar Pago</button>
                 {% if  session["position"]=='General' %}
                 <a href="/{{ empresa }}/manager/pay/formpayment_rsv" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
                 {% else %}

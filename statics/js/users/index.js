@@ -14,6 +14,93 @@ const language_datatable = {
         "sPrevious": "<"
     },
 };
+document.addEventListener("DOMContentLoaded", function() {
+
+    const cardsPerPage = 6; // cantidad de tarjetas por página
+    const cards = document.querySelectorAll(".user-card");
+    const totalCards = cards.length;
+    const totalPages = Math.ceil(totalCards / cardsPerPage);
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+
+    function showPage(page) {
+        currentPage = page;
+        const start = (page - 1) * cardsPerPage;
+        const end = start + cardsPerPage;
+        cards.forEach((card, index) => {
+            card.style.display = (index >= start && index < end) ? "block" : "none";
+        });
+        updatePagination();
+    }
+
+    function updatePagination() {
+        pagination.innerHTML = "";
+        const prevDisabled = currentPage === 1 ? "disabled" : "";
+        const nextDisabled = currentPage === totalPages ? "disabled" : "";
+
+        // Botón "Anterior"
+        pagination.innerHTML += `
+            <li class="page-item ${prevDisabled}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">Anterior</a>
+            </li>
+        `;
+
+        // Números de página
+        for (let i = 1; i <= totalPages; i++) {
+            const active = i === currentPage ? "active" : "";
+            pagination.innerHTML += `
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `;
+        }
+
+        // Botón "Siguiente"
+        pagination.innerHTML += `
+            <li class="page-item ${nextDisabled}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">Siguiente</a>
+            </li>
+        `;
+
+        // Eventos de los botones
+        document.querySelectorAll("#pagination a").forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const page = parseInt(e.target.getAttribute("data-page"));
+                if (page >= 1 && page <= totalPages) showPage(page);
+            });
+        });
+    }
+
+    // Mostrar la primera página
+    showPage(1);
+});
+/*
+document.addEventListener("DOMContentLoaded", () => {
+    cargarUsuarios(1); // Carga inicial
+
+    // Manejar clicks en la paginación dinámica
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("page-link")) {
+            e.preventDefault();
+            const page = e.target.getAttribute("data-page");
+            if (page) cargarUsuarios(page);
+        }
+    });
+});
+
+// 🔹 Función que carga las tarjetas por fetch
+async function cargarUsuarios(page = 1) {
+    const container = document.getElementById("usuarios-container");
+    container.innerHTML = "<div class='text-center py-5'>Cargando...</div>";
+
+    $total_pages = getElementById("total_pages").value;
+    var empresa = "{{ empresa }}";
+    const response = await fetch(` "/" + empresa + "/manager/users?page=${page}&total_pages=${total_pages}`);
+    const html = await response.text();
+
+    container.innerHTML = html;
+}
 
 jQuery( document ).ready( function( $ ) {
     var $userTable = jQuery("#userTable");
@@ -54,12 +141,12 @@ jQuery(document).on("click", ".delete-register", function(e) {
         }
         });
 });
-
+*/
 jQuery(document).on("click", ".change-status", function() {
     var $element = jQuery(this);
     var id = $element.attr('id');
     var empresa = "{{ empresa }}";
-    var url = '/' + empresa + '/manager//users/status';
+    var url = '/' + empresa + '/manager/users/status';
     var data = {
         user_id: id
     }
@@ -72,10 +159,12 @@ jQuery(document).on("click", ".change-status", function() {
         dataType:'json',
         success: function(response){
             if(response.status == 1){
-                $element.find('span').removeAttr('class').attr('class', '');
-                $element.find('span').addClass('badge');
-                $element.find('span').addClass(response.class_status);
-                $element.find('span').text(response.text_status);
+                var $badge = $element.find('span');
+                $badge
+                    .removeAttr('class')
+                    .addClass('badge')
+                    .addClass(response.class_status)
+                    .text(response.text_status);
             }
         }
     });

@@ -23,7 +23,7 @@ flowapi = FlowApi()
 APIURL="https://sandbox.flow.cl/api",
 
 # Ruta principal: mostrar usuarios
-@router.get("/iniciotransaccion", response_class=HTMLResponse)
+@router.post("/inicioTransaccion", response_class=HTMLResponse)
 async def transesccion(request: Request):
     empresa = request.state.empresa 
     
@@ -35,9 +35,12 @@ async def transesccion(request: Request):
 
     info_index = await util.formCharge(request.session)
 
+    ruta_image = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
+    ruta_image = os.path.abspath(ruta_image)
+
     form_data = await request.form()
     mpagar=form_data.get('mpagar')
-    
+    print("mpagar ",mpagar)
     if not mpagar or mpagar == 0:
         if request.session.get('position') =='General':
             return RedirectResponse(url=f"/{empresa}/manager/pay/formpayment_rsv", status_code=303)
@@ -77,14 +80,25 @@ async def transesccion(request: Request):
         print("No se recibieron cuotas")
         nrocuotas=0
         fechainicial=form_data.get('fechainicial')
-        
-
     valorcuota=form_data.get('valorcuota')
         
-    return templates.TemplateResponse("flowpagos/continuaflow.html", {"request": request, "session":request.session,"valorcuota":valorcuota,"nrocuotas":nrocuotas,"fechainicial":fechainicial,"mpagar":mpagar,"fecha":fecha,"identificador":identificador,"info_index":info_index,"helper":Helper,"empresa":empresa})
+    context = {"request": request, 
+               "session":request.session,
+               "valorcuota":valorcuota,
+               "nrocuotas":nrocuotas,
+               "fechainicial":fechainicial,
+               "mpagar":mpagar,
+               "fecha":fecha,
+               "identificador":identificador,
+               "info_index":info_index,
+               "helper":Helper,
+               "empresa":empresa,
+               "ruta_image":ruta_image
+               }    
+    return templates.TemplateResponse("flowpagos/continuaflow.html", context)
 
 
-@router.get("/iniciopagoflow", response_class=HTMLResponse)
+@router.post("/iniciopagoflow", response_class=HTMLResponse)
 async def iniciopago(request: Request):
     empresa = request.state.empresa 
     
@@ -95,35 +109,44 @@ async def iniciopago(request: Request):
     company_id=int(request.session.get('company'))
     form_data = await request.form()
 
+    result= await api.get_data("company",id=company_id,schema='global')
+    company = result['data'] if result["status"] == "success" else []
+
     result= await api.get_data("sale",id=int(request.session.get('sale')),schema=schema_name)
-    venta = result['data'] if result["status"] == "succes" else []
+    venta = result['data'] if result["status"] == "success" else []
 
     if request.session.get('position')=='General':
         result= await api.get_data("curso",id=int(request.session.get('user_curso_id')),schema=schema_name)
-        curso = result['data'] if result["status"] == "succes" else []
+        curso = result['data'] if result["status"] == "success" else []
             
     else:
         result= await api.get_data("curso",id=int(request.session.get('id')),schema=schema_name)
-        curso = result['data'] if result["status"] == "succes" else []
+        curso = result['data'] if result["status"] == "success" else []
          
     consulta = f'company_id={company_id}&gateway_id=3'
-    result= await api.get_data("gateway",query=consulta,schema=schema_name)
-    flowConn = result['data'][0] if result["status"] == "succes" else []
-    #Acceder a los valores
-    flow_apikey = flowConn['additional_config']['flow_apikey'];
-    flow_secretkey = flowConn['additional_config']['flow_secretkey'];
+    result= await api.get_data("gateways",query=consulta,schema=schema_name)
+    flowConn = result['data'][0] if result["status"] == "success" else []
 
-    NroVta = request.session('sale')
-    RutAl = request.session('user_ruta') 
+    #Acceder a los valores
+    flow_apikey = flowConn['additional_config']['flow_apikey']
+    flow_secretkey = flowConn['additional_config']['flow_secretkey']
+
+    NroVta = venta['id']
+    RutAl = request.session.get('user_ruta') 
     Monto = form_data.get('mpagar')
     identificador = form_data.get('identificador')
     correo = curso['correo']
 
-    array={'venta': NroVta ,'alumno':RutAl}
+    if venta['type_sale']=='GE':
+        subject = f'pago cuota o reserva vieje estudio de {company["nomfantasia"]}'
+    else:
+        subject = f'pago cuota o reserva vieje grupal de {company["nomfantasia"]}'
+
+    array={'venta': NroVta ,'alumno':RutAl, 'empresa':company["nomfantasia"]}
     optional = json.dumps(array) 
     params={
         'commerceOrder': identificador,
-        'subject': 'pago cuota viaje estudio Tevy Travel',
+        'subject':  subject,
         'currency': 'CLP',
         'amount': Monto,
         'email': correo,

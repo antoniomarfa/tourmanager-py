@@ -42,6 +42,21 @@ async def index(request: Request):
      # después de combinar schools0 y schools1
     schools_dict = {s["id"]: s["nombre"] for s in schools}
     
+    #Busco los Pasajeros segun la venta
+    request.session['filter_sales']=""
+
+    form_data = await request.form()
+    venta = int(form_data.get('venta') or 0)
+
+    getQuery =f'company_id={company_id}'
+    if venta != 0:
+        getQuery +=f'&sale_id={venta}'
+        request.session['filter_sales']=venta
+     
+    response = await api.get_data("curso/informe",query=getQuery,schema=schema_name)
+    courses = response['data'] if response['status'] == 'success' else []
+
+
     cant_access = {  
         "can_update": await rst.access_permission("course", "UPDATE", request.session),
         "can_delete": await rst.access_permission("course", "DELETE", request.session),
@@ -49,7 +64,15 @@ async def index(request: Request):
         "can_export_report": True # await rst.access_permission("users", "EXPORT_REPORT", request.session)
     } 
 
-    return templates.TemplateResponse("pasajeros/index.html", {"request": request, "session":request.session, "cant_access":cant_access, "sales": ventas,"empresa":empresa})
+    context =  {"request": request, 
+                "session":request.session, 
+                "cant_access":cant_access, 
+                "sales": ventas,
+                "courses": courses,
+                "empresa":empresa,
+                "Helper":Helper}
+
+    return templates.TemplateResponse("pasajeros/index.html",context)
 
 #llena la tabla
 @router.post("/gettable", response_class=HTMLResponse)
@@ -82,7 +105,6 @@ async def gettable(request: Request):
    
     if courses:
         for course in courses:
-            cnt_ingreso=0
             cnt_ingreso=0
            
             ficha=""

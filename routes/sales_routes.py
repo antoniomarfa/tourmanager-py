@@ -1,12 +1,21 @@
 from fastapi import FastAPI, Request, Form, Depends, APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from io import BytesIO
 from libraries.renderrequest import RenderRequest
 from libraries.helper import Helper
-import json, uuid, os
+import json, uuid, os, html, re
 from datetime import datetime, timezone, timedelta
 from libraries.restriction import Restriction
-
+#Todo para el pdf
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import (SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image)
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import cm
+from fastapi.responses import StreamingResponse
+from fastapi.concurrency import run_in_threadpool
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
@@ -57,18 +66,35 @@ async def index(request: Request):
         "can_insert": await rst.access_permission("users", "INSERT", request.session),
         "can_export_report": True # await rst.access_permission("users", "EXPORT_REPORT", request.session)
     } 
-    return templates.TemplateResponse("sales/index.html", {"request": request, "session":request.session, "cant_access":cant_access,"_schools": schools,"schools": schools, "sellers": sellers,"end_date":end_date,"start_date":start_date,"empresa":empresa})
+
+    context ={"request": request, 
+              "session":request.session, 
+              "cant_access":cant_access,
+              "_schools": schools,
+              "schools": schools, 
+              "sellers": sellers,
+              "end_date":end_date,
+              "start_date":start_date,
+              "empresa":empresa}
+    
+    return templates.TemplateResponse("sales/index.html", context)
 
 #llena la tabla
 @router.post("/gettable", response_class=HTMLResponse)
 async def gettable(request: Request):
     empresa = request.state.empresa 
-    
+
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")
     schema_name = request.session.get("schema")
+    company_id=int(request.session.get('company'))
+
     can_update= await rst.access_permission("quotes", "UPDATE", request.session),
     can_delete= await rst.access_permission("quotes", "DELETE", request.session),
+
+    response = await api.get_data("company",id=company_id,schema="global")
+    company = response["data"] if response["status"]=='success' else []
+    empresa=company['identificador']
 
     form_data = await request.form()
     start_date= form_data.get("start_date")
@@ -76,7 +102,6 @@ async def gettable(request: Request):
     vendedor = form_data.get("vendedor")
     colegio = form_data.get("colegion")
 
-    company_id=int(request.session.get('company'))
     getQuery=f'start_date={start_date}&end_date={end_date}&company_id={company_id}'
         
     if vendedor:
@@ -120,7 +145,9 @@ async def gettable(request: Request):
             alumnos_curso=sale["total_curso"]
 
             if sale["total_curso"] > 0:
-                lstpsajeros=f'<a class="btn btn-black btn-sm tooltip-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Listado Pasajeros" href="/sales/lstpasajerospdf/{sales["id"]}" target="_blank" >Listado</a>'
+                #ruta = f'http://127.0.0.1:8000/{empresa}/manager/sales/lstpasajerospdf/'
+                #lstpsajeros=f'<a class="btn btn-black btn-sm tooltip-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Listado Pasajeros" href="{ruta}{sale["id"]}" target="_blank" ><span class="badge text-bg-success">Listado</span></a>'
+                lstpsajeros = f'<a style="cursor: pointer;" class="list-pdf" id="{sale["id"]}"><span class="badge text-bg-success">listado</span></a>'
             else:
                 lstpsajeros=''
 
@@ -134,11 +161,16 @@ async def gettable(request: Request):
                 curso = ""    
             
             # Construcción de la fila
+            fecha_iso = sale["fecha"]
+
+            # Convertir y formatear
+            fecha_formateada = datetime.strptime(fecha_iso, "%Y-%m-%dT%H:%M:%SZ").strftime("%d-%m-%Y")
+
             table_body.append([
                 sale['id'],
                 "Gira Estudio" if sale['type_sale'] == 'GE' else "Viaje Grupal",
                 sale['identificador'],
-                sale['fecha'],
+                fecha_formateada,
                 sale['establecimiento_nombre'],
                 curso,
                 sale['program_name'],
@@ -169,8 +201,8 @@ async def gettable(request: Request):
              'Total Venta',
              '',
              '',
+             Helper.formato_numero(total_vta),
              '',
-             total_vta,
              '',
              '',
              '',
@@ -451,3 +483,149 @@ async def getquote(request:Request):
             'estado': quote['estado'],
             'obsestado': quote['obsestado']
         })
+
+@router.post("/lstpasajerospdf")
+async def pasajerospdf(request:Request,saleid:int = Form(...)):
+    schema_name = request.session.get("schema")
+    company_id = int(request.session.get("company"))
+    print(saleid)
+    response = await api.get_data("company",id=company_id,schema="global")
+    company=response['data'] if response['status']=='success' else []
+
+    consulta=f'sale_id={saleid}&company_id={company_id}'
+    response = await api.get_data("curso",query=consulta,schema=schema_name)
+    cursos=response['data'] if response['status']=='success' else []
+
+    consulta=f'id={saleid}'
+    response = await api.get_data("sale/informe",query=consulta,schema=schema_name)
+    sale=response['data'][0] if response['status']=='success' else []
+ 
+    data=""
+    if len(cursos)>0:
+        buffer = BytesIO()
+        logo_path = "/uploads/company/logo/login_logo_DET_7053186c-4188-4c9a-88af-fb12caa206bc.png"
+        logo_path = os.path.join(os.getcwd(), logo_path.lstrip("/"))
+        # Asegura que la ruta sea absoluta
+        #if not os.path.isabs(logo_path):
+        #    logo_path = os.path.join(os.getcwd(), logo_path.lstrip("/"))
+
+        # Crear documento
+        output_path = f"/uploads/pasajeros/listado_pasajeros_{saleid}.pdf"
+        output_path = os.path.join(os.getcwd(), output_path.lstrip("/"))
+        #si el archivo existe lo elimina para que solo exista el ultimo
+        if os.path.exists(output_path):
+            os.remove(output_path)
+
+        doc = SimpleDocTemplate(output_path, pagesize=A4)
+        styles = getSampleStyleSheet()
+
+        # Estilos personalizados
+        style_h3 = ParagraphStyle(
+            "H3",
+            fontSize=18,
+            textColor=colors.HexColor("#000000"),
+            spaceAfter=8,
+            alignment=0,
+        )
+        style_table_header = ParagraphStyle(
+            "Header",
+            fontSize=12,
+            textColor=colors.HexColor("#000066"),
+            leading=14,
+            alignment=TA_CENTER,
+        )
+        style_normal = ParagraphStyle("Normal", fontSize=11, leading=13)
+
+        elements = []
+
+        # --- ENCABEZADO CON LOGO Y NOMBRE ---
+        header_table = []
+        if os.path.exists(logo_path):
+            logo = Image(logo_path, width=3 * cm, height=3 * cm)
+        else:
+            print("⚠️ No se encontró la imagen del logo:", logo_path)
+            logo = Paragraph("<b>Sin logo</b>", styles["Normal"])
+
+
+        title = Paragraph(f"<b>{company['nomfantasia']}</b>", style_h3)
+        header_table.append([logo, title])
+
+        t_header = Table(header_table, colWidths=[4 * cm, 12 * cm])
+        t_header.setStyle(TableStyle([
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (1, 0), (1, 0), "LEFT"),
+        ]))
+        elements.append(t_header)
+        elements.append(Spacer(1, 0.5 * cm))
+
+        # --- DATOS DEL PROGRAMA ---
+        program_info = [
+            ["Colegio:", sale["establecimiento_nombre"]],
+            ["Curso:", f"{sale['curso']} - {sale['idcurso']}"],
+            ["Programa:", sale["program_name"]],
+        ]
+        t_info = Table(program_info, colWidths=[3 * cm, 13 * cm])
+        t_info.setStyle(TableStyle([
+            ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+            ("FONTSIZE", (0, 0), (-1, -1), 11),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ]))
+        elements.append(t_info)
+        elements.append(Spacer(1, 0.5 * cm))
+
+        # --- TÍTULO DE TABLA ---
+        title_table = Paragraph("<b>LISTADO DE PASAJEROS<br/>(Roaming List)</b>", style_table_header)
+        elements.append(title_table)
+        elements.append(Spacer(1, 0.3 * cm))
+
+        # --- TABLA DE PASAJEROS ---
+        data_table = [["Rut", "Nombre", "Fecha Nacimiento"]]
+
+        for curso in cursos:
+            nombre_alumno = curso["nombrealumno"].strip()
+            nombre_alumno = " ".join(nombre_alumno.split())
+            nombre_alumno = html.escape(nombre_alumno)
+            nombre_alumno = re.sub(r"[^A-Za-zÁÉÍÓÚáéíóúÑñ ]", " ", nombre_alumno)
+            curso["fechanac"] = datetime.strptime(curso["fechanac"], "%Y-%m-%d").strftime("%d-%m-%Y")
+
+            data_table.append([
+                curso["rutalumno"],
+                nombre_alumno,
+                curso["fechanac"] 
+            ])
+
+        table = Table(data_table, colWidths=[5 * cm, 8 * cm, 4 * cm])
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e3ece4")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, 0), 11),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 6),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
+            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f5f8f5")]),
+        ]))
+
+        elements.append(table)
+
+        # --- Generar PDF ---  
+        #doc.build(elements)
+        await run_in_threadpool(doc.build, elements)
+        buffer.seek(0)
+
+    if os.path.exists(output_path):
+        ruta=f"/uploads/pasajeros/listado_pasajeros_{saleid}.pdf"
+        msg="PDF generado correctamente en:", os.path.abspath(output_path)
+        status=1    
+    else:
+       msg="No se generó el archivo PDF."
+       status=0
+       ruta=""
+
+    return JSONResponse(
+        content={
+            "status": status,
+            "mensaje": msg,
+            "ruta": ruta
+        })       

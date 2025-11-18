@@ -25,9 +25,11 @@ async def index(request: Request):
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")
     schema_name = request.session.get("schema")
+    per_page=6
 
     response = await api.get_data("users",schema=schema_name)
     users = response["data"] if response["status"] == "success" else []
+    total = len(users)
 
     cant_access = {  
         "can_update": await rst.access_permission("users", "UPDATE", request.session),

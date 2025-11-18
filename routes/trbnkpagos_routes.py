@@ -127,7 +127,7 @@ async def iniciopago(request: Request):
      
     consulta = f'company_id={company_id}&gateway_id=3'
     result= await api.get_data("gateway",query=consulta,schema=schema_name)
-    trbnkConn = result['data'][0] if result["status"] == "succes" else []     
+    trbnkConn = result['data'][0] if result["status"] == "success" else []     
     #Acceder a los valores
     Tbk_Api_Key_Id = trbnkConn['additional_config']['trbk_commercialcode']
     Tbk_Api_Key_Secret = trbnkConn['additional_config']['trbk_keysecret']

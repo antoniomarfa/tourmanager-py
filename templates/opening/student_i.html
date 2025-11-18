@@ -10,7 +10,7 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">
-                <i class="fa fa-info"></i> Pasajero
+                <i class="fa fa-info"></i> Alumnos
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -67,15 +67,18 @@
                                 <div class="col-md-4">
                                     <label class="control-label">Fecha Nacimiento</label><br>
                                     <div class="col-md-7 no-padding">
-                                        <div class="input-group">
-                                            <input type="text" name="fechanac" id="fechanac" class="form-control" data-format="dd-mm-yyyy" value="{{ fecha_hoy }}">
-                                            <div class="input-group-addon">
-                                            <a href="#"><i class="fa fa-calendar"></i></a>
-                                            </div>
+                                        <div>
+                                            <input
+                                            type="date"
+                                            id="fechanac"
+                                            name="fechanac"
+                                            value="{{ fecha_hoy }}" 
+                                            />
                                         </div>
                                     </div>
                                 </div>                                  
                             </div>
+                            <br>
                             {% if sale.type_sale == 'GE' %}
                             <div class="row">
                                 <div class="col-md-6">
@@ -123,33 +126,28 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Region</label>
-                                            <select class="form-control required box_select" name="region_id" id="region_id">
-                                                <option value="">Seleccionar</option>
-                                                   {% for region in regions %}
-													{% set activo = 'selected="selected"' if region.id|string == '13' else '' %}
-                                                        <option value="{{ region.id }}" {{ activo }}>{{ region.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
+                                        <label class="control-label">Region</label>
+                                        <select class="form-control required box_select" name="region_id" id="region_id">
+                                            <option value="">Seleccionar</option>
+                                               {% for region in regions %}
+												{% set activo = 'selected="selected"' if region.id|string == '13' else '' %}
+                                                    <option value="{{ region.id }}" {{ activo }}>{{ region.description }}</option>
+                                                {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Comuna</label>
-                                            <select class="form-control required box_select" name="commune_id" id="commune_id">
-                                                <option value="">Seleccionar</option>
-                                                    {% for commune in communes %}
-													{% set activo = 'selected="selected"' if commune.id|string == '45' else '' %}
-                                                        <option value="{{ commune.id }}" {{ activo }}>{{ commune.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
+                                        <label class="control-label">Comuna</label>
+                                        <select class="form-control required box_select" name="commune_id" id="commune_id">
+                                            <option value="">Seleccionar</option>
+                                                {% for commune in communes %}
+												{% set activo = 'selected="selected"' if commune.id|string == '45' else '' %}
+                                                    <option value="{{ commune.id }}" {{ activo }}>{{ commune.description }}</option>
+                                                {% endfor %}
+                                        </select>                      
                                     </div>
                                 </div>	
-
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
@@ -217,7 +215,7 @@
                 </div>
 
             </div>
-            <div class="form-group d-flex justify-content-end">
+            <div class="form-group d-flex justify-content-end mt-4">
                 <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
                 <a href="/{{ empresa }}/manager/opening" type="button" class="btn btn-primary me-4"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
                 <input type="hidden" name="typesale" id="typesale" value="{{ sale.type_sale }}"/>

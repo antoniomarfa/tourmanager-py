@@ -119,7 +119,9 @@ async def login(
             request.session["position"]= "General"
             request.session["company"]= sale["company_id"]
             request.session["schema"]= schema_name
+            request.session['user_curso_id']=0
             request.session["sale"]= sale['id']
+            request.session["user_sale"]= sale['id']
             request.session["user_name"]= sale['encargado']
             request.session["company"]= sale["company_id"]
             request.session["typesale"]= sale["type_sale"]

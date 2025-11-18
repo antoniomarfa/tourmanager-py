@@ -83,6 +83,8 @@ class Utilities:
         dentro de doc_path (.docx). Reemplaza la primera ocurrencia encontrada
         en cada párrafo / celda. Preserva estilos en los runs.
         """
+        print("doc",doc_path)
+        print("signature ",signature_path)
         if not os.path.isfile(doc_path):
             raise FileNotFoundError(f"Documento no encontrado: {doc_path}")
         if not os.path.isfile(signature_path):

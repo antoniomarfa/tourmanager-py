@@ -28,6 +28,9 @@ async def formpaymentrsv(request: Request):
     schema_name = request.session.get("schema")
     company_id = request.session.get("company")
 
+    ruta_image = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
+    ruta_image = os.path.abspath(ruta_image)
+
     response = await api.get_data("gatewaysc",schema="global")
     gatewaysc = response['data'] if response["status"] == "success" else []
     hasta = len(gatewaysc) - 1
@@ -39,8 +42,8 @@ async def formpaymentrsv(request: Request):
         gateways=response['data']  if response["status"] == "success" else []
         if gateways:
             gatewaysc[i]['existe']='S'
-            ruta_image=f"http://localhost:8000/static/{gatewaysc[i]['gateway_image']}"
-            gatewaysc[i]['image']=ruta_image                
+            ruta_logo=f"http://localhost:8000/static/{gatewaysc[i]['gateway_image']}"
+            gatewaysc[i]['image']=ruta_logo                
         else:
             gatewaysc[i]['existe']='N';                
             
@@ -61,7 +64,7 @@ async def formpaymentrsv(request: Request):
     valorv=Helper.formato_numero(valorv)
     info_index = await util.formCharge(request.session)
 
-    return templates.TemplateResponse("pay/formpayment_rsv.html", {"request": request, "session":request.session,"valorv":valorv,"apagar":apagar,"gatewaysc":gatewaysc,"info_index":info_index,"empresa":empresa})
+    return templates.TemplateResponse("pay/formpayment_rsv.html", {"request": request, "session":request.session,"valorv":valorv,"apagar":apagar,"gatewaysc":gatewaysc,"info_index":info_index,"empresa":empresa,"ruta_image":ruta_image})
 
 # Mostrar Pago reserva general
 @router.get("/formpayment", response_class=HTMLResponse)

@@ -46,13 +46,13 @@ jQuery( document ).ready( function( $ ) {
                 {targets: 4, className: 'cell-left'},
                 {targets: 5, className: 'cell-center'},
                 {targets: 6, className: 'cell-center'},
-                {targets: 7, className: 'cell-center'},
-                {targets: 8, className: 'cell-center'},
+                {targets: 7, className: 'cell-right'},
+                {targets: 8, className: 'cell-right'},
                 {targets: 9, className: 'cell-center'},
                 {targets: 10, className: 'cell-center'},
                 {targets: 11, className: 'cell-center'},
                 {targets: 12, className: 'cell-center'},
-                {targets: 13, className: 'cell-center'},
+                {targets: 13, className: 'cell-right'},
                 {targets: 14, className: 'cell-center'},
                 {targets: 15},
                 {targets: 16, className: 'cell-center'},
@@ -240,3 +240,35 @@ function changesStatus(id,new_status){
      });
 
  }
+
+ jQuery(document).on("click", ".list-pdf", function() {
+    var $element = jQuery(this);
+    var id = $element.attr('id');
+    var empresa = document.getElementById('empresa').value;
+    var url = '/' + empresa + '/manager/sales/lstpasajerospdf';
+    var data = {
+        saleid: id
+    }
+    // Mostrar spinner
+    $('#loading-overlay').removeClass('d-none');
+    jQuery.ajax({
+        type: "POST",
+        encoding:"UTF-8",
+        url: url,
+        data: data,
+        dataType:'json',
+        success: function(response){
+            $('#loading-overlay').addClass('d-none');
+            if(response.status == 1){
+                const url = response.ruta;
+                // crear anchor y forzar descarga
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = ''; // vacío -> usa el nombre del recurso
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }
+        }
+    });
+});

@@ -24,7 +24,7 @@ jQuery( document ).ready( function( $ ) {
         }
 
     }, 'Debes ingresar un número de teléfono válido. Ej: +56961234567');
-
+    
 
     $('#form').validate({
         errorElement: 'span',

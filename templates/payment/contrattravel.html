@@ -54,7 +54,7 @@
          {% set option = "disabled" if curso.acepta_contrato|string != "1" else "" %}
         <input type="hidden" id="acepta_contrato" name="acepta_contrato" value ="{{ curso.acepta_contrato }}">
         <button type="submit" class="btn btn-primary">Descargar Contrato Firmado</button>        
-         /{{ empresa }}/manager//payment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+        <a href="/{{ empresa }}/manager/payment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
     </div>
 
     </br>

@@ -14,6 +14,69 @@ const language_datatable = {
         "sPrevious": "<"
     },
 };
+/*
+document.addEventListener("DOMContentLoaded", function() {
+
+    const cardsPerPage = 6; // cantidad de tarjetas por página
+    const cards = document.querySelectorAll(".user-card");
+    const totalCards = cards.length;
+    const totalPages = Math.ceil(totalCards / cardsPerPage);
+    const pagination = document.getElementById("pagination");
+    let currentPage = 1;
+
+    function showPage(page) {
+        currentPage = page;
+        const start = (page - 1) * cardsPerPage;
+        const end = start + cardsPerPage;
+        cards.forEach((card, index) => {
+            card.style.display = (index >= start && index < end) ? "block" : "none";
+        });
+        updatePagination();
+    }
+
+    function updatePagination() {
+        pagination.innerHTML = "";
+        const prevDisabled = currentPage === 1 ? "disabled" : "";
+        const nextDisabled = currentPage === totalPages ? "disabled" : "";
+
+        // Botón "Anterior"
+        pagination.innerHTML += `
+            <li class="page-item ${prevDisabled}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">Anterior</a>
+            </li>
+        `;
+
+        // Números de página
+        for (let i = 1; i <= totalPages; i++) {
+            const active = i === currentPage ? "active" : "";
+            pagination.innerHTML += `
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `;
+        }
+
+        // Botón "Siguiente"
+        pagination.innerHTML += `
+            <li class="page-item ${nextDisabled}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">Siguiente</a>
+            </li>
+        `;
+
+        // Eventos de los botones
+        document.querySelectorAll("#pagination a").forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const page = parseInt(e.target.getAttribute("data-page"));
+                if (page >= 1 && page <= totalPages) showPage(page);
+            });
+        });
+    }
+    // Mostrar la primera página
+    showPage(1);
+});
+*/
+
 jQuery( document ).ready( function( $ ) {
 
     $.fn.loadDataTableDocs = function(){
@@ -37,19 +100,50 @@ jQuery( document ).ready( function( $ ) {
             "columnDefs": [
                 {targets: 0, className: 'cell-right'},
                 {targets: 1, className: 'cell-right'},
-                {targets: 2, className: 'cell-left'},
+                {targets: 2, className: 'cell-left',
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `${row[2]}  ${row[3]}`;
+                    }
+
+                },
+                { 
+                  targets: 3, // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 3, className: 'cell-right'},
-                {targets: 4, className: 'cell-left'},
+                {targets: 4, className: 'cell-left',
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `${row[4]}  ${row[5]}`;
+                    }
+
+                },
+                { 
+                  targets: 5, // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 5, className: 'cell-left'},
                 {targets: 6, className: 'cell-left'},
                 {targets: 7, className: 'cell-right'},
-                {targets: 8, className: 'cell-right'},
+                { 
+                    targets: 8, className: 'cell-left', // El target debe ser la columna en la que quieres mostrar el contenido combinado
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `Subtotal: ${row[8]}  Descuento: ${row[9]} <br> Total: ${row[10]}`;
+                    }
+                },
+                { 
+                  targets: [9, 10], // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 9, className: 'cell-right'},
                 {targets: 10, className: 'cell-center'},
                 {targets: 11, className: 'cell-center'},
                 {targets: 12, className: 'cell-center'},
                 {targets: 13, className: 'cell-center'},
-                {targets: 14, className: 'cell-center'}            ],
+                {targets: 14, className: 'cell-center'}            
+            ],
             "initComplete": function(settings, json) {
 
             }

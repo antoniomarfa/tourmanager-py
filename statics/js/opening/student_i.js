@@ -34,7 +34,7 @@ jQuery( document ).ready( function( $ ) {
             celular:{ phoneWithCode:true },
             rutalumno: { required: true },
             nombrealumno: { required: true },
-            fechanac: { required: true },
+           // fechanac: { required: true },
             rutapoderado: { required: true },
             nombreapoderado: { required: true },
             calle: { required: true },
@@ -85,9 +85,9 @@ jQuery( document ).ready( function( $ ) {
         },
     });
 
-     $("#venta_id").select2()
-/*    $("#region_id").select2()
-    $("#commune_id").select2() */ 
+    $("#venta_id").select2()
+    $("#region_id").select2()
+    $("#commune_id").select2() 
 
     $('#region_id').change(function(){
      

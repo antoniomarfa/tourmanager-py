@@ -88,10 +88,12 @@
                                     <div class="form-group">
                                         <label class="control-label">¿Modificar Clave?</label>
                                         <div class="col-md-12 no-padding">
+                                        <span class="me-2">No</span>
                                         <label class="make-switch" data-on-label="SI" data-off-label="NO">
                                             <input type="checkbox" name="change_password" id="change_password" value="1">
                                             <span class="slider"></span>
                                         </label>
+                                        <span class="me-2">Si</span>                                        
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -108,10 +110,12 @@
                                     <div class="form-group">
                                         <label class="control-label">¿Activar Registro?</label>
                                         <div class="col-md-12 no-padding">
+                                        <span class="me-2">No</span>
                                         <label class="make-switch" data-on-label="SI" data-off-label="NO">
                                             <input type="checkbox" name="active" id="active" value="1" {% if user.active == 1 %}checked="checked"{% endif %}>
                                             <span class="slider"></span>
                                         </label>
+                                        <span class="me-2">Si</span>
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>

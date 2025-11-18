@@ -16,6 +16,13 @@
     </li>
   </ol>
 </nav>
+
+<div id="loading-overlay" class="d-none">
+  <div class="spinner-border text-primary"></div>
+  <p>Cargando resultados...</p>
+  <span id="loading-icon" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+</div>
+
 <div class="container mt-5">
   <h2>Ventas</h2>
   <hr>
@@ -54,7 +61,7 @@
 
 <div class="clearfix"></div>
 <form role="form" id="form" method="post">
-
+<input type="hidden" id="empresa" value="{{ empresa }}" />
 <div class="row">
     <div class="col-md-12 col-xs-12 col-sm-12">
 
@@ -134,9 +141,7 @@
 <hr>
 <div class="row">
 
-    <div class="col-md-12">
-
-        <table class="table table-bordered table-hove" id="table-sale">
+        <table class="table table-bordered table-hove nowrap" id="table-sale">
             <thead>
             <tr>
                 <th>Venta</th>
@@ -163,7 +168,7 @@
             </tbody>
         </table>
 
-    </div>
+
 </div>
 
 <br />

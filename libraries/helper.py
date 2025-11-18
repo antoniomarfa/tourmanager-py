@@ -157,3 +157,16 @@ class Helper:
             if key in request.session:
                 mensajes[tipo] = request.session.pop(key)
         return mensajes
+
+    @staticmethod
+    def number_format(valor, decimales=0, sep_miles=",", sep_decimal="."):
+        valor = float(valor)
+        entero, decimal = divmod(abs(valor), 1)
+        entero = int(entero)
+        decimal = round(decimal * (10 ** decimales))
+        entero_formateado = f"{entero:,}".replace(",", sep_miles)
+        decimal_formateado = f"{decimal:0{decimales}d}"
+        
+        if decimales > 0:
+            return f"{entero_formateado}{sep_decimal}{decimal_formateado}"
+        return entero_formateado

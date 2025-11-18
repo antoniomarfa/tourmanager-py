@@ -95,7 +95,7 @@ jQuery( document ).ready( function( $ ) {
         tcambio= $('#tipocambio').val() == '' ? 1 : $('#tipocambio').val();
 
         var empresa = "{{ empresa }}";
-        var Url = '/' + empresa + '/manager//sales/getprogramvalue';
+        var Url = '/' + empresa + '/manager/sales/getprogramvalue';
         var data = {
             program_id : program,
             nroalumno : nroalumno
