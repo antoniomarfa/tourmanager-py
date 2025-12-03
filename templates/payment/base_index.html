@@ -1,14 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Payment{% endblock %}
+{% block title %}Apoderados y Pasajeros{% endblock %}
 
 {% block content %}
 <!-- Header -->
 <div class="container mt-5" id="features">
+  <div class="d-flex justify-content-between align-items-center w-100">
+
+    <!-- Logo izquierda -->
+    <div>
+      <img src="{{ ruta_image }}" width="50" height="50" alt="Imagen empresa" class="img-fluid"
+        style="background-color: #f8f9fa;">
+    </div>
+
+    <!-- Menú usuario (derecha) -->
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+          <i class="fa fa-user"></i> Hola, {{ user_name }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li>
+            <a class="dropdown-item text-danger" href="/{{ empresa }}/manager/logout">Cerrar sesión</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+  <br>
   <div class="row">
     <div class="col-sm-9">
       <h4>Bienvenido(a) <strong>{{ info_index["apoderado"] }}</strong></h4>
-      <h4>Alumno <strong>{{ info_index["alumno"] }}</strong></h4>
+      <h4>Pasajero <strong>{{ info_index["alumno"] }}</strong></h4>
       <h4>Colegio <strong>{{ info_index["colegio"] }}</strong></h4>
       <h4>Curso <strong>{{ info_index["nomcurso"] }}</strong></h4>
       <h4>Programa <strong>{{ info_index["programa"] }}</strong></h4>
@@ -20,8 +44,8 @@
   </div>
   <hr class="my-3" style="height: 2px; background-color: black;">
 </div>
-  <!-- Aquí se carga el contenido dinámico -->
-  {% block payment_content %}{% endblock %}
+<!-- Aquí se carga el contenido dinámico -->
+{% block payment_content %}{% endblock %}
 
 </div>
 {% endblock %}

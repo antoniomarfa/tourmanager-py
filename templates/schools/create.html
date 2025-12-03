@@ -71,7 +71,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Region</label>
-                                        <select class="form-control box_select" name="region_id" id="region_id" required>
+                                         <select class="form-control box_select" name="region_id" id="region_id" required>
                                                 <option value="">Seleccionar</option>
                                                     {% for region in regions %} 
 														{% set activo = "selected='selected'" if region.id|string == "13" else "" %}                           

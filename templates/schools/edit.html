@@ -87,7 +87,7 @@
                                                 <option value="">Seleccionar</option>
                                                     {% for comuna in communes %}
                                                         {% set activo = "selected='selected'" if comuna.id|string == school.comuna_id|string else "" %}                                                         
-                                                        <option value="comuna.id " {{ activo }}> {{comuna.description}} </option>
+                                                        <option value="{{ comuna.id }}" {{ activo }}> {{comuna.description}} </option>
                                                     {% endfor %}
                                             </select>
                                     </div>

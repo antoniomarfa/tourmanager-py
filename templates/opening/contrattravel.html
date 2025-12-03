@@ -2,7 +2,7 @@
 
 {% block opening_content %}
 <style>
-    .my_scroll_div{
+    .my_scroll_div {
         max-height: 50vh;
         max-width: 80vh;
         overflow-y: scroll;
@@ -10,8 +10,9 @@
         scroll-snap-type: mandatory;
         scroll-snap-points-y: repeat(3rem);
         scroll-snap-type: y mandatory;
-        font-size:14px;
-    }  
+        font-size: 14px;
+    }
+
     pre {
         border: none;
         padding: 0;
@@ -20,51 +21,105 @@
         font-family: inherit;
         white-space: pre-wrap;
     }
-</style> 
-<div class="container"  style="float:center">
-     <form role="form" id="form" method="post" action="/{{ empresa }}/manager/opening/create_sale">
+</style>
+<div class="container" style="float:center">
+    <form role="form" id="form" method="post" action="/{{ empresa }}/manager/opening/create_sale">
 
-    <div class="col-md-12 text-center">
-        <p><h3>CONTRATO</h3></p>
-        <p><h5>{{ rs }}</h5></p>
-        <br>
-    </div>
-    <div class="container my_scroll_div">     
-        <div class="col text-justify">
-            <br><br>
-            <div class="col-md-12">
-                <iframe src="https://docs.google.com/gview?url={{ contrato }}&embedded=true" 
-                        style="width:100%; height:600px; border:none;"></iframe>
-            </div>        
+        <div class="col-md-12 text-center">
+            <p>
+            <h3>CONTRATO</h3>
+            </p>
+            <p>
+            <h5>{{ rs }}</h5>
+            </p>
+            <br>
         </div>
-    </div>
-    <br>
-
-    <div class="col-md-12 text-center">
-        {% set option = "checked='checked' disabled" if curso.acepta_contrato|string  == "1" else "" %}
-        <input type="checkbox" name="acepto" id="acepto" {{ option }}> <strong>Acepto las terminos y condiciones del contrato</strong>
+        <div class="container my_scroll_div">
+            <div class="col text-justify">
+                <br><br>
+                <div class="col-md-12">
+                    <div id="document-loading" style="text-align: center; padding: 50px;">
+                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                        <p>Cargando documento...</p>
+                    </div>
+                    <div id="document-viewer" style="padding: 20px; background: white;"></div>
+                    <div id="document-error" style="display: none; text-align: center; padding: 50px; color: red;">
+                        <i class="fa fa-exclamation-triangle fa-3x"></i>
+                        <p>Error al cargar el documento. Por favor, intente nuevamente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <br>
-        <p id="linea" style="display: none;">Solicito haga un firma ya sea usando el mouse o con lapiz en pantalla tactil</p>
-        <div id="sig" style="display: none; width: 400px; height: 200px; border: 1px solid #ccc; margin: 0 auto;"></div>
-        <input type="hidden" id="signature64" name="signature64">
-        <br>
-        <button type="button" id="clear" class="btn btn-primary" style="display: none;">Limpiar</button>
-        {% set option = "disabled" if curso.acepta_contrato|string != "1" else "" %}
-        <input type="hidden" id="acepta_contrato" name="acepta_contrato" value="{{ curso.acepta_contrato }}">
-        <input type="hidden" id="documentname" name="documentname" value="{{ documentname }}">
-        <input type="hidden" id="typesale" name="typesale" value="{{ venta.type_sale }}">
-        <button type="submit" class="btn btn-primary descargar-contrato">Continuar</button>
-        <a href="/{{ empresa }}/manager/opening" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
-    </div>
 
-    </br>
-    <div class="clearfix"></div>
+        <div class="col-md-12 text-center">
+            {% set option = "checked='checked' disabled" if curso.acepta_contrato|string == "1" else "" %}
+            <input type="checkbox" name="acepto" id="acepto" {{ option }}> <strong>Acepto las terminos y condiciones del
+                contrato</strong>
+            <br>
+            <p id="linea" style="display: none;">Solicito haga un firma ya sea usando el mouse o con lapiz en pantalla
+                tactil</p>
+            <div id="sig" style="display: none; width: 400px; height: 200px; border: 1px solid #ccc; margin: 0 auto;">
+            </div>
+            <input type="hidden" id="signature64" name="signature64">
+            <br>
+            <button type="button" id="clear" class="btn btn-primary" style="display: none;">Limpiar</button>
+            {% set option = "disabled" if curso.acepta_contrato|string != "1" else "" %}
+            <input type="hidden" id="acepta_contrato" name="acepta_contrato" value="{{ curso.acepta_contrato }}">
+            <input type="hidden" id="documentname" name="documentname" value="{{ documentname }}">
+            <input type="hidden" id="typesale" name="typesale" value="{{ venta.type_sale }}">
+            <button type="submit" class="btn btn-primary descargar-contrato">Continuar</button>
+            <a href="/{{ empresa }}/manager/opening" type="button" class="btn btn-primary"><i
+                    class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+        </div>
+
+        </br>
+        <div class="clearfix"></div>
 
 
-     </form>    
+    </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+    // Cargar el documento DOCX usando Mammoth.js
+    document.addEventListener('DOMContentLoaded', function () {
+        const documentUrl = "{{ contrato }}";
+        const viewer = document.getElementById('document-viewer');
+        const loading = document.getElementById('document-loading');
+        const error = document.getElementById('document-error');
+
+        // Fetch del documento
+        fetch(documentUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar el documento');
+                }
+                return response.arrayBuffer();
+            })
+            .then(arrayBuffer => {
+                // Convertir DOCX a HTML usando Mammoth
+                return mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+            })
+            .then(result => {
+                // Mostrar el HTML convertido
+                viewer.innerHTML = result.value;
+                loading.style.display = 'none';
+                viewer.style.display = 'block';
+
+                // Log de advertencias si las hay
+                if (result.messages.length > 0) {
+                    console.log('Advertencias de conversión:', result.messages);
+                }
+            })
+            .catch(err => {
+                console.error('Error al cargar el documento:', err);
+                loading.style.display = 'none';
+                error.style.display = 'block';
+            });
+    });
+</script>
 <script src="/static/js/opening/contrattravel.js"></script>
 {% endblock %}

@@ -12,6 +12,12 @@ MAIL_COLOR_TEXT= os.getenv("MAIL_COLOR_TEXT","#2e58a6")
 MAIL_COLOR_BACKGROUND= os.getenv("MAIL_COLOR_BACKGROUND","#f6f6f6")
 MAIL_COLOR_FOOTER_TEXT= os.getenv("MAIL_COLOR_FOOTER_TEXT","#ffffff")
 
+
+SMTP_SERVER = os.getenv("SMTP_SERVER")   # Servidor saliente (SMTP)
+SMTP_PORT = os.getenv("SMTP_PORT")                  # Puerto SMTP con SSL
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
+
 class Mailutil:
 
 
@@ -130,9 +136,9 @@ class Mailutil:
         # Si quieres enviar HTML en lugar de texto plano
         msg.add_alternative(body, subtype='html')
 
-        # Conexión al servidor SMTP de Gmail
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login('antoniomarfa@gmail.com', 'nrhd jfir affj tplr')
+        # Conexión SMTP con SSL   
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as smtp:
+            smtp.login(USERNAME, PASSWORD)
             smtp.send_message(msg)
 
         return

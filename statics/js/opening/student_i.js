@@ -1,18 +1,18 @@
-jQuery( document ).ready( function( $ ) {
-    $.validator.addMethod("validateRolUnicoTributario", function(value, element) {
+jQuery(document).ready(function ($) {
+    $.validator.addMethod("validateRolUnicoTributario", function (value, element) {
         var label = element.id;
         return this.optional(element) || validaRut(value, label);
     }, "El RUT ingresado es inválido");
     $.validator.addClassRules({
-        rut : { validateRolUnicoTributario : true }
+        rut: { validateRolUnicoTributario: true }
     });
 
-    $.validator.addMethod('phoneWithCode', function(value, element) {
+    $.validator.addMethod('phoneWithCode', function (value, element) {
         var validator = this;
         var phone = value;
         var rule_phone = /^\+([0-9]{11})$/;
 
-        if(phone.length == 0){
+        if (phone.length == 0) {
             return true;
         } else {
             if (phone.match(rule_phone)) {
@@ -29,18 +29,18 @@ jQuery( document ).ready( function( $ ) {
         errorElement: 'span',
         errorClass: 'validate-has-error',
         rules: {
-            correo: { required: true,email:true },
-            fono:{ required: true,phoneWithCode:true },
-            celular:{ phoneWithCode:true },
+            correo: { required: true, email: true },
+            fono: { required: true, phoneWithCode: true },
+            celular: { phoneWithCode: true },
             rutalumno: { required: true },
             nombrealumno: { required: true },
-           // fechanac: { required: true },
+            // fechanac: { required: true },
             rutapoderado: { required: true },
             nombreapoderado: { required: true },
             calle: { required: true },
             numdir: { required: true },
             region_id: { required: true },
-            commune_id: { required: true}
+            commune_id: { required: true }
         },
         highlight: function (element) {
             $(element).closest('.form-group').addClass('validate-has-error');
@@ -50,27 +50,23 @@ jQuery( document ).ready( function( $ ) {
             $(element).closest('.form-group').removeClass('validate-has-error');
             $(element).removeClass('error');
         },
-        errorPlacement: function (error, element)
-        {
-            if(element.closest('.has-switch').length)
-            {
+        errorPlacement: function (error, element) {
+            if (element.closest('.has-switch').length) {
                 error.insertAfter(element.closest('.has-switch'));
             }
             else
-            if(element.parent('.checkbox, .radio').length || element.parent('.input-group').length)
-            {
-                error.insertAfter(element.parent());
-            }
-            else
-            {
-                error.insertAfter(element);
-            }
+                if (element.parent('.checkbox, .radio').length || element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                }
+                else {
+                    error.insertAfter(element);
+                }
         },
         ignore: [],
-        invalidHandler: function() {
-            setTimeout(function() {
+        invalidHandler: function () {
+            setTimeout(function () {
                 $('.nav-tabs a small.required').remove();
-                var validatePane = $('.tab-content.tab-validate .tab-pane:has(input.error), .tab-content.tab-validate .tab-pane:has(select.error)').each(function() {
+                var validatePane = $('.tab-content.tab-validate .tab-pane:has(input.error), .tab-content.tab-validate .tab-pane:has(select.error)').each(function () {
                     var id = $(this).attr('id');
                     $('.nav-tabs').find('a[href^="#' + id + '"]').append(' <small class="required">***</small>');
                     console.log(id);
@@ -87,59 +83,79 @@ jQuery( document ).ready( function( $ ) {
 
     $("#venta_id").select2()
     $("#region_id").select2()
-    $("#commune_id").select2() 
+    $("#commune_id").select2()
 
-    $('#region_id').change(function(){
-     
+
+    $('#rutalumno').blur(function () {
+        var empresa = $('#empresaCode').val();
+        var Url = '/' + empresa + '/manager/opening/getAlumno';
+
+        $.get(Url, { rutalumno: $(this).val() }, function (response) {
+            if (response.status == "error") {
+                Swal.fire({
+                    text: "El pasajero ya esta ingresado",
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/' + empresa + '/manager/opening';
+                    }
+                });
+            }
+        });
+    });
+
+    $('#region_id').change(function () {
+
         var region = $(this).val();
-        var empresa = "{{ empresa }}";
+        var empresa = $('#empresaCode').val();
         var Url = '/' + empresa + '/manager/opening/getComune';
         var data = {
-          region_id : region
-          }
-  
-          $.ajax({
-              type: "POST",
-              encoding: "UTF-8",
-              url: Url,
-              data: data,
-              dataType: 'json',
-              success: function(response){
-                //  $('#bodega').find('option').not('first').remove();
-                  $('#commune_id option:not(:first)').remove();
-  
-                  $.each(response, function(index,data){
-                      $('#commune_id').append('<option value="'+data['id']+'">'+data['description']+'</option>')
-                  })
-              }
-          })
-  
-     });    
+            region_id: region
+        }
 
-     $('#venta_id').change(function(){
-     
+        $.ajax({
+            type: "POST",
+            encoding: "UTF-8",
+            url: Url,
+            data: data,
+            dataType: 'json',
+            success: function (response) {
+                //  $('#bodega').find('option').not('first').remove();
+                $('#commune_id option:not(:first)').remove();
+
+                $.each(response, function (index, data) {
+                    $('#commune_id').append('<option value="' + data['id'] + '">' + data['description'] + '</option>')
+                })
+            }
+        })
+
+    });
+
+    $('#venta_id').change(function () {
+
         var venta = $(this).val();
-        var empresa = "{{ empresa }}";
+        var empresa = $('#empresaCode').val();
         var Url = '/' + empresa + '/manager/opening/getVenta';
         var data = {
-          venta_id : venta
-          }
-  
-          $.ajax({
-              type: "POST",
-              encoding: "UTF-8",
-              url: Url,
-              data: data,
-              dataType: 'json',
-              success: function(response){
+            venta_id: venta
+        }
+
+        $.ajax({
+            type: "POST",
+            encoding: "UTF-8",
+            url: Url,
+            data: data,
+            dataType: 'json',
+            success: function (response) {
                 $('#apagar').val(response.subtotal);
                 $('#descto').val(response.descuento);
                 $('#a_pagar').val(response.valor);
 
-              }
-          })
-  
-     });    
+            }
+        })
+
+    });
 
 
 });

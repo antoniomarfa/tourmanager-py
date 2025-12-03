@@ -1,46 +1,86 @@
 {% extends "flowpagos/base_index.html" %}
 
 {% block opening_content %}
-<div class="col-md-6" style="margin-left:30%">
-    <div>
-        <h4><i class="fa fa-table"></i> Continuar con  Pago Flow</h4>
-    </div> 
-    <br>
-     <div>
-        <form role="form" name="form_continuapagoflw" id="form_continuapagoflw" method="post" action="/{{ empresa }}/manager/flowpagos/iniciopagoflow" enctype="multipart/form-data">        
-            <div class="form-group row">
-                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Nro Ingreso</strong></label>
-                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;">{{ identificador }}</label>
-            </div>
-            <div class="form-group row">
-                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Fecha Pago</strong></label>
-                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;">{{ fecha }}</label>
-            </div>
-            <div class="form-group row">
-                <label class="col-form-label col-form-label-sm col-sm-4" style="text-align: left;"><strong>Monto a Pagar</strong></label>
-                <label class="col-form-label col-form-label-sm col-sm-6" style="text-align: left;" id="mpagar">$ {{ helper.number_format(mpagar, 0, ".", ",") }}</label>
-                <input type="hidden" name="mpagar" value="{{ mpagar }}" />
-                <input type="hidden" name="valorcuota" value="{{ valorcuota }}" />
-                <input type="hidden" name="nrocuotas" value="{{ nrocuotas }}" />
-                <input type="hidden" name="fechainicial" value="{{ fechainicial }}" /> 
-                <input type="hidden" name="identificador" value="{{ identificador }}" />
-            </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg mt-4 mb-4">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0 text-dark">
+                        <i class="fa fa-credit-card"></i> Continuar con Pago Flow
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form role="form" name="form_continuapagoflw" id="form_continuapagoflw" method="post"
+                        action="/{{ empresa }}/manager/flowpagos/iniciopagoflow" enctype="multipart/form-data">
 
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <strong><i class="fa fa-hashtag"></i> Nro Ingreso:</strong>
+                                </div>
+                                <div class="col-7">
+                                    <span class="text-muted">{{ identificador }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-            <button type="submit" class="btn btn-success" >Continuar Pago</button>
-                {% if  session["position"]=='General' %}
-                <a href="/{{ empresa }}/manager/pay/formpayment_rsv" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
-                {% else %}
-                {% if session["encuotas"]=="S" %}
-                    <a href="/{{ empresa }}/manager/pay/formpayment_ct" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
-                {% else %}
-                    <a href="/{{ empresa }}/manager/pay/formpayment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
-                {% endif %}
-                {% endif %}
-        </form>
-     </div>
-</div> 
-<br>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-5">
+                                    <strong><i class="fa fa-calendar"></i> Fecha Pago:</strong>
+                                </div>
+                                <div class="col-7">
+                                    <span class="text-muted">{{ fecha }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-<div class="clearfix"></div>
+                        <div class="mb-4">
+                            <div class="row">
+                                <div class="col-5">
+                                    <strong><i class="fa fa-dollar"></i> Monto a Pagar:</strong>
+                                </div>
+                                <div class="col-7">
+                                    <span class="text-success font-weight-bold h5" id="mpagar">$ {{
+                                        helper.number_format(mpagar, 0, ".", ",") }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="mpagar" value="{{ mpagar }}" />
+                        <input type="hidden" name="valorcuota" value="{{ valorcuota }}" />
+                        <input type="hidden" name="nrocuotas" value="{{ nrocuotas }}" />
+                        <input type="hidden" name="fechainicial" value="{{ fechainicial }}" />
+                        <input type="hidden" name="identificador" value="{{ identificador }}" />
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fa fa-arrow-right"></i> Continuar Pago
+                            </button>
+
+                            {% if session["position"]=='General' %}
+                            <a href="/{{ empresa }}/manager/pay/formpayment_rsv" class="btn btn-secondary btn-lg">
+                                <i class="fa fa-angle-double-left"></i> Cancelar y Volver
+                            </a>
+                            {% else %}
+                            {% if session["encuotas"]=="S" %}
+                            <a href="/{{ empresa }}/manager/pay/formpayment_ct" class="btn btn-secondary btn-lg">
+                                <i class="fa fa-angle-double-left"></i> Cancelar y Volver
+                            </a>
+                            {% else %}
+                            <a href="/{{ empresa }}/manager/pay/formpayment" class="btn btn-secondary btn-lg">
+                                <i class="fa fa-angle-double-left"></i> Cancelar y Volver
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

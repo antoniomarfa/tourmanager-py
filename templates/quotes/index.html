@@ -5,155 +5,149 @@
 {% block content %}
 
 <nav class="breadcrumb-container" aria-label="breadcrumb">
-  <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item">
-      <a href="/{{ empresa }}/manager/index">
-        <i class="bi bi-house-door-fill me-1"></i> Home
-      </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      <i class="bi bi-pencil-square me-1"></i> Cotizaciones
-    </li>
-  </ol>
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="/{{ empresa }}/manager/index">
+                <i class="bi bi-house-door-fill me-1"></i> Home
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="bi bi-pencil-square me-1"></i> Cotizaciones
+        </li>
+    </ol>
 </nav>
 
 <div class="container mt-2">
-  <h2>Cotizaciones</h2>
-  <hr>
-  {% if cant_access["can_insert"] %}
-    <div class="mb-3 text-end">
-        <div class="btn-group">
-            <button type="button" class="btn btn-success">
-                <i class="fa fa-plus"></i> Nueva Cotización
-            </button>
-            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            </button>
-            <ul class="dropdown-menu dropdown-menu-center">
-                <li>
-                    <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/ge">
-                    <i class="fa fa-file-text"></i> Gira Estudio
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/vg">
-                    <i class="fa fa-file-text"></i> Viaje Grupal
-                    </a>
-                </li>
-            </ul>
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2>
+            <i class="fas fa-money-bill-wave"></i>
+            Cotizaciones
+        </h2>
+        <p class="subtitle">Gestión y seguimiento de todas las cotizaciones registradas</p>
+
+        {% if cant_access["can_insert"] %}
+        <div class="mb-3 text-end">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Nueva Cotización
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu dropdown-menu-center">
+                    <li>
+                        <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/ge">
+                            <i class="fa fa-file-text"></i> Gira Estudio
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/{{ empresa }}/manager/quotes/create/vg">
+                            <i class="fa fa-file-text"></i> Viaje Grupal
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-  {% endif %}
+        {% endif %}
 
-{% if cant_access["can_export"] %}
-    <button type="button" class="btn btn-success" id="export-report"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Informe </button>
-{% endif %}
+        {% if cant_access["can_export"] %}
+        <button type="button" class="btn btn-success" id="export-report"><i class="fa fa-file-excel-o"
+                aria-hidden="true"></i> Exportar Informe </button>
+        {% endif %}
 
 
-<div class="clearfix"></div>
+        <div class="clearfix"></div>
 
-<hr>
-<form role="form" id="form" method="post">
 
-<div class="row">
-    <div class="col-md-12 col-xs-12 col-sm-12">
+        <form role="form" id="form" method="post">
 
-        <div class="panel panel-primary">
-
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <span class="control-label">&nbsp;&nbsp;Fecha Desde</span><br>
-                        <div class="col-md-6 no-padding">
-                            <div>
-                                <input
-                                    type="date"
-                                    id="start_date"
-                                    name="start_date"
-                                    value="{{ start_date }}" 
-                                    max="{{ end_date }}" 
-                                /> 
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light fw-semibold">
+                    Filtros de búsqueda
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Fecha Desde</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date"
+                                    value="{{ start_date }}" max="{{ end_date }}" />
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <span class="control-label">Fecha Hasta</span><br>
-                        <div class="col-md-6 no-padding">
-                            <div>
-                                <input
-                                    type="date"
-                                    id="end_date"
-                                    name="end_date"
-                                    value="{{ end_date }}" 
-                                    max="{{ end_date }}" 
-                                />    
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Fecha Hasta</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date"
+                                    value="{{ end_date }}" max="{{ end_date }}" />
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="control-label">Vendedor</label>
-                            <select class="form-control box_select" name="vendedor" id="vendedor">
-                                <option value="">Todas</option>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Vendedor</label>
+                                <select class="form-control box_select" name="vendedor" id="vendedor">
+                                    <option value="">Todas</option>
                                     {% for seller in sellers %}
-                                    {% if seller.rol.description == 'Vendedor' or seller.rol.description == 'Captador' or seller.rol.description == 'Administrador' %}
-                                    {% set activo = 'selected="selected"' if request.session["filter_seller"] == seller.id else '' %}
+                                    {% if seller.rol.description == 'Vendedor' or seller.rol.description == 'Captador'
+                                    or
+                                    seller.rol.description == 'Administrador' %}
+                                    {% set activo = 'selected="selected"' if request.session["filter_seller"] ==
+                                    seller.id
+                                    else '' %}
                                     <option value="{{ seller.id }}" {{ activo }}>{{ seller.name }}</option>
                                     {% endif %}
                                     {% endfor %}
-                                
-                            </select>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <span class="control-label">&nbsp;</span><br>
-                        <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
-                            <button type="button" class="btn btn-primary search"><i class="fa fa-search"></i> Buscar</button>
+                    <div class="row mt-3">
+                        <div class="col-md-12 text-end">
+                            <button type="button" class="btn btn-primary search">
+                                <i class="fa fa-search"></i> Buscar
+                            </button>
                         </div>
                     </div>
                 </div>
-         </div>
+            </div>
+
     </div>
-</div>
+    <div class="row">
 
-
-
-<div class="row">
-
-    <div class="col-md-12">
+        <div class="col-md-12">
 
             <table class="table table-bordered table-hover" id="table-sale">
                 <thead>
-                <tr>
-                    <th>Cotizacion</th>
-                    <th>Identificador</th>
-                    <th>Tipo</th>
-                    <th>Fecha</th>
-                    <th>Vendedor</th>
-                    <th>Colegio</th>
-                    <th>N Pasajeros</th>
-                    <th>programa</th>
-                    <th>Subtotal</th>
-                    <th>Descuento</th>
-                    <th>Total</th>
-                    <th>Contacto</th>
-                    <th>Fono</th>
-                    <th>Email</th>
-                    <th>Estado</th>
-                    <th>Autor</th>
-                    <th>Modificador</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th>Cotizacion</th>
+                        <th>Identificador</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Vendedor</th>
+                        <th>Colegio</th>
+                        <th>N Pasajeros</th>
+                        <th>programa</th>
+                        <th>Subtotal</th>
+                        <th>Descuento</th>
+                        <th>Total</th>
+                        <th>Contacto</th>
+                        <th>Fono</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                        <th>Autor</th>
+                        <th>Modificador</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
 
+        </div>
     </div>
-</div>
 
-<br />
-</form>
+    <br />
+    </form>
 </div>
 {% endblock %}
 

@@ -17,21 +17,31 @@
   </ol>
 </nav>
 
-<h3>Listado de Ingresos</h3>
-<br />
+<div class="page-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2>
+      <i class="fas fa-money-bill-wave"></i>
+      Listado de Ingresos
+    </h2>
+    <p class="subtitle">Gestión y seguimiento de todos los ingresos registrados</p>
 
-<div class="clearfix"></div>
+    <!-- Action Buttons -->
+    {% if cant_access["can_insert"] %}
+    <div class="action-buttons">
+      <a href="/{{ empresa }}/manager/entry/create" class="btn btn-success">
+        <i class="fa fa-file-text me-2"></i> Nuevo Ingreso
+      </a>
+    </div>
+    {% endif %}
+  </div>
 
- {% if cant_access["can_insert"] %}
-<div class="form-group text-right">
-    <a href="/{{ empresa }}/manager/entry/create" type="button" class="btn btn-success"><i class="fa fa-file-text"></i> Nuevo</a>
-</div>
-{% endif %}
-
-<div class="table-responsive">
-    <table class="table table-bordered table-hover" id="table-ing">
+  <!-- Table Card -->
+  <div class="modern-table-wrapper">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover" id="table-ing">
         <thead>
-        <tr>
+          <tr>
             <th>Nro Comp.</th>
             <th>Tipo</th>
             <th>Fecha</th>
@@ -43,12 +53,14 @@
             <th>Monto</th>
             <th>Forma Pago</th>
             <th>Estado</th>
-            <th width="20%"></th>
-        </tr>
+            <th width="20%">Acciones</th>
+          </tr>
         </thead>
         <tbody>
         </tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

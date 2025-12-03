@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Listado de Ventas{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-container" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item">
+      <a href="/{{ empresa }}/manager/index">
+        <i class="bi bi-house-door-fill me-1"></i> Home
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <i class="bi bi-pencil-square me-1"></i> Ventas
+    </li>
+  </ol>
+</nav>
+
+<div id="loading-overlay" class="d-none">
+  <div class="spinner-border text-primary"></div>
+  <p>Cargando resultados...</p>
+  <span id="loading-icon" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+</div>
+
+<div class="container mt-5">
+  <h2>Ventas</h2>
+  <hr>
+
+  {% if cant_access["can_insert"] %}
+    <div class="mb-3 text-end">
+        <div class="btn-group">
+            <button type="button" class="btn btn-success">
+                <i class="fa fa-plus"></i> Nueva Venta
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-center">
+                <li>
+                    <a class="dropdown-item" href="/{{ empresa }}/manager/sales/create/ge">
+                    <i class="fa fa-file-text"></i> Gira Estudio
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/{{ empresa }}/manager/sales/create/vg">
+                    <i class="fa fa-file-text"></i> Viaje Grupal
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+  {% endif %}
+
+ 
+</div>
+
+{% if cant_access["export_report"] %}
+    <button type="button" class="btn btn-success" id="export-report"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar Informe </button>
+{% endif %}
+
+<div class="clearfix"></div>
+<form role="form" id="form" method="post">
+<input type="hidden" id="empresa" value="{{ empresa }}" />
+<div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <span class="control-label">&nbsp;&nbsp;Fecha Desde</span><br>
+                        <div class="col-md-6 no-padding">
+                            <div>
+                                <input
+                                    type="date"
+                                    id="start_date"
+                                    name="start_date"
+                                    value="{{ start_date }}" 
+                                    max="{{ end_date }}" 
+                                /> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <span class="control-label">Fecha Hasta</span><br>
+                        <div class="col-md-6 no-padding">
+                            <div>
+                                <input
+                                    type="date"
+                                    id="end_date"
+                                    name="end_date"
+                                    value="{{ end_date }}" 
+                                    max="{{ end_date }}" 
+                                />    
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px;margin-bottom:20px">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Vendedor</label>
+                                <select class="form-control box_select" name="vendedor" id="vendedor">
+                                    <option value="">Todas</option>
+                                        {% for seller in sellers %}
+                                        {% if seller.rol.description == 'Vendedor' or seller.rol.description == 'Captador' or seller.rol.description == 'Administrador' %}
+                                        {% set activo = 'selected="selected"' if request.session["filter_seller"] == seller.id else '' %}
+                                        <option value="{{ seller.id }}" {{ activo }}>{{ seller.name }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Colegios</label>
+                                <select class="form-control box_select" name="colegio" id="colegio">
+                                    <option value="">Todas</option>
+                                        {% for school in schools %}
+                                            {% set activo = 'selected="selected"' if request.session["filter_school"] == school.id else '' %}
+                                        <option value="{{school.id}}" {{ activo }}>{{ school.nombre }}</option>
+                                        {% endfor %}
+                                </select>
+                            </div>
+                        </div>   
+                        <div class="col-md-2">
+                             <span class="control-label">&nbsp;</span><br>
+                             <div class="col-md-6 no-padding" style="margin:0 0 10px 0">
+                                <button type="button" class="btn btn-primary search"><i class="fa fa-search"></i> Buscar</button>
+                             </div>
+                         </div>
+                     </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+
+        <table class="table table-bordered table-hove nowrap" id="table-sale">
+            <thead>
+            <tr>
+                <th>Venta</th>
+                <th>Tipo Venta</th>
+                <th>Identificador</th>
+                <th>Fecha</th>
+                <th>Colegio</th>
+                <th>Curso</th>
+                <th>programa</th>
+                <th>Pasajeros</th>
+                <th>Liberados</th>
+                <th>valor</th>
+                <th>Total</th>
+                <th>Vendedor</th>
+                <th>Estado</th>
+                <th>Alumnos</th>
+                <th>Lst Pasajeros</th>
+                <th>Correo</th>
+                <th>Autor</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+
+</div>
+
+<br />
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/sales/index.js"></script>
+{% endblock %}

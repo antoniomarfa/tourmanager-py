@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form, Depends, APIRouter
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 from libraries.renderrequest import RenderRequest
 from libraries.helper import Helper
 import json, uuid, os, bcrypt,re,base64
@@ -8,8 +9,10 @@ from datetime import datetime, timezone, timedelta
 from libraries.restriction import Restriction
 from libraries.utilities import Utilities
 from libraries.flowapi import FlowApi
-from docx2pdf import convert
+from pyflowcl import Payment
+from pyflowcl.Clients import ApiClient
 
+load_dotenv()
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
@@ -19,8 +22,9 @@ rst = Restriction()
 util = Utilities()
 flowapi = FlowApi()
 
-#APIURL="https://www.flow.cl/api",
-APIURL="https://sandbox.flow.cl/api",
+apiUrl="https://www.flow.cl/api"
+#APIURL="https://sandbox.flow.cl/api",
+#apiUrl=os.getenv("APIURL")
 
 # Ruta principal: mostrar usuarios
 @router.post("/inicioTransaccion", response_class=HTMLResponse)
@@ -33,15 +37,24 @@ async def transesccion(request: Request):
     schema_name = request.session.get("schema")
     company_id=int(request.session.get('company'))
 
-    info_index = await util.formCharge(request.session)
+    info_index = await util.formPaymentCharge(request.session)
 
     ruta_image = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
     ruta_image = os.path.abspath(ruta_image)
 
     form_data = await request.form()
     mpagar=form_data.get('mpagar')
-    print("mpagar ",mpagar)
+    sfapagar=form_data.get('sfapagar')
     if not mpagar or mpagar == 0:
+        if request.session.get('position') =='General':
+            return RedirectResponse(url=f"/{empresa}/manager/pay/formpayment_rsv", status_code=303)
+        else:
+            if request.session.get('encuotas')=='S':
+                return RedirectResponse(url=f"/{empresa}/manager/pay/formpayment_ct", status_code=303)
+            else:
+                return RedirectResponse(url=f"/{empresa}/manager/pay/formpayment", status_code=303)
+    print("montos apagar ",mpagar,sfapagar)
+    if mpagar > sfapagar:
         if request.session.get('position') =='General':
             return RedirectResponse(url=f"/{empresa}/manager/pay/formpayment_rsv", status_code=303)
         else:
@@ -53,7 +66,7 @@ async def transesccion(request: Request):
     identificador = uuid.uuid4().hex
 
     consulta = f"identificador={identificador}"
-    result = await api.get_data("ingreso",query=consulta,schema=schema_name);
+    result = await api.get_data("ingreso",query=consulta,schema=schema_name)
     contador=len(result['data']) if result["status"] == "success" else 0        
 
     if contador > 1:
@@ -69,7 +82,6 @@ async def transesccion(request: Request):
 
     if nrocuota and isinstance(nrocuota, list):
         # aquí es el equivalente a tu if PHP
-        print("Cuotas recibidas:", nrocuota)
         nrocuotas = len(form_data.getlist('nrocuota'))
         primera='N'
         for value in form_data.getlist('nrocuota'):
@@ -77,11 +89,11 @@ async def transesccion(request: Request):
                 fechainicial=form_data.get('fechainicial')
                 primera='S'
     else:
-        print("No se recibieron cuotas")
         nrocuotas=0
         fechainicial=form_data.get('fechainicial')
     valorcuota=form_data.get('valorcuota')
-        
+    user_name=request.session.get("user_name")
+
     context = {"request": request, 
                "session":request.session,
                "valorcuota":valorcuota,
@@ -93,7 +105,8 @@ async def transesccion(request: Request):
                "info_index":info_index,
                "helper":Helper,
                "empresa":empresa,
-               "ruta_image":ruta_image
+               "ruta_image":ruta_image,
+               "user_name":user_name
                }    
     return templates.TemplateResponse("flowpagos/continuaflow.html", context)
 
@@ -117,12 +130,11 @@ async def iniciopago(request: Request):
 
     if request.session.get('position')=='General':
         result= await api.get_data("curso",id=int(request.session.get('user_curso_id')),schema=schema_name)
-        curso = result['data'] if result["status"] == "success" else []
-            
+        curso = result['data'] if result["status"] == "success" else []   
     else:
         result= await api.get_data("curso",id=int(request.session.get('id')),schema=schema_name)
         curso = result['data'] if result["status"] == "success" else []
-         
+
     consulta = f'company_id={company_id}&gateway_id=3'
     result= await api.get_data("gateways",query=consulta,schema=schema_name)
     flowConn = result['data'][0] if result["status"] == "success" else []
@@ -132,7 +144,7 @@ async def iniciopago(request: Request):
     flow_secretkey = flowConn['additional_config']['flow_secretkey']
 
     NroVta = venta['id']
-    RutAl = request.session.get('user_ruta') 
+    RutAl = curso['rutalumno']
     Monto = form_data.get('mpagar')
     identificador = form_data.get('identificador')
     correo = curso['correo']
@@ -152,7 +164,7 @@ async def iniciopago(request: Request):
         'email': correo,
         'paymentMethod': 9,
         'urlConfirmation': "https://flowresponse.onrender.com/token",
-        'urlReturn': f"{empresa}/manager/pagosflow/returnFlow",
+        'urlReturn': f"https://127.0.0.1:8000/{empresa}/manager/pagosflow/returnFlow",
         'optional': optional
         }
 
@@ -161,34 +173,37 @@ async def iniciopago(request: Request):
 
     flowapi.set_api_key(flow_apikey)
     flowapi.set_secret_key(flow_secretkey)
-    flowapi.set_api_url(APIURL)
-   
+    flowapi.set_api_url(apiUrl)
+
     response=flowapi.send(service,params,method)
     
-    valorcuota=0 if not form_data.get("valorcuota") else form_data.get("valorcuota")
-    nrocuotas=0 if not form_data.get('nrocuotas') else form_data.get('nrocuotas')
+    if  venta['cuotas']=='GE':
+        valorcuota=0 if not form_data.get("valorcuota") else form_data.get("valorcuota")
+        nrocuotas=0 if not form_data.get('nrocuotas') else form_data.get('nrocuotas')
+    else:
+        valorcuota=0
+        nrocuotas=0
 
     #Grabar el Ingreso con estado procesando
     # Fecha de hoy
-    fecha_actual = util.convertir_fecha(datetime.today().strftime("%d/%m/%Y"))
+    hoy = datetime.today()
+    fecha_actual = hoy.strftime("%Y-%m-%d")
 
     fecha_inicial= form_data.get('fechainicial')
-       
-    if not fecha_inicial:  # equivale a empty() en PHP
+    
+    if not fecha_inicial or fecha_inicial == "None": 
         fecha_inicial = fecha_actual
-    else:   
-        fecha_inicial = util.convertir_fecha(fecha_inicial)
-        
+  
     data = {
         "tipocomp":"COW",
-        "fecha": fecha_actual,
+        "fecha": fecha_actual+"T00:00:00Z",
         "identificador": identificador,
-        "sale_id": venta['id'],
-        "curso_id": curso['id'],
+        "sale_id": int(venta['id']),
+        "curso_id": int(curso['id']),
         "rutapo": curso['rutapod'],
         "rutalum": curso['rutalumno'],
         "fpago":"FW",
-        "monto": Monto,
+        "monto": int(Monto),
         "activo":1,
         "status_pago":"En Proceso",
         "token_flow": response['token'],
@@ -196,19 +211,18 @@ async def iniciopago(request: Request):
         "company_id": request.session.get("company"),
         "valorcuota": valorcuota,
         "nrocuotas": nrocuotas,
-        "fechainicial": fecha_inicial,
+        "fechainicial": fecha_inicial+"T00:00:00Z",
         "company_id": request.session.get("company")
     }
-        
+
     insert = await api.set_data("ingreso",body=json.dumps(data),schema=schema_name)
 
-    id_ingreso = insert["data"]["data"]["return_id"]        
+    id_ingreso = insert["data"]["data"]["return_id"] if insert["status"] == "success" else 0     
     request.session["id_ingreso"] = id_ingreso
     request.session["identificador"]= identificador
 
     destination=f"{response['url']}?token={response['token']}"
     return RedirectResponse(url=destination)
-
 
 
 @router.post("/returnFlow")
@@ -230,10 +244,10 @@ async def returnflow(request: Request):
     result = await api.get_data("ingreso",query=consulta,schema=schema_name)
     ingreso = result['data'][0] if result["status"] == "success" else []
          
-    #Session::set('sale',$ingreso['sale_id']);
-    #Session::set('user_curso_id',$ingreso['curso_id']);
-    #Session::set('company', $ingreso["company_id"]);
-    #Session::set('user_rut',$ingreso['rutapo']);
+    #Session::set('sale',$ingreso['sale_id'])
+    #Session::set('user_curso_id',$ingreso['curso_id'])
+    #Session::set('company', $ingreso["company_id"])
+    #Session::set('user_rut',$ingreso['rutapo'])
         
     consulta =f"company_id={company_id}&gateway_id=3"
     result = await api.get_data("gateway",query=consulta,schema=schema_name)
@@ -246,13 +260,13 @@ async def returnflow(request: Request):
     #Mostrar al clientes si esta ok o no el pago
     flowapi.set_api_key(flow_apikey)
     flowapi.set_secret_key(flow_secretkey)
-    flowapi.set_api_url(APIURL)
+    flowapi.set_api_url(apiUrl)
 
     service ="payment/getStatus"
     method ="GET"
     params ={'token' : token}
 
-    respuesta=flowapi.send(service,params,method);
+    respuesta=flowapi.send(service,params,method)
 
     status=int(respuesta["status"])
     if status == 2:

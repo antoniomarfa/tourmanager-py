@@ -7,8 +7,9 @@
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%; 
+  -webkit-text-size-adjust: 100%;
 }
+
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -27,18 +28,43 @@ body {
 }
 
 /* Tipografía preservada */
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
   color: #373e4a;
 }
 
-h1, .h1 { font-size: 31px; }
-h2, .h2 { font-size: 25px; }
-h3, .h3 { font-size: 21px; }
-h4, .h4 { font-size: 15px; }
+h1,
+.h1 {
+  font-size: 31px;
+}
+
+h2,
+.h2 {
+  font-size: 25px;
+}
+
+h3,
+.h3 {
+  font-size: 21px;
+}
+
+h4,
+.h4 {
+  font-size: 15px;
+}
 
 /* Form controls preservados - ESTILO ORIGINAL */
 .form-control {
@@ -63,8 +89,8 @@ h4, .h4 { font-size: 15px; }
 .form-control:focus {
   border-color: #cbd0d9;
   outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(203, 208, 217, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(203, 208, 217, 0.6);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(203, 208, 217, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(203, 208, 217, 0.6);
 }
 
 /* Estructura de formulario preservada */
@@ -80,7 +106,12 @@ label {
   color: #373e4a;
 }
 
-/* Grid system preservado */
+/* Grid system preservado - COMENTADO para usar Bootstrap 5 flexbox */
+/* 
+NOTA: Este sistema de grid de Bootstrap 3 (basado en floats) está comentado
+porque interfiere con el sistema de grid de Bootstrap 5 (basado en flexbox).
+Si necesitas soporte para Bootstrap 3, considera usar un archivo CSS separado.
+
 .row {
   margin-left: -15px;
   margin-right: -15px;
@@ -122,6 +153,7 @@ label {
 .col-xs-3 { width: 25%; }
 .col-xs-2 { width: 16.66666667%; }
 .col-xs-1 { width: 8.33333333%; }
+*/
 
 /* Botones preservados */
 .btn {
@@ -225,7 +257,8 @@ label {
   opacity: 1;
 }
 
-/* Mejoras de compatibilidad sin cambiar la apariencia */
+/* Mejoras de compatibilidad sin cambiar la apariencia - COMENTADO para Bootstrap 5 */
+/*
 @media (max-width: 767px) {
   .container {
     padding-left: 10px;
@@ -240,13 +273,29 @@ label {
     margin-bottom: 10px;
   }
 }
+*/
 
 /* Utilidades preservadas */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-left { text-align: left; }
-.pull-left { float: left; }
-.pull-right { float: right; }
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
 .clearfix::after {
   content: "";
   display: table;
@@ -289,7 +338,8 @@ label {
 }
 
 .panel-body.form-groups-bordered {
-  background-color: #f7f7f7; /* gris claro */
+  background-color: #f7f7f7;
+  /* gris claro */
   border-radius: 6px;
   padding: 15px;
 }
@@ -301,7 +351,7 @@ label {
   padding: 12px 40px;
   width: 100%;
   border-radius: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   display: block;
 }
 
@@ -314,7 +364,7 @@ label {
 }
 
 /* Separador */
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
   color: #adb5bd;
 }
 

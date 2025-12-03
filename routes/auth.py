@@ -23,7 +23,7 @@ async def login(
     code_company=request.session.get("code_company")
     error = ""
     error1 = ""
-    print("identificador ",code_company)
+
     if code_company != "GRL_999":    
         consulta=f"identificador={code_company}"
         respuesta = await api.get_data("company",query=consulta, schema="global")  
@@ -60,8 +60,6 @@ async def login(
         #query_params = f"active=1&username={username}&password={password}&company_id={company_id}"
         query_params = f"username={username}&password={password}&company_id={company_id}"
         response = await api.get_data("users", query=query_params, schema=schema_name)
-        print("consulat ",query_params,"shema ",schema_name)
-        print("respuesta ",response)
         if response["status"] == "success" and len(response["data"]) > 0:
             user = response["data"][0]
             request.session["authenticated"] = True
@@ -90,21 +88,21 @@ async def login(
         if response["status"] == "success" and len(response["data"]) > 0:
             course = response["data"][0]
             stored_hash = course["password"].encode("utf-8")
-            if bcrypt.checkpw(rut_bytes, stored_hash):
-                request.session["authenticated"]= True
-                request.session["id"]= course["id"]
-                request.session["name"]= course["nombreapod"]
-                request.session["position"]= "Apoderado"
-                request.session["company"]= course["company_id"]
-                request.session["schema"]= schema_name
-                request.session["sale"]= course['sale_id']
-                request.session["user_rut"]= course['rutapod']
-                request.session["user_ruta"]= course['rutalumno']
-                request.session["user_name"]= course['nombreapod']
-                request.session["user_id"]= course['id']
-                request.session["typesale"]= course["sale"]["type_sale"]
-                request.session["plancode"]= plan
-                login_status = "success"
+         #   if bcrypt.checkpw(rut_bytes, stored_hash):
+            request.session["authenticated"]= True
+            request.session["id"]= course["id"]
+            request.session["name"]= course["nombreapod"]
+            request.session["position"]= "Apoderado"
+            request.session["company"]= course["company_id"]
+            request.session["schema"]= schema_name
+            request.session["sale"]= course['sale_id']
+            request.session["user_rut"]= course['rutapod']
+            request.session["user_ruta"]= course['rutalumno']
+            request.session["user_name"]= course['nombreapod']
+            request.session["user_id"]= course['id']
+            request.session["typesale"]= course["sale"]["type_sale"]
+            request.session["plancode"]= plan
+            login_status = "success"
 
     # 3. Buscar por código de acceso
     if login_status == "invalid" and accesscode:

@@ -54,35 +54,38 @@
               <!-- Formas de pago según gateways -->
               <div class="row g-3">
                 {% for gtw in gatewaysc %}
-                  {% if gtw.existe == 'S' %}
-                  <div class="col-6 text-center">
-                    <form method="post" action="/{{ empresa }}/manager/{{ gtw.gateway_url }}">
-                      <input type="hidden" name="mpagar" value="{{ apagar }}">
-                      <button type="submit" class="btn p-0 border-0 bg-transparent">
-                        <img src="{{ gtw['image'] }}" class="img-fluid rounded shadow-sm" style="max-width:220px; max-height:160px;" alt="Pagos">
-                      </button>
-                    </form>
-                  </div>
-                  {% endif %}
+                {% if gtw.existe == 'S' %}
+                <div class="col-6 text-center">
+                  <form method="post" action="/{{ empresa }}/manager/{{ gtw.gateway_url }}">
+                    <input type="hidden" name="mpagar" value="{{ apagar }}">
+                    <input type="hidden" id="sfapagar" name="sfapagar" value="{{ apagar }}">
+                    <button type="submit" class="btn p-0 border-0 bg-transparent">
+                      <img src="{{ gtw['image'] }}" class="img-fluid rounded shadow-sm"
+                        style="max-width:220px; max-height:160px;" alt="Pagos">
+                    </button>
+                  </form>
+                </div>
+                {% endif %}
                 {% endfor %}
               </div>
               <!-- Fin formas de pago -->
 
               <!-- Voucher -->
-              <form role="form" id="pagosvou" method="post" action="/{{ empresa }}/manager/opening/procesarpago" class="mt-5">
-              <div class="row mb-3">
-                <label for="voucher" class="form-label">Si pagó la Reserva,<br>Ingrese el Nro de Comprobante</label>
-                <div class="col-md-5">
-                  <input type="text" class="form-control" id="voucher" name="voucher" value="">
+              <form role="form" id="pagosvou" method="post" action="/{{ empresa }}/manager/opening/procesarpago"
+                class="mt-5">
+                <div class="row mb-3">
+                  <label for="voucher" class="form-label">Si pagó la Reserva,<br>Ingrese el Nro de Comprobante</label>
+                  <div class="col-md-5">
+                    <input type="text" class="form-control" id="voucher" name="voucher" value="">
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <button type="submit" class="btn btn-success">
-                    <i class="fa fa-angle-double-right"></i> Continuar Pago Con Comprobante
-                  </button>
+                <div class="row">
+                  <div class="col">
+                    <button type="submit" class="btn btn-success">
+                      <i class="fa fa-angle-double-right"></i> Continuar Pago Con Comprobante
+                    </button>
+                  </div>
                 </div>
-              </div>
               </form>
 
             </div>

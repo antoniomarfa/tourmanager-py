@@ -50,7 +50,10 @@ async def formpaymentrsv(request: Request):
         
     request.session["encuotas"]= "N"
 
-    valorv = saldopen = apagar = pagad= 0
+    valorv = 0
+    saldopen = 0    
+    apagar = 0  
+    pagad= 0
     #Valor Viaje
     result = await api.get_data("sale",id=int(request.session.get('sale')),schema=schema_name)
     sale = result['data'] if result["status"] == "success" else []
@@ -68,8 +71,7 @@ async def formpaymentrsv(request: Request):
 
 # Mostrar Pago reserva general
 @router.get("/formpayment", response_class=HTMLResponse)
-async def formpaymentrsv(request: Request):
-    empresa = request.state.empresa 
+async def formpayment(request: Request):
     
     if not request.session.get("authenticated"):
         return RedirectResponse(url=f"/{empresa}/manager/login")
@@ -77,7 +79,11 @@ async def formpaymentrsv(request: Request):
     schema_name = request.session.get("schema")
     company_id = request.session.get("company")
     
-    info_index = await util.formCharge(request.session)
+    ruta_logo = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
+    ruta_logo = os.path.abspath(ruta_logo)
+        
+    info_index = await util.formPaymentCharge(request.session)
+    empresa=info_index['identificador']
 
     response = await api.get_data("gatewaysc",schema="global")
     gatewaysc = response['data'] if response["status"] == "success" else []
@@ -91,11 +97,14 @@ async def formpaymentrsv(request: Request):
         if gateways:
             gatewaysc[i]['existe']='S'
             ruta_image=f"http://localhost:8000/static/{gatewaysc[i]['gateway_image']}"
-            gatewaysc[i]['image']=ruta_image                
+            gatewaysc[i]['image']=ruta_image   
         else:
             gatewaysc[i]['existe']='N';                
        
-    valorv = saldopen = apagar = pagado= 0
+    valorv = 0
+    saldopen = 0
+    apagar = 0
+    pagado= 0
     #Valor Viaje
     result = await api.get_data("sale",id=int(request.session.get('sale')),schema=schema_name)
     sale = result['data'] if result["status"] == "success" else []
@@ -119,13 +128,27 @@ async def formpaymentrsv(request: Request):
     form_view["valorv"]=Helper.formato_numero(valorv)
     form_view["saldopen"]=Helper.formato_numero(saldopen)
     form_view["apagar"]=Helper.formato_numero(saldopen)
+    form_view["sfapagar"]=saldopen
 
-    return templates.TemplateResponse("pay/formpayment.html", {"request": request, "session":request.session,"form_view":form_view,"info_index":info_index,"empresa":empresa})
+    user_name=request.session.get("user_name")
+
+    context={
+        "request": request, 
+        "session":request.session,
+        "form_view":form_view,
+        "info_index":info_index,
+        "empresa":empresa,
+        "ruta_image":ruta_logo,
+        "position":request.session.get("position"),
+        "user_name":user_name
+    }
+
+    return templates.TemplateResponse("pay/formpayment.html", context)
 
 
 # Mostrar Pago reserva general
 @router.get("/formpayment_ct", response_class=HTMLResponse)
-async def formpaymentrsv(request: Request):
+async def formpaymentct(request: Request):
     empresa = request.state.empresa 
     
     if not request.session.get("authenticated"):

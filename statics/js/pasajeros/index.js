@@ -100,12 +100,12 @@ jQuery( document ).ready( function( $ ) {
             "columnDefs": [
                 {targets: 0, className: 'cell-right'},
                 {targets: 1, className: 'cell-right'},
-                {targets: 2, className: 'cell-left',
+                {
+                    targets: 2, className: 'cell-left',
                     "render": function(data, type, row, meta) {
                            // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
                         return `${row[2]}  ${row[3]}`;
                     }
-
                 },
                 { 
                   targets: 3, // Especifica las columnas 8, 9 y 10

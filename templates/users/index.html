@@ -19,88 +19,98 @@
 
 <div class="container mt-5">
 
-
-    <div class="form-group justify-content-between ">
-        <h2>Usuarios</h2>
-        <div class="text-right">
-            {% if cant_access["can_insert"] %}
-            <a href="/{{ empresa }}/manager/users/create" class="btn btn-success"><i class="fa fa-file-text" aria-hidden="true"></i> Nuevo</a>
-            {% endif %}
-    </div>    
-  </div>    
+  <div class="form-group justify-content-between ">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h2>
+        <i class="fas fa-money-bill-wave"></i>
+        Listado de Usuarios
+      </h2>
+      <p class="subtitle">Gestión y seguimiento de todos los usuarios registrados</p>
+      <div class="text-right">
+        {% if cant_access["can_insert"] %}
+        <a href="/{{ empresa }}/manager/users/create" class="btn btn-success"><i class="fa fa-file-text"
+            aria-hidden="true"></i> Nuevo</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
   <hr>
-    {% if msg %}
-    <!--
+  {% if msg %}
+  <!--
     <div class="alert alert-success alert-dismissible show" role="alert">   
     {{ msg }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
     </div>
     -->
-    <script>
-        Swal.fire({
-        title: "Usuarios",
-        text: "{{ msg }}",
-        icon: "success"
-      });
-    </script>
-    {% endif %}
+  <script>
+    Swal.fire({
+      title: "Usuarios",
+      text: "{{ msg }}",
+      icon: "success"
+    });
+  </script>
+  {% endif %}
 
-    {% if error %}
-    <!--
+  {% if error %}
+  <!--
     <div class="alert alert-danger alert-dismissible show" role="alert">
     {{ error }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
     </div>
     -->
-    <script>
-        Swal.fire({
-        title: "Usuarios",
-        text: "{{ error }}",
-        icon: "danger"
-      });
-    </script>
-    {% endif %}   
+  <script>
+    Swal.fire({
+      title: "Usuarios",
+      text: "{{ error }}",
+      icon: "danger"
+    });
+  </script>
+  {% endif %}
 
-<div class="container py-4">
+  <div class="container py-4">
     <div class="row g-3" id="user-container">
-        {% for user in users %}
-        {% set class_status = "text-bg-success" if user.active == 1 else "text-bg-secondary" %} 
-        {% set text_status = "Activo" if user.active == 1 else "Inactivo" %}
-        <div class="col-md-4 user-card">
-            <div class="card shadow-sm border-1 h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="card-title mb-0" style="color:cornflowerblue"><i class="fa fa-user"></i> {{ user.name }}</h5>
-                        <a style="cursor: pointer;" class="change-status" id="{{ user.id }}">
-                            <span class="badge {{ class_status }}">{{ text_status }}</span>
-                        </a>
-                    </div>
-                    <h6 class="card-subtitle text-muted mb-2">@{{ user.username }}</h6>
-                    <p class="mb-1"><strong><i class="fa fa-file"></i> Perfil:</strong> {{ user.rol.description }}</p>
-                    <p class="mb-1"><strong><i class="fa fa-envelope"></i> Correo:</strong> {{ user.email }}</p>
-                    <p><strong><i class="fa fa-phone"></i> Teléfono:</strong> {{ user.phone }}</p>
-                </div>
-                <div class="card-footer text-end bg-white">
-                    {% if cant_access["can_update"] %}
-                    <a href="/{{ empresa }}/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-outline-warning"data-bs-toggle="tooltip" title="Editar" ><i class="fa fa-edit"></i> Editar</a>
-                    {% endif %}
-                    {% if cant_access["can_delete"] %}
-                    <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar" data-original-title="Eliminar" data-id="{{ user.id }}" data-bs-toggle="tooltip" title="Eliminar"><i class="fa fa-trash"></i> Eliminar</a>
-                    {% endif %}
-                </div>
+      {% for user in users %}
+      {% set class_status = "text-bg-success" if user.active == 1 else "text-bg-secondary" %}
+      {% set text_status = "Activo" if user.active == 1 else "Inactivo" %}
+      <div class="col-md-4 user-card">
+        <div class="card shadow-sm border-1 h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="card-title mb-0" style="color:cornflowerblue"><i class="fa fa-user"></i> {{ user.name }}</h5>
+              <a style="cursor: pointer;" class="change-status" id="{{ user.id }}">
+                <span class="badge {{ class_status }}">{{ text_status }}</span>
+              </a>
             </div>
+            <h6 class="card-subtitle text-muted mb-2">@{{ user.username }}</h6>
+            <p class="mb-1"><strong><i class="fa fa-file"></i> Perfil:</strong> {{ user.rol.description }}</p>
+            <p class="mb-1"><strong><i class="fa fa-envelope"></i> Correo:</strong> {{ user.email }}</p>
+            <p><strong><i class="fa fa-phone"></i> Teléfono:</strong> {{ user.phone }}</p>
+          </div>
+          <div class="card-footer text-end bg-white">
+            {% if cant_access["can_update"] %}
+            <a href="/{{ empresa }}/manager/users/edit/{{ user.id }}" class="btn btn-sm btn-outline-warning"
+              data-bs-toggle="tooltip" title="Editar"><i class="fa fa-edit"></i> Editar</a>
+            {% endif %}
+            {% if cant_access["can_delete"] %}
+            <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar"
+              data-original-title="Eliminar" data-id="{{ user.id }}" data-bs-toggle="tooltip" title="Eliminar"><i
+                class="fa fa-trash"></i> Eliminar</a>
+            {% endif %}
+          </div>
         </div>
-        {% endfor %}
-        <!-- Paginación -->
-        <nav aria-label="Paginación de usuarios">
-          <ul class="pagination justify-content-center mt-4" id="pagination"></ul>
-       </nav>
+      </div>
+      {% endfor %}
+      <!-- Paginación -->
+      <nav aria-label="Paginación de usuarios">
+        <ul class="pagination justify-content-center mt-4" id="pagination"></ul>
+      </nav>
     </div>
-</div>
+  </div>
 
 
   {% endblock %}
 
-{% block scripts %}
-<script src="/static/js/users/index.js"></script>
-{% endblock %}
+  {% block scripts %}
+  <script src="/static/js/users/index.js"></script>
+  {% endblock %}

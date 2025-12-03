@@ -104,33 +104,73 @@ async def update(request: Request):
     if response['status']=='success':
         message="Grabado Ok"
         Helper.flash_message(request, "success", "Empresa actualizada correctamente.")
-        # === Guardar archivos si existen ===
+        # === Guardar archivos si existen con validaciones ===
         company = request.session.get("company")
-
+        MAX_FILE_SIZE = 2 * 1024 * 1024  # 2 MB
+        
         contrato_dir = UPLOAD_DIR / "contrato" / str(company)
         contrato_dir.mkdir(parents=True, exist_ok=True)
 
-        if contratoge:
-            ext = os.path.splitext(contratoge.filename)[1]
+        # Validar y guardar contrato de gira de estudio
+        if contratoge and contratoge.filename:
+            # Validar extensión
+            ext = os.path.splitext(contratoge.filename)[1].lower()
+            if ext != ".docx":
+                Helper.flash_message(request, "error", "El archivo de Contrato GE debe ser .docx")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Validar tamaño
+            contents = await contratoge.read()
+            if len(contents) > MAX_FILE_SIZE:
+                Helper.flash_message(request, "error", f"El archivo de Contrato GE excede el tamaño máximo de 2MB")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Guardar archivo
             nuevo_nombre = f"Contratoge_{request.session.get('code_company')}{ext}"
             file_location = contrato_dir / nuevo_nombre
             with open(file_location, "wb") as buffer:
-                shutil.copyfileobj(contratoge.file, buffer)
+                buffer.write(contents)
 
-        if contratovg:
-            ext = os.path.splitext(contratovg.filename)[1]
+        # Validar y guardar contrato de viajes grupales
+        if contratovg and contratovg.filename:
+            # Validar extensión
+            ext = os.path.splitext(contratovg.filename)[1].lower()
+            if ext != ".docx":
+                Helper.flash_message(request, "error", "El archivo de Contrato VG debe ser .docx")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Validar tamaño
+            contents = await contratovg.read()
+            if len(contents) > MAX_FILE_SIZE:
+                Helper.flash_message(request, "error", f"El archivo de Contrato VG excede el tamaño máximo de 2MB")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Guardar archivo
             nuevo_nombre = f"Contratovg_{request.session.get('code_company')}{ext}"
             file_location = contrato_dir / nuevo_nombre
             with open(file_location, "wb") as buffer:
-                shutil.copyfileobj(contratovg.file, buffer)
+                buffer.write(contents)
 
-        if archive_image:
-            ext = os.path.splitext(archive_image.filename)[1]
+        # Validar y guardar logo
+        if archive_image and archive_image.filename:
+            # Validar extensión
+            ext = os.path.splitext(archive_image.filename)[1].lower()
+            if ext != ".png":
+                Helper.flash_message(request, "error", "El logo debe ser un archivo .png")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Validar tamaño
+            contents = await archive_image.read()
+            if len(contents) > MAX_FILE_SIZE:
+                Helper.flash_message(request, "error", f"El logo excede el tamaño máximo de 2MB")
+                return RedirectResponse(url=f"/{empresa}/manager/company/edit", status_code=303)
+            
+            # Guardar archivo
             nuevo_nombre = f"login_logo_{request.session.get('code_company')}{ext}"
             file_location = UPLOAD_DIR_IMG / nuevo_nombre
             UPLOAD_DIR_IMG.mkdir(parents=True, exist_ok=True)
             with open(file_location, "wb") as buffer:
-                shutil.copyfileobj(archive_image.file, buffer)
+                buffer.write(contents)
     if response['status']=='error':
         Helper.flash_message(request, "error", response["message"])
 

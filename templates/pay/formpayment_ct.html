@@ -2,89 +2,89 @@
 
 {% block opening_content %}
 <div class="row col-sm-10 mt-4 ms-5">
-  <form role="form" id="pagosweb" method="post" action="" enctype="multipart/form-data">   
+  <form role="form" id="pagosweb" method="post" action="" enctype="multipart/form-data">
     <!-- Columna izquierda -->
-    <div class="col-sm-6"> 
+    <div class="col-sm-6">
       <div>
-        <h4><i class="fa fa-money"></i> Elige Cuota</h4> 
+        <h4><i class="fa fa-money"></i> Elige Cuota</h4>
       </div>
       <div class="mt-3">
         <strong>
           <div class="row">
             <div class="table-responsive">
-                <table class="table table-bordered table-sm align-middle" id="table-cuotas">
+              <table class="table table-bordered table-sm align-middle" id="table-cuotas">
                 <thead class="table-light">
-                    <tr>
+                  <tr>
                     <th></th>
                     <th>Nro Cuota</th>
                     <th>Fecha</th>
                     <th width="20%">Monto</th>
-                    </tr>
+                  </tr>
                 </thead>
                 <tbody>
-                    {% for cuota in cuotas %}
-                    <tr>
+                  {% for cuota in cuotas %}
+                  <tr>
                     <td>
-                        <input type="checkbox" 
-                            name="nrocuota[]" 
-                            id="cuota-{{ cuota.nro }}" 
-                            class="form-check-input nrocuota" 
-                            value="{{ cuota.monto }}">
+                      <input type="checkbox" name="nrocuota[]" id="cuota-{{ cuota.nro }}"
+                        class="form-check-input nrocuota" value="{{ cuota.monto }}">
                     </td>
                     <td>{{ cuota.nro }}</td>
                     <td>{{ cuota.mes_agno }}</td>
                     <td class="text-end">{{ "{:,.0f}".format(cuota.monto).replace(",", ".") }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
+                  </tr>
+                  {% endfor %}
+                  <tr>
                     <td></td>
                     <td>A pagar</td>
                     <td></td>
                     <td>
-                        <input type="text" id="fmpagar" name="fmpagar" class="form-control form-control-sm text-end" value="0">
-                        <input type="hidden" id="mpagar" name="mpagar">
+                      <input type="text" id="fmpagar" name="fmpagar" class="form-control form-control-sm text-end"
+                        value="0">
+                      <input type="hidden" id="mpagar" name="mpagar">
                     </td>
-                    </tr>
+                  </tr>
                 </tbody>
-                </table>
+              </table>
               <input type="hidden" id="valorcuota" name="valorcuota" value="{{ valor_cuota }}">
               <input type="hidden" id="fechainicial" name="fechainicial" value="{{ $_fechainicial }}">
             </div>
           </div>
-        </strong>  
+        </strong>
         <div class="row mt-3">
           <div class="col text-center">
-            <button type="button" class="btn btn-primary btn-sm show-compact-entry" id="{{ session['id'] }}">Ver Abonos</button>
-            <a href="/{{ empresa }}/manager/payment/index" class="btn btn-secondary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm show-compact-entry" id="{{ session['id'] }}">Ver
+              Abonos</button>
+            <a href="/{{ empresa }}/manager/payment" class="btn btn-secondary btn-sm">
               <i class="fa fa-angle-double-left"></i> Cancelar y Volver
             </a>
           </div>
-        </div>                
+        </div>
       </div>
     </div>
 
     <!-- Columna derecha -->
     <div class="col-sm-6">
       <div>
-        <h4><i class="fa fa-credit-card"></i> Elige Forma Pago</h4> 
+        <h4><i class="fa fa-credit-card"></i> Elige Forma Pago</h4>
       </div>
       <div class="row mt-3">
-        <!-- agregar formas de pago segun gateways --->            
+        <!-- agregar formas de pago segun gateways --->
         {% for gtw in gatewaysc %}
-            {% if gtw.existe == 'S' %}
-            <div class="col-6 text-center">
-                <form method="post" action="/{{ empresa }}/manager/{{ gtw.gateway_url }}">
-                    <button type="submit" class="btn p-0 border-0 bg-transparent">
-                        <img src="{{ gtw['image'] }}" class="img-fluid rounded shadow-sm" style="max-width:220px; max-height:160px;" alt="Pagos">
-                    </button>
-                </form>
-            </div>
-          {% endif %}
+        {% if gtw.existe == 'S' %}
+        <div class="col-6 text-center">
+          <form method="post" action="/{{ empresa }}/manager/{{ gtw.gateway_url }}">
+            <button type="submit" class="btn p-0 border-0 bg-transparent">
+              <img src="{{ gtw['image'] }}" class="img-fluid rounded shadow-sm"
+                style="max-width:220px; max-height:160px;" alt="Pagos">
+            </button>
+          </form>
+        </div>
+        {% endif %}
         {% endfor %}
         <!---- fin formas de pago --->
       </div>
     </div>
-  </form>     
+  </form>
 </div>
 
 <!-- Modal -->

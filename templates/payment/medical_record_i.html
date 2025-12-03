@@ -2,380 +2,420 @@
 
 {% block payment_content %}
 <style>
-hr.n4 {
-  border: 1px solid black;
-}
+    hr.n4 {
+        border: 1px solid black;
+    }
 </style>
-<div class="container"  style="float:center">
-<form role="form" id="form1" method="post" action="/{{ empresa }}/manager/payment/insert_fm" enctype="multipart/form-data" class="custom-validate form-groups-bordered">
+<div class="container" style="float:center">
+    <form role="form" id="form1" method="post" action="/{{ empresa }}/manager/payment/insert_fm"
+        enctype="multipart/form-data" class="custom-validate form-groups-bordered">
 
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs left-aligned"><!-- available classes "bordered", "right-aligned" -->
-                <li class="nav-item"><a class="nav-link active" href="#tab1" data-bs-toggle="tab" id="tab1-tab" role="tab" aria-controls="tab1">
-                        <span><i class="fa fa-info" aria-hidden="true"></i></span>
-                        <span>Antecedesntes Personales</span>
-                    </a>
-                </li>
-                <li class="nav-item"><a class="nav-link" href="#tab2" data-bs-toggle="tab" id="tab2-tab" role="tab" aria-controls="tab2">
-                        <span><i class="fa fa-info" aria-hidden="true"></i></span>
-                        <span>Antecedesntes Medicos</span>
-                    </a>
-                </li>
-            </ul>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1"
+                            type="button" role="tab" aria-controls="tab1" aria-selected="true">
+                            <i class="fa fa-info"></i> Alumnos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button"
+                            role="tab" aria-controls="tab2" aria-selected="false">
+                            <i class="fa fa-info"></i> Antecedentes Medicos
+                        </button>
+                    </li>
+                </ul>
 
-            <div class="tab-content tab-validate">
+                <div class="tab-content tab-validate">
 
-                <div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-                    <div class="panel panel-primary">
-                        <div class="panel-body color-gris-fondo form-groups-bordered">
+                    <div class="tab-pane active" id="tab1">
+                        <div class="panel panel-primary">
+                            <div class="panel-body form-groups-bordered">
 
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="control-label">Colegio</label>
-                                    <input type="text" class="form-control" name="colegio" id="colegio" maxlength="20" readonly value="{{ info_index['colegio'] }}"/>
-                                </div>
-                             </div>
-                             <div class="col-md-2">
-                                 <div class="form-group">
-                                     <label class="control-label">Curso</label>
-                                     <input type="text" class="form-control" name="curso" id="curso" maxlength="100" readonly value="{{ info_index['nomcurso'] }}"/>
-                                  </div>
-                              </div>
-
-                              <div class="col-md-2">
-                                  <div class="form-group">
-                                      <label class="control-label">Fecha Salida</label>
-                                <input type="text" class="form-control" name="fecha" id="fecha" maxlength="100" readonly value="{{ info_index['fechasalida'] }}"/>
-                                  </div>
-                              </div>
-
-                              <div class="col-md-4">
-                                  <div class="form-group">
-                                      <label class="control-label">Destino</label>
-                                      <input type="text" class="form-control" name="destino" id="destino" maxlength="100" readonly value="{{ info_index['programa'] }}"/>
-                                  </div>
-                              </div>
-
-                            </div>
-                            <div class="row">
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                      <label class="control-label">Alumno (Nombres y Apellidos)</label>
-                                      <input type="text" class="form-control" name="alumno" id="alumno" maxlength="100" readonly value="{{ info_index['alumno'] }}"/>
-                                  </div>
-                              </div>
-
-                              <div class="col-md-2">
-                                  <div class="form-group">
-                                      <label class="control-label">Rut</label>
-                                      <input type="text" class="form-control" name="rutpass" id="rutpass" maxlength="20" value="{{ info_index['rutalumno'] }}" />
-                                  </div>
-                              </div>
-                              <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Pasaprte</label>
-                                        <input type="text" class="form-control required rut" name="pasaportealumno" id="pasaportealumno" maxlength="20" value="{{ info_index['pasaporte'] }}" />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Colegio</label>
+                                            <input type="text" class="form-control" name="colegio" id="colegio"
+                                                maxlength="20" readonly value="{{ info_index['colegio'] }}" />
+                                        </div>
                                     </div>
-                              </div>
-                              <div class="col-md-2">
-                              </div>
-                            </div>  
-                            <div class="row">
-                              <div class="col-md-4">
-                                    <label class="control-label">Fecha Nacimiento</label><br>
-                                    <div class="col-md-7 no-padding">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Curso</label>
+                                            <input type="text" class="form-control" name="curso" id="curso"
+                                                maxlength="100" readonly value="{{ info_index['nomcurso'] }}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="control-label">Fecha Salida</label><br>
                                         <div class="input-group">
-                                            <input type="text" name="fecnac" id="fecnac" class="form-control" value="{{ info_index['fechanac'] }}">
-                                            <div class="input-group-addon">
-                                            <a href="#"><i class="entypo-calendar"></i></a>
+                                            <input type="date" id="fecha" name="fecha"
+                                                value="{{ info_index['fechasalida'] }}"
+                                                max="{{ info_index['fechasalida'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">Destino</label>
+                                            <input type="text" class="form-control" name="destino" id="destino" readonly
+                                                value="{{ info_index['programa'] }}" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Alumno (Nombres y Apellidos)</label>
+                                            <input type="text" class="form-control" name="alumno" id="alumno" readonly
+                                                value="{{ info_index['alumno'] }}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Rut</label>
+                                            <input type="text" class="form-control" name="rutpass" id="rutpass"
+                                                maxlength="20" value="{{ info_index['rutalumno'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Pasaprte</label>
+                                            <input type="text" class="form-control" name="pasaportealumno"
+                                                id="pasaportealumno" maxlength="20"
+                                                value="{{ info_index['pasaporte'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="control-label">Fecha Nacimiento</label><br>
+                                        <div class="input-group">
+                                            <input type="date" id="fecnac" name="fecnac"
+                                                value="{{ info_index['fechanac'] }}"
+                                                max="{{ info_index['fechanac'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Nacionalidad</label>
+                                            <input type="text" class="form-control" name="nacionalidad"
+                                                id="nacionalidad" maxlength="100" value="" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Nombre Completo Apoderado</label>
+                                            <input type="text" class="form-control" name="apoderado" id="apoderado"
+                                                maxlength="100" readonly value="{{ info_index['apoderado'] }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Calle</label>
+                                            <input type="text" class="form-control required" name="calle" id="calle"
+                                                maxlength="100" value="{{ info_index['dircalle'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Numero</label>
+                                            <input type="text" class="form-control required" name="numdir" id="numdir"
+                                                maxlength="100" value="{{ info_index['dirnumero'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Depto</label>
+                                            <input type="text" class="form-control" name="numdepto" id="numdepto"
+                                                maxlength="100" value="{{ info_index['nrodepto'] }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Región</label>
+                                            <select class="form-control required box_select" name="region_id"
+                                                id="region_id">
+                                                {% for region in regions %}
+                                                {% set activo = "selected='selected'" if region.id|string ==
+                                                info_index['regionid']|string else "" %}
+                                                <option value="{{region.id}}" {{ activo }}> {{region.description}}
+                                                </option>
+                                                {% endfor %}
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Comuna</label>
+                                            <select class="form-control required box_select" name="comuna_id"
+                                                id="comuna_id">
+                                                <option value="">Seleccionar</option>
+                                                {% for comuna in communes %}
+                                                {% set activo = "selected='selected'" if comuna.id|string ==
+                                                info_index['comunaid']|string else "" %}
+                                                <option value="{{ comuna.id }}" {{ activo }}> {{comuna.description}}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Fono</label>
+                                            <input type="text" class="form-control" name="fono" id="fono"
+                                                maxlength="100" value="{{ info_index['fono'] }}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="control-label">Celular</label>
+                                            <input type="text" class="form-control required" name="celular" id="celular"
+                                                maxlength="100" value="{{ info_index['celular'] }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Correo</label>
+                                            <input type="text" class="form-control required" name="correo" id="correo"
+                                                maxlength="100" value="{{ info_index['correo'] }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- panel -->
+                    </div>
+
+
+                    <div class="tab-pane" id="tab2">
+                        <div class="panel panel-primary">
+                            <div class="panel-body form-groups-bordered">
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Factor Sanguineo</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control required" name="factorsang"
+                                                id="factorsang" maxlength="10" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_psico" id="switch_psico"
+                                                        value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
-                              </div>  
-                              <div class="col-md-2">
-                              </div>  
-                              <div class="col-md-6">
-                                  <div class="form-group">
-                                      <label class="control-label">Nacionalidad</label>
-                                      <input type="text" class="form-control" name="nacionalidad" id="nacionalidad" maxlength="100" />
-                                  </div>
-                              </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label class="control-label">Se encuentra bajo algun tipo de tratamiento
+                                                medico, psicologico o psiquiatrico</label><br>
+                                            <label class="control-label">Cual(es) ?</label><br>
+                                            <input type="text" class="form-control" name="psicol" id="psicol"
+                                                maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_medicacion"
+                                                        id="switch_medicacion" value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label class="control-label">Medicacion (Si Procede)</label><br>
+                                            <label class="control-label">Dosis (Si Procede)</label><br>
+                                            <input type="text" class="form-control" name="medicaciond" id="medicaciond"
+                                                maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch" data-on-label="SI" data-off-label="NO">
+                                                    <input type="checkbox" name="switch_enfermedadp"
+                                                        id="switch_enfermedadp" value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label class="control-label">Enfermedades Preexistentes ( Asma, Diabetes,
+                                                Epilepsia, Arritmia, etc.)</label><br>
+                                            <label class="control-label">Cual(es) ?</label><br>
+                                            <input type="text" class="form-control" name="enfermedadpr"
+                                                id="enfermedadpr" maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Medicamento o Alimentos
+                                                Contraindicados</label><br>
+                                            <label class="control-label">Cual(es) ?</label><br>
+                                            <input type="text" class="form-control" name="medalim" id="medalim"
+                                                maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Alergias a Considerar ( Fármacos, Comidas u
+                                                otros )</label><br>
+                                            <label class="control-label">Cual(es) ?</label><br>
+                                            <input type="text" class="form-control" name="alergias" id="alergias"
+                                                maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Celiaco</label>
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_celiaco" id="switch_celiaco"
+                                                        value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Vegetariano</label>
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_vegetariano"
+                                                        id="switch_vegetariano" value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Vegano</label>
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_vegano" id="switch_vegano"
+                                                        value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="control-label">Intolerante Lactosa</label>
+                                            <div class="col-md-12 no-padding">
+                                                <label class="make-switch">
+                                                    <input type="checkbox" name="switch_lactosa" id="switch_lactosa"
+                                                        value="1">
+                                                    <span class="slider" data-on-label="SI" data-off-label="NO"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Observaciones</label><br>
+                                            <input type="text" class="form-control" name="obs" id="obs" maxlength="100"
+                                                value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Eventual Emergencia Avisar a</label><br>
+                                            <input type="text" class="form-control required" name="emergencia"
+                                                id="emergencia" maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="n4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Telefono(s)</label>
+                                            <input type="text" class="form-control required" name="emergenciafono"
+                                                id="emergenciafono" maxlength="100" value="" />
+                                        </div>
+                                    </div>
+                                </div>
 
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6">
-                                  <div class="form-group">
-                                      <label class="control-label">Nombre Completo Apoderado</label>
-                                      <input type="text" class="form-control" name="apoderado" id="apoderado" maxlength="100" readonly value="{{ info_index['apoderado'] }}"/>
-                                  </div>
-                              </div>
+
+                            </div>
                         </div>
-                        <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Calle</label>
-                                        <input type="text" class="form-control required" name="calle" id="calle" maxlength="100" value="{{ info_index['dircalle'] }}"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Numero</label>
-                                        <input type="text" class="form-control required" name="numdir" id="numdir" maxlength="100" value="{{ info_index['dirnumero'] }}"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Depto</label>
-                                        <input type="text" class="form-control" name="numdepto" id="numdepto" maxlength="100" value="{{ info_index['nrodepto'] }}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Región</label>
-                                            <select class="form-control required box_select" name="region_id" id="region_id">
-                                                <option value="">Seleccionar</option>
-                                                    {% for region in regions %}
-														{% set selected = 'selected="selected"' if region.id|string == info_index['regionid']|string else '' %}
-                                                        <option value="{{ region.id }}" {{ selected }}>{{ region.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Comuna</label>
-                                            <select class="form-control required box_select" name="comuna_id" id="comuna_id">
-                                                <option value="">Seleccionar</option>
-                                                    {% for commune in communes %}
-                            							{% set selected = 'selected="selected"' if commune.id|string == info_index['comunaid']|string  else '' %}
-                                                        <option value="{{ commune.id }}" {{ selected }}>{{ commune.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>	
-
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Fono</label>
-                                        <input type="text" class="form-control" name="fono" id="fono" maxlength="100" value="{{ info_index['fono'] }}"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Celular</label>
-                                        <input type="text" class="form-control required" name="celular" id="celular" maxlength="100" value="{{ info_index['celular'] }}" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Correo</label>
-                                        <input type="text" class="form-control required" name="correo" id="correo" maxlength="100" value="{{ info_index['correo'] }}"/>
-                                    </div>
-                                </div>
-                            </div>                                                    
-                        </div>
-                     </div>
-                </div>
-
-                <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-                    <div class="panel panel-primary">
-                        <div class="panel-body color-gris-fondo form-groups-bordered">
-                       
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Factor Sanguineo</label>
-                                    </div>  
-                                </div>  
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control required" name="factorsang" id="factorsang" maxlength="10" value=""/>
-                                    </div>  
-                                </div>  
-                            </div>  
-							<hr class="n4">
-                            <div class="row">
-								<div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_psico" id="switch_psico" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 									
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <label class="control-label">Se encuentra bajo algun tipo de tratamiento medico, psicologico o psiquiatrico</label><br>
-                                        <label class="control-label">Cual(es) ?</label><br>
-                                        <input type="text" class="form-control" name="psicol" id="psicol" maxlength="100" value=""/>
-                                    </div>  
-                                </div>  
-                            </div>  
-							<hr class="n4">
-                            <div class="row">
-   							    <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_medicacion" id="switch_medicacion" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 									
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <label class="control-label">Medicacion (Si Procede)</label><br>
-                                        <label class="control-label">Dosis (Si Procede)</label><br>
-                                         <input type="text" class="form-control" name="medicaciond" id="medicaciond" maxlength="100" value=""/>
-                                    </div>  
-                                </div>  
-                            </div>  
-							<hr class="n4">
-                            <div class="row">
-    							<div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch" data-on-label="SI" data-off-label="NO">
-                                            <input type="checkbox" name="switch_enfermedadp" id="switch_enfermedadp" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 									
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <label class="control-label">Enfermedades Preexistentes ( Asma, Diabetes, Epilepsia, Arritmia, etc.)</label><br>  
-                                        <label class="control-label">Cual(es) ?</label><br>
-                                        <input type="text" class="form-control" name="enfermedadpr" id="enfermedadpr" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>								
-							<hr class="n4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Medicamento o Alimentos Contraindicados</label><br>
-                                        <label class="control-label">Cual(es) ?</label><br>
-                                        <input type="text" class="form-control" name="medalim" id="medalim" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>
-							<hr class="n4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Alergias a Considerar ( Fármacos, Comidas u otros )</label><br>
-                                        <label class="control-label">Cual(es) ?</label><br>
-                                        <input type="text" class="form-control" name="alergias" id="alergias" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>
-							<hr class="n4">
-                            <div class="row">
-    							<div class="col-md-2">
-                                    <div class="form-group">
-                                         <label class="control-label">Celiaco</label>    
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_celiaco" id="switch_eliaco" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 
-    							<div class="col-md-2">
-                                    <div class="form-group">
-                                         <label class="control-label">Vegetariano</label>    
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_vegetariano" id="switch_vegetariano" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div>                                                                 
-    							<div class="col-md-2">
-                                    <div class="form-group">
-                                         <label class="control-label">Vegano</label>    
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_vegano" id="switch_vegano" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 		
-    							<div class="col-md-2">
-                                    <div class="form-group">
-                                         <label class="control-label">Intolerante Lactosa</label>    
-                                        <div class="col-md-12 no-padding">
-                                        <label class="make-switch">
-                                            <input type="checkbox" name="switch_lactosa" id="switch_lactosa" value="1">
-                                            <span class="slider" data-on-label="SI" data-off-label="NO"></span>
-                                        </label>
-                                        </div>
-                                    </div>
-								</div> 	                                							
-                            </div>
-							<hr class="n4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Observaciones</label><br>
-                                        <input type="text" class="form-control" name="obs" id="obs" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>
-							<hr class="n4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Eventual Emergencia Avisar a</label><br>
-                                        <input type="text" class="form-control required" name="emergencia" id="emergencia" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>
-							<hr class="n4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Telefono(s)</label>
-                                        <input type="text" class="form-control required" name="emergenciafono" id="emergenciafono" maxlength="100" value=""/>
-                                    </div>  
-                                </div>
-                            </div>                       
-
-                        
-                        </div>
-                     </div>
-                </div>
-
-            </div>   
-            <div  class="form-group d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-success  me-3"><i class="fa fa-save"></i> Guardar</button>
-                <a href="/{{ empresa }}/manager/payment" type="button" class="btn btn-primary"><i class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
-            </div>            
+                    </div>
+                </div> <!-- tab-content -->
+            </div> <!-- col12-->
+            <div class="form-group d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-success me-3"><i class="fa fa-save"></i> Guardar</button>
+                <a href="/{{ empresa }}/manager/payment" type="button" class="btn btn-primary"><i
+                        class="fa fa-angle-double-left"></i> Cancelar y Volver</a>
+                <input type="hidden" name="id" id="id" value="{{ course.id }}" />
+            </div>
         </div>
-    </div>            
-</form>    
+    </form>
 </div>
 {% endblock %}
 

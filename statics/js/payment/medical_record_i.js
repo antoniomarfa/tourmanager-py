@@ -1,20 +1,22 @@
 var public_vars = public_vars || {};
 
-;(function($, window, undefined){
+"use strict";
 
-	"use strict";
+$(document).ready(function () {
 
-	$(document).ready(function()
-	{
+	// Radio Toggle
+	if ($.isFunction($.fn.bootstrapSwitch)) {
 
-// Radio Toggle
-		if($.isFunction($.fn.bootstrapSwitch))
-		{
+		$('.make-switch.is-radio').on('switch-change', function () {
+			$('.make-switch.is-radio').bootstrapSwitch('toggleRadioState');
+		});
+	}
 
-			$('.make-switch.is-radio').on('switch-change', function () {
-		        $('.make-switch.is-radio').bootstrapSwitch('toggleRadioState');
-		    });
-		}
+	$('#comuna_id').select2({
+		placeholder: 'Seleccione una comuna',
+	});
 
-    });
-})    
+	$('#region_id').select2({
+		placeholder: 'Seleccione una region',
+	});
+});

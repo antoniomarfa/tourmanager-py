@@ -16,6 +16,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm
 from fastapi.responses import StreamingResponse
 from fastapi.concurrency import run_in_threadpool
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
@@ -115,7 +116,7 @@ async def gettable(request: Request):
     total_vta =0 
 
     table_body = []
-
+    table_footer = ""
     if sales:
         for sale in sales:
             # Select status
@@ -176,13 +177,12 @@ async def gettable(request: Request):
                 sale['program_name'],
                 sale['nroalumno'],
                 sale['liberados'],
+                f"{alumnos_curso} / {sale['nroalumno']}",
                 Helper.formato_numero(sale['vprograma']),
                 Helper.formato_numero(int(sale['vprograma']) * int(sale['nroalumno'])),
                 sale['seller_name'],
                 select_status,
-                f"{alumnos_curso} / {sale['nroalumno']}",
                 lstpsajeros,
-                sendemail,
                 sale['author'],
                 actions
             ])
@@ -190,30 +190,25 @@ async def gettable(request: Request):
             if sale['state'] != 'R':
                 total_vta +=(int(sale['vprograma']) * int(sale['nroalumno']))
 
-        table_body.append([
-             '',
-             '',
-             '',
-             '',
-             '',
-             '',
-             '',
-             'Total Venta',
-             '',
-             '',
-             Helper.formato_numero(total_vta),
-             '',
-             '',
-             '',
-             '',
-             '',
-             '',
-             ''
-        ])
 
-        return JSONResponse(content={"data": table_body})
+        table_footer=f"""
+        <td></td>
+        <td></td>
+        <td align='center'><strong>Total General</strong></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td align='right'><strong>{Helper.formato_numero(total_vta)}</strong></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        """
+
+        return JSONResponse(content={"data": table_body,"footer": table_footer})
     else:
-        return JSONResponse(content={"data": []})
+        return JSONResponse(content={"data": [], "footer": ""})
        
 
 @router.get("/create/{type}", response_class=HTMLResponse)

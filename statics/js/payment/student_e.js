@@ -78,6 +78,10 @@ jQuery( document ).ready( function( $ ) {
         },
     });
 
+    $("#venta_id").select2();
+    $("#region_id").select2();
+    $("#commune_id").select2(); 
+
     $('#region_id').change(function(){
      
         var region = $(this).val();

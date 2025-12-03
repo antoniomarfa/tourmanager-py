@@ -1,37 +1,36 @@
 {% extends "payment/base_index.html" %}
 
-{% block  payment_content %}
+{% block payment_content %}
 <div class="container my-5">
   <div class="row g-4">
     <!-- Alumno -->
     <div class="col-12 col-md-6 col-lg-6">
       <div class="card text-center shadow-lg h-100 rounded-3">
         <div class="card-body d-flex flex-column p-4">
-        <!--  <i class="fa fa-user fa-3x mb-4 text-primary"></i> -->
-          <img src="/static/images/alumno.png" class="d-block mx-auto mb-1" width="60px" height="60px" alt="">
-          <h4 class="card-title fw-bold mb-3">Alumno</h4>
+          <!--  <i class="fa fa-user fa-3x mb-4 text-primary"></i> -->
+          <img src="/static/images/pasajero.png" class="d-block mx-auto mb-1" width="60px" height="60px" alt="">
+          <h4 class="card-title fw-bold mb-3">Pasajero</h4>
           <p class="card-text flex-grow-1">
             Revisa y corrige la información de tu hija(o), podrán hacerlo mientras no firmes el contrato.
           </p>
-          <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/student">Ir</a>
+          <a class="btn btn-primary mt-3 px-4" href="/{{empresa}}/manager/payment/student">Ir</a>
         </div>
       </div>
     </div>
-
     <!-- Ficha Médica -->
     <div class="col-12 col-md-6 col-lg-6">
       <div class="card text-center shadow-lg h-100 rounded-3">
         <div class="card-body d-flex flex-column p-4">
-     <!--     <i class="fa fa-file fa-3x mb-4 text-success"></i>. -->
+          <!--     <i class="fa fa-file fa-3x mb-4 text-success"></i>. -->
           <img src="/static/images/fichamed.png" class="d-block mx-auto mb-1" width="60px" height="60px" alt="">
           <h4 class="card-title fw-bold mb-3">Ficha Médica</h4>
           <p class="card-text flex-grow-1">
             Llena los datos de la ficha médica de tu hijo(a), para nosotros estar al tanto de sus necesidades médicas.
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
-            <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/medicalrecordi">Ir</a>
+          <a class="btn btn-primary mt-3 px-4" href="/{{empresa}}/manager/payment/medicalrecordi">Ir</a>
           {% else %}
-            <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
+          <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
           {% endif %}
         </div>
       </div>
@@ -41,16 +40,17 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="card text-center shadow-lg h-100 rounded-3">
         <div class="card-body d-flex flex-column p-4">
-     <!--     <i class="fa fa-file-text fa-3x mb-4 text-warning"></i> -->
+          <!--     <i class="fa fa-file-text fa-3x mb-4 text-warning"></i> -->
           <img src="/static/images/contrato.png" class="d-block mx-auto mb-1" width="60px" height="60px" alt="">
           <h4 class="card-title fw-bold mb-3">Contrato</h4>
           <p class="card-text flex-grow-1">
-            Aquí podrás revisar y firmar el contrato, una vez firmado ya no podrás modificar la información de tu hija(o).
+            Aquí podrás revisar y firmar el contrato, una vez firmado ya no podrás modificar la información de tu
+            hija(o).
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
-            <a class="btn btn-primary mt-3 px-4" href="/{empresa}/payment/contrat_travel">Ir</a>
+          <a class="btn btn-primary mt-3 px-4" href="/{{empresa}}/manager/payment/contrat_travel">Ir</a>
           {% else %}
-            <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
+          <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
           {% endif %}
         </div>
       </div>
@@ -60,20 +60,20 @@
     <div class="col-12 col-md-6 col-lg-6">
       <div class="card text-center shadow-lg h-100 rounded-3">
         <div class="card-body d-flex flex-column p-4">
-    <!--      <i class="fa fa-credit-card fa-3x mb-4 text-danger"></i> -->
+          <!--      <i class="fa fa-credit-card fa-3x mb-4 text-danger"></i> -->
           <img src="/static/images/creditcard.png" class="d-block mx-auto mb-1" width="60px" height="60px" alt="">
           <h4 class="card-title fw-bold mb-3">Pagos</h4>
           <p class="card-text flex-grow-1">
             Revisa pagos realizados, además podrás pagar el monto total o abonar a este.
           </p>
           {% if session['position'] in ['Apoderado', 'General'] %}
-            {% if info_index["cuotas"] > 1 %}
-              <a class="btn btn-primary mt-3 px-4" href="/{empresa}/pay/formpayment_ct">Ir</a>
-            {% else %}
-              <a class="btn btn-primary mt-3 px-4" href="/{empresa}/pay/formpayment">Ir</a>
-            {% endif %}
+          {% if info_index["cuotas"] > 1 %}
+          <a class="btn btn-primary mt-3 px-4" href="/{{empresa}}/manager/pay/formpayment_ct">Ir</a>
           {% else %}
-            <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
+          <a class="btn btn-primary mt-3 px-4" href="/{{empresa}}/manager/pay/formpayment">Ir</a>
+          {% endif %}
+          {% else %}
+          <a class="btn btn-secondary mt-3 px-4 disabled" href="#" tabindex="-1" aria-disabled="true">Ir</a>
           {% endif %}
         </div>
       </div>

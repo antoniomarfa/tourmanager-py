@@ -40,25 +40,58 @@ jQuery( document ).ready( function( $ ) {
             "oLanguage": language_datatable,
             "columnDefs": [
                 {targets: 0, className: 'cell-center'},
-                {targets: 1, className: 'cell-center'},
+                {
+                    targets: 1, className: 'cell-center',
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `<strong>Venta:</strong> ${row[1]} <br> <strong>Identificador:</strong> ${row[2]} <br> <strong>Fecha:</strong> ${row[3]}`;
+                    }                    
+                },
+                { 
+                  targets: [2, 3], // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 2, className: 'cell-center'},
                 {targets: 3, className: 'cell-center'},
                 {targets: 4, className: 'cell-left'},
                 {targets: 5, className: 'cell-center'},
-                {targets: 6, className: 'cell-center'},
+                {
+                    targets: 6, className: 'cell-center',
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `<strong>Programa:</strong> ${row[6]} <br> 
+                        <strong>Pasajeros:</strong> ${row[7]} <br> 
+                        <strong>Liberados:</strong> ${row[8]} <br>
+                        <strong>Ingresados:</strong> ${row[9]}`;
+                    }                    
+                },
+                { 
+                  targets: [7, 8], // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 7, className: 'cell-right'},
                 {targets: 8, className: 'cell-right'},
                 {targets: 9, className: 'cell-center'},
-                {targets: 10, className: 'cell-center'},
+                {
+                    targets: 10, className: 'cell-center',
+                    "render": function(data, type, row, meta) {
+                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `<strong>Valor:</strong> ${row[10]} <br> <strong>Total:</strong> ${row[11]}`;
+                    }                    
+                },
+                { 
+                  targets: [11], // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
                 {targets: 11, className: 'cell-center'},
                 {targets: 12, className: 'cell-center'},
                 {targets: 13, className: 'cell-right'},
                 {targets: 14, className: 'cell-center'},
-                {targets: 15},
+                {targets: 15, className: 'cell-center'},
                 {targets: 16, className: 'cell-center'},
-                {targets: 17, className: 'cell-center'}
             ],
             "initComplete": function(settings, json) {
+                $('#tfooter').append(json.footer);  
             }
         });
     };

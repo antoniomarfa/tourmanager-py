@@ -19,6 +19,8 @@ from routes.gateways_routes import router as gateways_routes
 from routes.entry_routes import router as entry_routes
 from routes.gdsair_routes import router as gdsair_routes
 from routes.gdshotel_routes import router as gdshotel_routes
+from routes.dashboard_routes import router as dashboard_routes
+
 
 # Lista de routers centralizada
 all_routers = [
@@ -42,5 +44,6 @@ all_routers = [
     (gateways_routes, "/gateways"),
     (entry_routes, "/entry"),
     (gdsair_routes, "/gdsair"),
-    (gdshotel_routes, "/gdshotel")
+    (gdshotel_routes, "/gdshotel"),
+    (dashboard_routes, "/dashboard")
 ]

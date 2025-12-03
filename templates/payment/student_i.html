@@ -1,4 +1,4 @@
-{% extends "opening/base_index.html" %}
+{% extends "payment/base_index.html" %}
 
 {% block payment_content %}
 <div class="container mt-5"  style="float:center">
@@ -123,33 +123,28 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Region</label>
-                                            <select class="form-control required box_select" name="region_id" id="region_id">
-                                                <option value="">Seleccionar</option>
-                                                   {% for region in regions %}
-													{% set activo = 'selected="selected"' if region.id|string == '13' else '' %}
-                                                        <option value="{{ region.id }}" {{ activo }}>{{ region.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
+                                        <label class="control-label">Region</label>
+                                         <select class="form-control box_select" name="region_id" id="region_id" required>
+                                            <option value="">Seleccionar</option>
+                                            {% for region in regions %} 
+											{% set activo = "selected='selected'" if region.id|string == "13" else "" %}                           
+                                            <option value=" {{ region.id }} "  {{ activo }}> {{region.description}} </option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <div class="input-group">
-                                            <label class="control-label">Comuna</label>
-                                            <select class="form-control required box_select" name="commune_id" id="commune_id">
-                                                <option value="">Seleccionar</option>
-                                                    {% for commune in communes %}
-													{% set activo = 'selected="selected"' if commune.id|string == '45' else '' %}
-                                                        <option value="{{ commune.id }}" {{ activo }}>{{ commune.description }}</option>
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
+                                        <label class="control-label">Comuna</label>
+                                        <select class="form-control box_select" name="commune_id" id="commune_id" required>
+                                            <option value="">Seleccionar</option>
+                                            {% for comuna in communes %}
+                                            {% set activo = "selected='selected'" if comuna.id|string == "45" else "" %}                                                         
+                                            <option value="{{ comuna.id }}" {{ activo }}> {{comuna.description}} </option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
-                                </div>	
-
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-3">

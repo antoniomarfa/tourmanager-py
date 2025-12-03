@@ -58,11 +58,18 @@ class FlowApi:
     def _sign(self, params: dict) -> str:
         keys = sorted(params.keys())
         to_sign = "&".join([f"{k}={params[k]}" for k in keys])
-        return hmac.new(
+        firma = hmac.new(
             self.secret_key.encode("utf-8"),
             to_sign.encode("utf-8"),
             hashlib.sha256,
         ).hexdigest()
+        
+        return firma 
+        #return hmac.new(
+        #    self.secret_key.encode("utf-8"),
+        #    to_sign.encode("utf-8"),
+        #    hashlib.sha256,
+        #).hexdigest()
 
     def _http_get(self, url: str, data: str, sign: str) -> dict:
         full_url = f"{url}?{data}&s={sign}"

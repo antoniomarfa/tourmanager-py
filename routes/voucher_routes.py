@@ -68,9 +68,9 @@ async def gettable(request: Request):
         
     for voucher in vouchers:
         if voucher['used'] == 0:
-            usado='<a style="cursor: pointer;"><span class="badge text-badge-danger">No Cobrado</span></a>';   
+            usado='<a style="cursor: pointer;"><span class="badge text-bg-danger">No Cobrado</span></a>';   
         else:
-            usado='<a style="cursor: pointer;"><span class="badge text-badge-success">Cobrado</span></a>';   
+            usado='<a style="cursor: pointer;"><span class="badge text-bg-success">Cobrado</span></a>';   
             
         if can_delete and voucher['used'] == 0: 
                button=f"<a type='button' class='btn btn-sm btn-danger delete-register' data-toggle='tooltip' data-placement='top' title='' data-original-title='Eliminar' data-id='{voucher['id']}' ><i class='fa fa-trash'></i></a>"

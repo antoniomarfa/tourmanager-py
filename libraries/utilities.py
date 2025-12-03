@@ -1,6 +1,6 @@
 from libraries.renderrequest import RenderRequest
 from docx import Document
-import os,io,base64
+import os,io,base64,subprocess,shutil
 from docx.shared import Inches
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
@@ -8,6 +8,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from io import BytesIO
 from libraries.helper import Helper
+from datetime import datetime, timezone, timedelta
+import zipfile
+from lxml import etree
+
 
 api = RenderRequest()
 
@@ -83,8 +87,6 @@ class Utilities:
         dentro de doc_path (.docx). Reemplaza la primera ocurrencia encontrada
         en cada párrafo / celda. Preserva estilos en los runs.
         """
-        print("doc",doc_path)
-        print("signature ",signature_path)
         if not os.path.isfile(doc_path):
             raise FileNotFoundError(f"Documento no encontrado: {doc_path}")
         if not os.path.isfile(signature_path):
@@ -177,10 +179,11 @@ class Utilities:
     def docx_to_pdf_with_images(docx_path: str, pdf_path: str):
         """
         Convierte un docx a PDF preservando:
-            - texto
+            - texto con estilos (negrita, tamaño de fuente)
+            - alineación (izquierda, centro, derecha)
             - saltos de línea
             - tablas
-            - imágenes (incluida la firma insertada previamente)
+            - imágenes con posicionamiento correcto
         """
         if not os.path.isfile(docx_path):
             raise FileNotFoundError(f"Documento no encontrado: {docx_path}")
@@ -188,66 +191,295 @@ class Utilities:
         doc = Document(docx_path)
         c = canvas.Canvas(pdf_path, pagesize=A4)
         page_width, page_height = A4
-        x_margin = inch
-        y_position = page_height - inch
-        line_height = 14  # altura de línea aproximada
+        x_margin = 0.75 * inch
+        y_position = page_height - 0.75 * inch
+        
+        # Extraer todas las imágenes del documento
+        image_map = {}
+        try:
+            for rel_id, rel in doc.part.rels.items():
+                if "image" in rel.reltype:
+                    image_map[rel_id] = rel.target_part.blob
+        except Exception as e:
+            print(f"Advertencia al extraer imágenes: {e}")
+
+        def check_page_break(needed_space=inch):
+            """Verifica si necesitamos una nueva página"""
+            nonlocal y_position
+            if y_position < needed_space:
+                c.showPage()
+                y_position = page_height - 0.75 * inch
+                return True
+            return False
+
+        def get_paragraph_alignment(p):
+            """Obtiene la alineación del párrafo"""
+            try:
+                alignment = p.alignment
+                if alignment == 1:  # CENTER
+                    return 'center'
+                elif alignment == 2:  # RIGHT
+                    return 'right'
+                elif alignment == 3:  # JUSTIFY
+                    return 'justify'
+                else:  # LEFT o None
+                    return 'left'
+            except:
+                return 'left'
+
+        def draw_text_with_alignment(text, y_pos, alignment='left', font_name='Helvetica', font_size=11, bold=False):
+            """Dibuja texto con alineación y estilo"""
+            if bold:
+                font_name = font_name + '-Bold'
+            
+            c.setFont(font_name, font_size)
+            text_width = c.stringWidth(text, font_name, font_size)
+            
+            if alignment == 'center':
+                x_pos = (page_width - text_width) / 2
+            elif alignment == 'right':
+                x_pos = page_width - x_margin - text_width
+            else:  # left or justify
+                x_pos = x_margin
+            
+            c.drawString(x_pos, y_pos, text)
+            return font_size + 2  # retorna el espacio usado
 
         def draw_paragraph(p):
+            """Dibuja un párrafo con estilos, alineación e imágenes"""
             nonlocal y_position
-            for r in p.runs:
-                # dibujar texto si existe
-                if r.text.strip():
-                    for line in r.text.split('\n'):
-                        c.drawString(x_margin, y_position, line)
-                        y_position -= line_height
-                        if y_position < inch:
-                            c.showPage()
-                            y_position = page_height - inch
-
-                # dibujar imágenes asociadas al run
-                for rel in r.part.rels.values():
-                    if "image" in rel.reltype:
-                        image_bytes = rel.target_part.blob
-                        img_stream = BytesIO(image_bytes)
-                        img_reader = ImageReader(img_stream)
-                        img_width = 1.2 * inch
-                        img_height = 1.2 * inch
-                        # colocar la imagen en la misma línea aproximada
-                        c.drawImage(img_reader, page_width - x_margin - img_width, y_position, width=img_width, height=img_height)
-                        y_position -= img_height + 2
-                        if y_position < inch:
-                            c.showPage()
-                            y_position = page_height - inch
-
-            # agregar espacio entre párrafos
-            y_position -= line_height
-            if y_position < inch:
-                c.showPage()
-                y_position = page_height - inch
+            
+            alignment = get_paragraph_alignment(p)
+            
+            # Primero, procesar imágenes en el párrafo
+            images_in_paragraph = []
+            for run in p.runs:
+                if hasattr(run, '_element'):
+                    for drawing in run._element.findall('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}drawing'):
+                        try:
+                            # Obtener dimensiones de la imagen del XML
+                            extent = drawing.find('.//{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}extent')
+                            blip = drawing.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}blip')
+                            
+                            if blip is not None:
+                                embed_id = blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed')
+                                if embed_id and embed_id in image_map:
+                                    # Calcular dimensiones (EMUs to inches: 914400 EMUs = 1 inch)
+                                    img_width = 1.2 * inch
+                                    img_height = 1.2 * inch
+                                    
+                                    if extent is not None:
+                                        try:
+                                            cx = int(extent.get('cx', 914400))
+                                            cy = int(extent.get('cy', 914400))
+                                            img_width = (cx / 914400.0) * inch
+                                            img_height = (cy / 914400.0) * inch
+                                        except:
+                                            pass
+                                    
+                                    images_in_paragraph.append({
+                                        'data': image_map[embed_id],
+                                        'width': img_width,
+                                        'height': img_height
+                                    })
+                        except Exception as e:
+                            print(f"Error al procesar imagen: {e}")
+            
+            # Dibujar imágenes
+            for img_info in images_in_paragraph:
+                check_page_break(img_info['height'] + inch)
+                
+                img_stream = BytesIO(img_info['data'])
+                img_reader = ImageReader(img_stream)
+                
+                # Calcular posición X según alineación
+                if alignment == 'center':
+                    x_pos = (page_width - img_info['width']) / 2
+                elif alignment == 'right':
+                    x_pos = page_width - x_margin - img_info['width']
+                else:
+                    x_pos = x_margin
+                
+                try:
+                    c.drawImage(img_reader, x_pos, y_position - img_info['height'], 
+                              width=img_info['width'], height=img_info['height'], 
+                              preserveAspectRatio=True, mask='auto')
+                    y_position -= (img_info['height'] + 5)
+                except Exception as e:
+                    print(f"Error dibujando imagen: {e}")
+            
+            # Procesar texto del párrafo
+            if p.text.strip():
+                # Analizar runs para detectar estilos
+                text_segments = []
+                for run in p.runs:
+                    if run.text:
+                        is_bold = run.bold if run.bold is not None else False
+                        font_size = 11  # tamaño por defecto
+                        
+                        # Intentar obtener tamaño de fuente
+                        try:
+                            if run.font.size:
+                                font_size = run.font.size.pt
+                        except:
+                            pass
+                        
+                        text_segments.append({
+                            'text': run.text,
+                            'bold': is_bold,
+                            'size': font_size
+                        })
+                
+                # Si todos los runs tienen el mismo estilo, dibujar como una unidad
+                if text_segments:
+                    # Combinar texto
+                    full_text = ''.join([seg['text'] for seg in text_segments])
+                    # Usar el estilo del primer run (simplificación)
+                    is_bold = text_segments[0]['bold']
+                    font_size = text_segments[0]['size']
+                    
+                    # Dividir en líneas
+                    lines = full_text.split('\n')
+                    for line in lines:
+                        if line.strip():
+                            # Word wrap si es necesario
+                            font_name = 'Helvetica-Bold' if is_bold else 'Helvetica'
+                            c.setFont(font_name, font_size)
+                            
+                            max_width = page_width - (2 * x_margin)
+                            
+                            # Dividir línea si es muy larga
+                            words = line.split()
+                            current_line = ""
+                            
+                            for word in words:
+                                test_line = current_line + " " + word if current_line else word
+                                test_width = c.stringWidth(test_line, font_name, font_size)
+                                
+                                if test_width <= max_width:
+                                    current_line = test_line
+                                else:
+                                    if current_line:
+                                        check_page_break(font_size + 10)
+                                        draw_text_with_alignment(current_line, y_position, alignment, 
+                                                               'Helvetica', font_size, is_bold)
+                                        y_position -= (font_size + 2)
+                                    current_line = word
+                            
+                            if current_line:
+                                check_page_break(font_size + 10)
+                                draw_text_with_alignment(current_line, y_position, alignment, 
+                                                       'Helvetica', font_size, is_bold)
+                                y_position -= (font_size + 2)
+                        else:
+                            # Línea vacía
+                            y_position -= 7
+                
+                # Espacio después del párrafo
+                y_position -= 6
 
         def draw_table(table):
+            """Dibuja una tabla con bordes"""
             nonlocal y_position
+            
+            num_cols = len(table.columns)
+            available_width = page_width - (2 * x_margin)
+            col_width = available_width / num_cols if num_cols > 0 else available_width
+            
             for row in table.rows:
+                # Calcular contenido de celdas
+                cell_contents = []
+                max_lines = 1
+                
                 for cell in row.cells:
+                    cell_text = ""
                     for p in cell.paragraphs:
+                        if p.text.strip():
+                            cell_text += p.text.strip() + "\n"
+                    cell_text = cell_text.strip()
+                    cell_contents.append(cell_text)
+                    
+                    # Contar líneas
+                    if cell_text:
+                        lines = cell_text.split('\n')
+                        max_lines = max(max_lines, len(lines))
+                
+                # Calcular altura de la fila
+                row_height = max_lines * 14 + 10
+                
+                # Verificar espacio
+                check_page_break(row_height + inch)
+                
+                # Dibujar celdas
+                for idx, content in enumerate(cell_contents):
+                    x_pos = x_margin + (idx * col_width)
+                    
+                    # Dibujar borde
+                    c.rect(x_pos, y_position - row_height, col_width, row_height)
+                    
+                    # Dibujar contenido
+                    if content:
+                        lines = content.split('\n')
+                        temp_y = y_position - 12
+                        
+                        for line in lines[:max_lines]:  # Limitar líneas
+                            if line.strip():
+                                # Truncar texto si es muy largo
+                                c.setFont('Helvetica', 10)
+                                while c.stringWidth(line, 'Helvetica', 10) > (col_width - 4):
+                                    line = line[:-1]
+                                
+                                c.drawString(x_pos + 2, temp_y, line)
+                                temp_y -= 14
+                
+                y_position -= row_height
+            
+            # Espacio después de tabla
+            y_position -= 10
+
+        # Procesar documento en orden
+        for element in doc.element.body:
+            if element.tag.endswith('p'):
+                for p in doc.paragraphs:
+                    if p._element == element:
                         draw_paragraph(p)
-                y_position -= line_height
-                if y_position < inch:
-                    c.showPage()
-                    y_position = page_height - inch
-
-        # dibujar todos los párrafos
-        for p in doc.paragraphs:
-            draw_paragraph(p)
-
-        # dibujar todas las tablas
-        for table in doc.tables:
-            draw_table(table)
+                        break
+            elif element.tag.endswith('tbl'):
+                for table in doc.tables:
+                    if table._element == element:
+                        draw_table(table)
+                        break
 
         c.save()
         print(f"PDF generado correctamente: {pdf_path}")
 
         
+    @staticmethod    
+    def potectted_docx(docx_file):
+        #docx_file = "entrada.docx"
+        output_file = "protegido.docx"
+
+        with zipfile.ZipFile(docx_file, 'r') as zin:
+            with zipfile.ZipFile(output_file, 'w') as zout:
+                for item in zin.infolist():
+                    data = zin.read(item.filename)
+
+                    # Editar document.xml
+                    if item.filename == "word/settings.xml":
+                        tree = etree.fromstring(data)
+                        ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+
+                        protection = etree.Element("{%s}documentProtection" % ns["w"])
+                        protection.set("w:edit", "readOnly")
+                        protection.set("w:enforcement", "1")
+
+                        tree.insert(0, protection)
+                        data = etree.tostring(tree)
+
+                    zout.writestr(item, data)
+
+
+
     @staticmethod    
     async def formCharge(session: dict):
         info_index=[]
@@ -275,6 +507,7 @@ class Utilities:
             "fechaultimo": Helper.formatear(venta["fecha_ultpag"]),
             "fechasalida": Helper.formatear(venta["fechasalida"]),
             "company": company["nomfantasia"],
+            "identificador": company["identificador"]
         }
 
         return info_index     
@@ -292,10 +525,14 @@ class Utilities:
         response = await api.get_data("sale",id=int(session.get('sale')),schema=schema_name)
         venta = response['data'] if response["status"] == "success" else []
 
-        consulta = f"sale_id={session.get('sale')}&rutapod={session.get('user_rut')}"
-        response = await api.get_data("curso",query=consulta,schema=schema_name)
-        cursos = response['data'][0] if response["status"] == "success" else []
-    
+        if  session.get("position")== "General":
+            consulta = int(session.get('user_curso_id'))
+        else:
+            consulta = int(session.get('id'))
+
+        response = await api.get_data("curso",id=consulta,schema=schema_name)
+        cursos = response['data'] if response["status"] == "success" else []
+
         colegioid=int(venta['establecimiento_id'])
         response = await api.get_data("colegio",id=colegioid,schema=schema_name)
         colegio=response['data'] if response["status"] == "success" else []
@@ -304,17 +541,27 @@ class Utilities:
         response = await api.get_data("programac",id=program_id,schema=schema_name)
         program = response['data'] if response["status"] == "success" else []
 
+        # Construcción de la fila
+        fecha_iso = venta['fecha_ultpag']
+        # Convertir y formatear
+        fechaultpag = datetime.strptime(fecha_iso, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+
+        # Construcción de la fila
+        fecha_iso = venta['fechasalida']
+        # Convertir y formatear
+        fechasal = datetime.strptime(fecha_iso, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
 
         info_index = {
+            "curso": f"{colegio['nombre']}-{venta['curso']}-{venta['idcurso']}",
+            "company": company["nomfantasia"],
             "colegio": colegio["nombre"],
             "nomcurso": f'{venta["curso"]}-{venta["idcurso"]}',
             "programa": program["name"],
-            "curso": cursos,
             "apoderado": cursos['nombreapod'],
             "alumno": cursos['nombrealumno'],
             "rutalumno": cursos["rutalumno"], 
             "pasaporte": cursos["pasaporte"],
-            "fechanac": Helper.formatear(cursos['fechanac']),
+            "fechanac": cursos['fechanac'],
             "regionid": cursos["region_id"],
             "comunaid": cursos["comuna_id"],
             "dircalle": cursos['dircalle'],
@@ -324,8 +571,8 @@ class Utilities:
             "celular": cursos['celular'],
             "correo": cursos['correo'],
             "cuotas": venta["cuotas"],
-            "fechaultimo": Helper.formatear(venta['fecha_ultpag']),
-            "fechasalida": Helper.formatear(venta['fechasalida'])
+            "fechaultimo": fechaultpag,
+            "fechasalida": fechasal,
+            "identificador": company["identificador"]
         }
-
         return info_index 

@@ -37,11 +37,14 @@ async def index(request: Request):
     empresa=company['identificador']
 
     paso = request.session.get('paso')
-    info_index = await formCharge(request.session)
+    info_index = await util.formCharge(request.session)
+    if not info_index:
+        return RedirectResponse(url=f"/{empresa}/manager/opening", status_code=303)
+
 
     ruta_image = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
     ruta_image = os.path.abspath(ruta_image)
-    print("empresa",empresa)
+
     context={"request": request, 
              "session":request.session,
              "paso":paso,
@@ -81,8 +84,10 @@ async def index(request: Request):
     response = await api.get_data("colegio",id=colegioid,schema=schema_name)
     colegio=response['data'] if response["status"] == "success" else []
 
-    info_index = await formCharge(request.session)
- 
+    info_index = await util.formCharge(request.session)
+    if not info_index:
+        return RedirectResponse(url=f"/{empresa}/manager/opening", status_code=303)
+
     course=[]
     if request.session.get('user_curso_id') and request.session.get('user_curso_id') != '':
         cursoid = request.session.get('user_curso_id')
@@ -125,6 +130,30 @@ async def index(request: Request):
                   "ruta_image":ruta_image
                   }
         return templates.TemplateResponse("opening/student_i.html", context)
+
+#Valida si existe el alumno
+@router.get("/getAlumno")
+async def getAlumno(request:Request):
+    empresa = request.state.empresa 
+    schema_name = request.session.get("schema")
+    company_id=int(request.session.get('company'))
+
+    rutalumno = request.query_params.get("rutalumno")
+
+    consulta=f"rutalumno={rutalumno}&company_id={company_id}"
+    result = await api.get_data("curso",query=consulta,schema=schema_name)
+    pasajero=result["data"][0] if result['status'] =='success' else [] 
+
+    if len(pasajero)>0:
+       request.session["user_curso_id"]= pasajero['id']
+       request.session["user_ruta"] = pasajero['rutalumno']
+       request.session["user_rut"] = pasajero['rutapod']
+       request.session["paso"] = "1"  
+       #si existe carga los datos necesarios para continuar
+       return JSONResponse(content={"status":"error","message":"Alumno encontrado"})
+    else:
+       return JSONResponse(content={"status":"success","message":"Alumno no encontrado"})
+
 
  #Crea la venta
 @router.post("/create")
@@ -195,7 +224,7 @@ async def create(request:Request):
         "pasaporte": form_data.get('pasaporte') or ""
     }
     response = await api.set_data("curso",body=json.dumps(data), schema=schema_name)
-
+    print(response)
     if response.get("status") == "success":
        id = response["data"]["data"]["return_id"]   
        request.session["user_curso_id"]= id
@@ -294,7 +323,10 @@ async def contrattravel(request: Request):
     #archivo creado enviado al navegador para que lo vea el cliente
     file_doc_html=f'http://127.0.0.1/uploads/openning/{documentname}'
     contrato = file_doc_html #os.path.abspath(file_doc) 
-    info_index = await formCharge(request.session)
+    info_index = await util.formCharge(request.session)
+    if not info_index:
+        return RedirectResponse(url=f"/{empresa}/manager/opening", status_code=303)
+    
     context ={"request": request, 
               "session":request.session,
               "info_index":info_index,
@@ -333,7 +365,7 @@ async def createsale(request: Request):
 
     #directorio donde queda el wrd creaado con el contrato
     contrato_wrd = os.path.join(UPLOAD_DIR, "contrato", "pasajeros", str(company_id), 'wrd')
-    os.makedirs(contrato_pdf, exist_ok=True)
+    os.makedirs(contrato_wrd, exist_ok=True)
         
     response = await api.get_data("curso",id=int(request.session.get('user_curso_id')),schema=schema_name)
     curso = response['data'] if response["status"] == "success" else []
@@ -404,28 +436,34 @@ async def createsale(request: Request):
             # Mover y renombrar
             filewrd = os.path.join(contrato_wrd, documentwrd)
             file_wrd = os.path.abspath(filewrd)
-
+         
+            #mueve el foledo a word 
             shutil.move(file_doc, file_wrd)
-            #convertir word a pdf con libreria http
-            clientId = '90da2604-7052-4d85-8686-9e6e687e2990'
-            clientSecret = '38c9a7c7f5813dd387043f50212a802f'
             
-            #Rutas de archivos
-            localDocxPath = file_wrd   #Ruta real en tu servidor
-            remoteDocxName = namewrd+'.docx'  #Nombre en Aspose Cloud
-            remotePdfName = namewrd+'.pdf'   #Nombre destino
+            #Generar PDF
+            Utilities.docx_to_pdf_with_images(file_wrd, file_pdf) 
+
+            ##convertir word a pdf con libreria http
+            #clientId = '90da2604-7052-4d85-8686-9e6e687e2990'
+            #clientSecret = '38c9a7c7f5813dd387043f50212a802f'
             
-            #Flujo completo
-            token = convertpdf.get_aspose_token(clientId, clientSecret)
+            ##Rutas de archivos
+            #localDocxPath = file_wrd   #Ruta real en tu servidor
+            #remoteDocxName = namewrd+'.docx'  #Nombre en Aspose Cloud
+            #remotePdfName = namewrd+'.pdf'   #Nombre destino
             
-            convertpdf.upload_to_aspose(token, localDocxPath, remoteDocxName)
+            ##Flujo completo
+            #token = convertpdf.get_aspose_token(clientId, clientSecret)
             
-            convertpdf.convert_docx_to_pdf(token, remoteDocxName, remotePdfName, file_pdf)
+            #convertpdf.upload_to_aspose(token, localDocxPath, remoteDocxName)
+            
+            #convertpdf.convert_docx_to_pdf(token, remoteDocxName, remotePdfName, file_pdf)
             
 
             # Elimina los archivos de paso      
             os.remove(ruta_firma)
-            os.remove(file_doc)
+            if os.path.exists(file_doc):
+                os.remove(file_doc)
 
             request.session["paso"]="2"
             request.session["user_contrato"]= "S"
@@ -476,13 +514,11 @@ async def procesarpago(request:Request):
     schema_name = request.session.get("schema")
     company_id=int(request.session.get('company'))
 
-    module='opening'
-
     nro_voucher=form_data.get('voucher')
         
     consulta = f"voucher={nro_voucher}&sale_id={request.session.get('user_sale')}&used=0"
     response = await api.get_data("voucher",query=consulta,schema=schema_name)
-    voucher = response['data'] if response["status"] == "success" else [] 
+    voucher = response['data'][0] if response["status"] == "success" else [] 
         
     if voucher: 
         data=""
@@ -493,13 +529,14 @@ async def procesarpago(request:Request):
         
         if len(existe_pago) == 0:
             #grabar el ingreso
-            response = await api.get_data("pagos",id=int(request.session.get('user_sale')),schema=schema_name)
+            sale_id=voucher['sale_id']
+            response = await api.get_data("sale",id=int(sale_id),schema=schema_name)
             venta = response['data'] if response["status"] == "success" else []
-
+            print("curso ",request.session.get('user_curso_id'))
             response = await api.get_data("curso",id=int(request.session.get('user_curso_id')),schema=schema_name);
             curso = response['data'] if response["status"] == "success" else []
 
-            response = await api.get_data("program",id=int(venta['program_id']),schema=schema_name)
+            response = await api.get_data("programac",id=int(venta['program_id']),schema=schema_name)
             program= response['data'] if response["status"] == "success" else []
 
             Monto=program["reserva"]
@@ -573,7 +610,7 @@ async def procesarpago(request:Request):
             response = await api.set_data("pagos",body=json.dumps(data), schema=schema_name)
             #Update voucher
             dato='{"used":1}'
-            resp = await api.update_data("programac", id=int(voucher["id"]), body=json.dumps(dato),schema=schema_name)
+            resp = await api.update_data("voucher", id=int(voucher["id"]), body=json.dumps(dato),schema=schema_name)
  
             request.session['paso']='3'
             request.session['user_pagado']='S'
@@ -620,32 +657,3 @@ async def status(request: Request,venta_id: int = Form(...),):
             'typesale': typesale
         })
 
-async def formCharge(session: dict):
-    info_index=[]
-    schema_name = session.get("schema")
-    company_id=int(session.get('company'))
-
-    response = await api.get_data("company",id=company_id,schema="global")
-    company = response['data'] if response["status"] == "success" else [] 
-
-    getQuery=f"id={session.get('user_sale')}"
-    response = await api.get_data("sale/informe",query=getQuery,schema=schema_name)
-    venta=response['data'][0] if response["status"] == "success" else [] 
-
-    programid=int(venta['program_id'])
-    response = await api.get_data("programac",id=programid,schema=schema_name)
-    program=response['data'] if response["status"] == "success" else []
-    
-    colegioid=int(venta['establecimiento_id'])
-    response = await api.get_data("colegio",id=colegioid,schema=schema_name)
-    colegio=response['data'] if response["status"] == "success" else []
-
-    info_index = {
-        "curso": f"{colegio['nombre']}-{venta['curso']}-{venta['idcurso']}",
-        "programa": program["name"],
-        "fechaultimo": Helper.formatear(venta["fecha_ultpag"]),
-        "fechasalida": Helper.formatear(venta["fechasalida"]),
-        "company": company["nomfantasia"],
-    }
-
-    return info_index 
