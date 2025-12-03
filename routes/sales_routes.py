@@ -141,7 +141,7 @@ async def gettable(request: Request):
                     else:
                         actions += f'<a class="btn btn-sm btn-warning" href="/sales/editge/{sale["id"]}"><i class="fa fa-pencil"></i></a> '
             if can_delete:
-                actions += f'<a class="btn btn-sm btn-danger cancel-register" id="{sale["id"]}"><i class="fa fa-trash"></i></a>'
+                actions = f'<a class="btn btn-sm btn-danger cancel-register" id="{sale["id"]}"><i class="fa fa-trash"></i></a>'
             
             alumnos_curso=sale["total_curso"]
 
@@ -196,10 +196,7 @@ async def gettable(request: Request):
         <td></td>
         <td align='center'><strong>Total General</strong></td>
         <td></td>
-        <td></td>
-        <td></td>
         <td align='right'><strong>{Helper.formato_numero(total_vta)}</strong></td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

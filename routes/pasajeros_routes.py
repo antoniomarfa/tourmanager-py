@@ -117,11 +117,11 @@ async def gettable(request: Request):
             
             actions=""
             if can_update:
-                actions += f'<a type="button" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="" data-original-title="Editar" href="/pasajeros/edit/{course["id"]}"><i class="fa fa fa-pencil"></i></a> '
+                actions += f'<a class="btn btn-sm btn-warning" href="/pasajeros/edit/{course["id"]}"><i class="fa fa-pencil"></i></a> '
             
             if can_delete:
                 if cnt_ingreso == 0:
-                    actions += f'<a type="button" class="btn btn-sm btn-danger delete-register" data-toggle="tooltip" data-placement="top" title="" data-original-title="Eliminar" data-id="{course["id"]}"><i class="fa fa-trash"></i></a>'
+                    actions += f'<a class="btn btn-sm btn-danger delete-register" data-id="{course["id"]}"><i class="fa fa-trash"></i></a>'
             
             table_body.append([
                 f"{course['sale_id']}-{cnt_ingreso}",

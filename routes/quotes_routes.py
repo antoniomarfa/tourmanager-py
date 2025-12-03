@@ -83,7 +83,6 @@ async def gettable(request: Request):
         consulta +='&seller_id={vendedor}'
                 
     response = await api.get_data("quotes/informe", query=getQuery,schema=schema_name)
-    print("response ",response)
     quotes = response["data"] if response["status"] == "success" else []
     table_body = []
 
@@ -114,11 +113,18 @@ async def gettable(request: Request):
                 actions += f'<a class="btn btn-sm btn-danger cancel-register" id="{quote["id"]}"><i class="fa fa-trash"></i></a>'
 
             # Construcción de la fila
+            fecha_iso = quote["fecha"]
+
+            # Convertir y formatear
+            fecha_formateada = datetime.strptime(fecha_iso, "%Y-%m-%dT%H:%M:%SZ").strftime("%d-%m-%Y")
+
+
+            # Construcción de la fila
             table_body.append([
                 quote['id'],
                 quote['identificador'],
                 "Gira Estudio" if quote['type_sale'] == 'GE' else "Viaje Grupal",
-                quote['fecha'],
+                fecha_formateada,
                 quote.get('users', {}).get('username', ''),
                 colegio,
                 quote['pasajeros'],

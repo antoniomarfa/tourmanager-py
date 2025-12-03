@@ -73,7 +73,7 @@ async def gettable(request: Request):
             usado='<a style="cursor: pointer;"><span class="badge text-bg-success">Cobrado</span></a>';   
             
         if can_delete and voucher['used'] == 0: 
-               button=f"<a type='button' class='btn btn-sm btn-danger delete-register' data-toggle='tooltip' data-placement='top' title='' data-original-title='Eliminar' data-id='{voucher['id']}' ><i class='fa fa-trash'></i></a>"
+               button=f"<a class='btn btn-sm btn-danger delete-register' data-id='{voucher['id']}'><i class='fa fa-trash'></i></a>"
         else:
              button=''
 
@@ -129,7 +129,7 @@ async def setvoucher(request: Request):
                 message = 'Voucher Ingresado correctamente.'
                 voucher_id = insert["data"]["data"]["return_id"]
                 if can_delete: 
-                    button=f'<a type="button" class="btn btn-sm btn-danger delete-register" data-toggle="tooltip" data-placement="top" title="" data-original-title="Eliminar" data-id="{voucher_id}" ><i class="fa fa-trash"></i></a>'
+                    button=f'<a class="btn btn-sm btn-danger delete-register" data-id="{voucher_id}"><i class="fa fa-trash"></i></a>'
                 else:
                     button=""
 

@@ -99,7 +99,7 @@ async def gettable(request: Request):
                 actions=""
                 if can_delete:
                     if ingreso['activo'] == 1:
-                      actions = f'<a type="button" class="btn btn-sm btn-danger cancel-register" data-toggle="tooltip" data-placement="top" title="" data-original-title="Eliminar" id="{ingreso["id"]}"><i class="fa fa-trash-o"></i></a>'
+                      actions = f'<a class="btn btn-sm btn-danger cancel-register" id="{ingreso["id"]}"><i class="fa fa-trash"></i></a>'
                                 
                             
 

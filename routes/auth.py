@@ -2,7 +2,9 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from libraries.renderrequest import RenderRequest
-import bcrypt,re
+import bcrypt, re, random, smtplib, os
+from datetime import datetime, timedelta
+from email.message import EmailMessage
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -152,3 +154,289 @@ async def logout(request: Request):
     redirect_url = request.session.get("url_redirect", "/")
     request.session.clear()
     return RedirectResponse(url=redirect_url , status_code=302)
+
+# ============= SISTEMA DE RECUPERACIÓN DE CONTRASEÑA =============
+
+# Función auxiliar para enviar código por correo
+async def send_verification_code(email: str, code: str, company_name: str, empresa: str):
+    """Envía el código de verificación al correo del usuario"""
+    try:
+        # Configuración SMTP desde variables de entorno
+        SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+        SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
+        USERNAME = os.getenv("USERNAME")
+        PASSWORD = os.getenv("PASSWORD")
+        
+        if not USERNAME or not PASSWORD:
+            raise Exception("Credenciales SMTP no configuradas")
+        
+        # Crear el mensaje
+        msg = EmailMessage()
+        msg['Subject'] = f'Código de Recuperación de Contraseña - {company_name}'
+        msg['From'] = USERNAME
+        msg['To'] = email
+        
+        # Cuerpo del correo en HTML
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }}
+                .container {{ max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
+                .header {{ text-align: center; color: #2e58a6; margin-bottom: 30px; }}
+                .code-box {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; border-radius: 10px; margin: 20px 0; }}
+                .code {{ font-size: 36px; font-weight: bold; letter-spacing: 10px; }}
+                .info {{ color: #666; font-size: 14px; line-height: 1.6; }}
+                .footer {{ margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🔐 Recuperación de Contraseña</h1>
+                    <h3>{company_name}</h3>
+                </div>
+                
+                <p class="info">Hola,</p>
+                <p class="info">Has solicitado recuperar tu contraseña. Utiliza el siguiente código de verificación:</p>
+                
+                <div class="code-box">
+                    <div class="code">{code}</div>
+                    <p style="margin-top: 10px; font-size: 14px;">Código de Verificación</p>
+                </div>
+                
+                <p class="info">Este código es válido por <strong>15 minutos</strong>.</p>
+                <p class="info">Si no solicitaste este código, puedes ignorar este correo de forma segura.</p>
+                
+                <div class="footer">
+                    <p>Este es un correo automático, por favor no respondas.</p>
+                    <p>&copy; {datetime.now().year} {company_name}</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg.add_alternative(html_body, subtype='html')
+        
+        # Enviar el correo
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as smtp:
+            smtp.login(USERNAME, PASSWORD)
+            smtp.send_message(msg)
+        
+        return True
+    except Exception as e:
+        print(f"Error al enviar correo: {str(e)}")
+        return False
+
+# Ruta GET: Mostrar formulario de recuperación de contraseña
+@router.get("/forgot-password", response_class=HTMLResponse)
+async def forgot_password_form(request: Request):
+    empresa = request.state.empresa
+    
+    # Obtener información de la empresa para la imagen
+    consulta = f"identificador={empresa}"
+    respuesta = await api.get_data("company", query=consulta, schema="global")
+    
+    ruta_image = "/statics/images/default-login.png"  # Imagen por defecto
+    if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
+        company = respuesta['data'][0]
+        if company.get('logo'):
+            ruta_image = f"/statics/uploads/{company['logo']}"
+    
+    return templates.TemplateResponse("auth/forgot_password.html", {
+        "request": request,
+        "empresa": empresa,
+        "ruta_image": ruta_image
+    })
+
+# Ruta POST: Procesar solicitud de recuperación y enviar código
+@router.post("/forgot-password", response_class=HTMLResponse)
+async def forgot_password_send_code(request: Request, email: str = Form("")):
+    empresa = request.state.empresa
+    schema_name = "demo"
+    
+    # Obtener información de la empresa
+    consulta = f"identificador={empresa}"
+    respuesta = await api.get_data("company", query=consulta, schema="global")
+    
+    ruta_image = "/statics/images/default-login.png"
+    company_name = "Sistema"
+    company_id = 0
+    
+    if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
+        company = respuesta['data'][0]
+        company_id = company['id']
+        schema_name = company['schema_name']
+        company_name = company['nomfantasia']
+        if company.get('logo'):
+            ruta_image = f"/statics/uploads/{company['logo']}"
+    
+    email = email.strip().lower()
+    
+    if not email:
+        return templates.TemplateResponse("auth/forgot_password.html", {
+            "request": request,
+            "empresa": empresa,
+            "ruta_image": ruta_image,
+            "error": "Debes ingresar un correo electrónico."
+        })
+    
+    # Buscar usuario por email
+    query_params = f"email={email}&company_id={company_id}"
+    response = await api.get_data("users", query=query_params, schema=schema_name)
+    
+    if response["status"] != "success" or len(response["data"]) == 0:
+        return templates.TemplateResponse("auth/forgot_password.html", {
+            "request": request,
+            "empresa": empresa,
+            "ruta_image": ruta_image,
+            "error": "No se encontró ninguna cuenta asociada a este correo electrónico."
+        })
+    
+    user = response["data"][0]
+    
+    # Generar código aleatorio de 6 dígitos
+    verification_code = str(random.randint(100000, 999999))
+    
+    # Guardar en sesión el código, email y tiempo de expiración
+    request.session["reset_code"] = verification_code
+    request.session["reset_email"] = email
+    request.session["reset_user_id"] = user["id"]
+    request.session["reset_expires"] = (datetime.now() + timedelta(minutes=15)).isoformat()
+    
+    # Enviar código por correo
+    email_sent = await send_verification_code(email, verification_code, company_name, empresa)
+    
+    if not email_sent:
+        return templates.TemplateResponse("auth/forgot_password.html", {
+            "request": request,
+            "empresa": empresa,
+            "ruta_image": ruta_image,
+            "error": "Error al enviar el correo. Por favor, intenta nuevamente."
+        })
+    
+    # Redirigir a la página de verificación
+    return RedirectResponse(url=f"/{empresa}/manager/verify-code", status_code=303)
+
+# Ruta GET: Mostrar formulario de verificación de código
+@router.get("/verify-code", response_class=HTMLResponse)
+async def verify_code_form(request: Request):
+    empresa = request.state.empresa
+    
+    # Verificar que exista una sesión de recuperación activa
+    if "reset_email" not in request.session:
+        return RedirectResponse(url=f"/{empresa}/manager/forgot-password", status_code=303)
+    
+    # Obtener información de la empresa para la imagen
+    consulta = f"identificador={empresa}"
+    respuesta = await api.get_data("company", query=consulta, schema="global")
+    
+    ruta_image = "/statics/images/default-login.png"
+    if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
+        company = respuesta['data'][0]
+        if company.get('logo'):
+            ruta_image = f"/statics/uploads/{company['logo']}"
+    
+    return templates.TemplateResponse("auth/verify_code.html", {
+        "request": request,
+        "empresa": empresa,
+        "ruta_image": ruta_image,
+        "email": request.session.get("reset_email")
+    })
+
+# Ruta POST: Verificar código y permitir acceso
+@router.post("/verify-code", response_class=HTMLResponse)
+async def verify_code_process(request: Request, code: str = Form("")):
+    empresa = request.state.empresa
+    schema_name = "demo"
+    
+    # Obtener información de la empresa
+    consulta = f"identificador={empresa}"
+    respuesta = await api.get_data("company", query=consulta, schema="global")
+    
+    ruta_image = "/statics/images/default-login.png"
+    company_id = 0
+    plan = None
+    
+    if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
+        company = respuesta['data'][0]
+        company_id = company['id']
+        schema_name = company['schema_name']
+        plan = company['plancode_id']
+        request.session['company_name'] = company['nomfantasia']
+        if company.get('logo'):
+            ruta_image = f"/statics/uploads/{company['logo']}"
+    
+    # Verificar que exista una sesión de recuperación activa
+    if "reset_code" not in request.session or "reset_email" not in request.session:
+        return RedirectResponse(url=f"/{empresa}/manager/forgot-password", status_code=303)
+    
+    # Verificar expiración del código
+    expires_str = request.session.get("reset_expires")
+    if expires_str:
+        expires = datetime.fromisoformat(expires_str)
+        if datetime.now() > expires:
+            # Limpiar sesión
+            request.session.pop("reset_code", None)
+            request.session.pop("reset_email", None)
+            request.session.pop("reset_user_id", None)
+            request.session.pop("reset_expires", None)
+            
+            return templates.TemplateResponse("auth/verify_code.html", {
+                "request": request,
+                "empresa": empresa,
+                "ruta_image": ruta_image,
+                "email": request.session.get("reset_email", ""),
+                "error": "El código ha expirado. Por favor, solicita uno nuevo."
+            })
+    
+    code = code.strip()
+    stored_code = request.session.get("reset_code")
+    
+    # Verificar que el código coincida
+    if code != stored_code:
+        return templates.TemplateResponse("auth/verify_code.html", {
+            "request": request,
+            "empresa": empresa,
+            "ruta_image": ruta_image,
+            "email": request.session.get("reset_email"),
+            "error": "Código incorrecto. Por favor, verifica e intenta nuevamente."
+        })
+    
+    # Código correcto - Obtener información del usuario
+    user_id = request.session.get("reset_user_id")
+    response = await api.get_data("users", id=user_id, schema=schema_name)
+    
+    if response["status"] != "success":
+        return templates.TemplateResponse("auth/verify_code.html", {
+            "request": request,
+            "empresa": empresa,
+            "ruta_image": ruta_image,
+            "email": request.session.get("reset_email"),
+            "error": "Error al recuperar información del usuario."
+        })
+    
+    user = response["data"]
+    
+    # Limpiar datos de recuperación
+    request.session.pop("reset_code", None)
+    request.session.pop("reset_email", None)
+    request.session.pop("reset_user_id", None)
+    request.session.pop("reset_expires", None)
+    
+    # Iniciar sesión automáticamente
+    request.session["authenticated"] = True
+    request.session["position"] = "Otro"
+    request.session["id"] = user["id"]
+    request.session["name"] = user["name"]
+    request.session["user_name"] = user["username"]
+    request.session["rol"] = user["rol"]["description"]
+    request.session["company"] = user["company_id"]
+    request.session["schema"] = schema_name
+    request.session['plancode'] = plan
+    
+    # Redirigir según el rol
+    return RedirectResponse(url=f"/{empresa}/manager/index", status_code=303)

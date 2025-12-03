@@ -1,22 +1,22 @@
 const language_datatable = {
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sSearch":         "Buscar:",
+    "sProcessing": "Procesando...",
+    "sLengthMenu": "Mostrar _MENU_ registros",
+    "sZeroRecords": "No se encontraron resultados",
+    "sEmptyTable": "Ningún dato disponible en esta tabla",
+    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+    "sSearch": "Buscar:",
     "oPaginate": {
-        "sFirst":    "<<",
-        "sLast":     ">>",
-        "sNext":     ">",
+        "sFirst": "<<",
+        "sLast": ">>",
+        "sNext": ">",
         "sPrevious": "<"
     },
 };
-jQuery( document ).ready( function( $ ) {
+jQuery(document).ready(function ($) {
 
-    $.fn.loadDataTableDocs = function(){
+    $.fn.loadDataTableDocs = function () {
         var empresa = "{{ empresa }}";
         var url = '/' + empresa + '/manager/sales/gettable';
         var data = {
@@ -24,11 +24,11 @@ jQuery( document ).ready( function( $ ) {
             end_date: $("input#end_date").val(),
             vendedor: $('[name=vendedor]').find(':selected').val(),
             colegio: $('[name=colegio]').find(':selected').val(),
-            
+
         }
         var $table_fixed = $("#table-sale");
 
-        var table_fixed = $table_fixed.DataTable( {
+        var table_fixed = $table_fixed.DataTable({
             "ajax": {
                 "url": url,
                 "type": "POST",
@@ -39,59 +39,79 @@ jQuery( document ).ready( function( $ ) {
             "pageLength": 50,
             "oLanguage": language_datatable,
             "columnDefs": [
-                {targets: 0, className: 'cell-center'},
+                { targets: 0, className: 'cell-center' },
                 {
                     targets: 1, className: 'cell-center',
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
                         return `<strong>Venta:</strong> ${row[1]} <br> <strong>Identificador:</strong> ${row[2]} <br> <strong>Fecha:</strong> ${row[3]}`;
-                    }                    
+                    }
                 },
-                { 
-                  targets: [2, 3], // Especifica las columnas 8, 9 y 10
+                {
+                    targets: [2, 3], // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 2, className: 'cell-center'},
-                {targets: 3, className: 'cell-center'},
-                {targets: 4, className: 'cell-left'},
-                {targets: 5, className: 'cell-center'},
+                { targets: 2, className: 'cell-center' },
+                { targets: 3, className: 'cell-center' },
+                {
+                    targets: 4, className: 'cell-left',
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `<strong>Colegio:</strong> ${row[4]} <br> <strong>Curso :</strong> ${row[5]}`;
+                    }
+                },
+                {
+                    targets: 5, // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
+                { targets: 5, className: 'cell-center' },
                 {
                     targets: 6, className: 'cell-center',
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
                         return `<strong>Programa:</strong> ${row[6]} <br> 
                         <strong>Pasajeros:</strong> ${row[7]} <br> 
                         <strong>Liberados:</strong> ${row[8]} <br>
                         <strong>Ingresados:</strong> ${row[9]}`;
-                    }                    
+                    }
                 },
-                { 
-                  targets: [7, 8], // Especifica las columnas 8, 9 y 10
+                {
+                    targets: [7, 8, 9], // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 7, className: 'cell-right'},
-                {targets: 8, className: 'cell-right'},
-                {targets: 9, className: 'cell-center'},
+                { targets: 7, className: 'cell-right' },
+                { targets: 8, className: 'cell-right' },
+                { targets: 9, className: 'cell-center' },
                 {
                     targets: 10, className: 'cell-center',
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
                         return `<strong>Valor:</strong> ${row[10]} <br> <strong>Total:</strong> ${row[11]}`;
-                    }                    
+                    }
                 },
-                { 
-                  targets: [11], // Especifica las columnas 8, 9 y 10
+                {
+                    targets: [11], // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 11, className: 'cell-center'},
-                {targets: 12, className: 'cell-center'},
-                {targets: 13, className: 'cell-right'},
-                {targets: 14, className: 'cell-center'},
-                {targets: 15, className: 'cell-center'},
-                {targets: 16, className: 'cell-center'},
+                { targets: 11, className: 'cell-center' },
+                { targets: 12, className: 'cell-center' },
+                {
+                    targets: 13, className: 'cell-right',
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return ` ${row[13]} <br> ${row[14]}`;
+                    }
+                },
+                {
+                    targets: 14, // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
+                { targets: 14, className: 'cell-center' },
+                { targets: 15, className: 'cell-center' },
+                { targets: 16, className: 'cell-center' },
             ],
-            "initComplete": function(settings, json) {
-                $('#tfooter').append(json.footer);  
+            "initComplete": function (settings, json) {
+                $('#tfooter').append(json.footer);
             }
         });
     };
@@ -101,45 +121,45 @@ jQuery( document ).ready( function( $ ) {
     $('#vendedor').select2();
     $('#colegio').select2();
 
-    $('#import-courses').click(function(){
+    $('#import-courses').click(function () {
         var checkboxes = [];
         jQuery('#table-sale tbody input:checked').each(function () {
-             checkboxes.push($(this).val());
-             ulploadVta=$(this).val();
+            checkboxes.push($(this).val());
+            ulploadVta = $(this).val();
         });
-    
-        if(checkboxes.length == 0 || checkboxes.length > 1){
+
+        if (checkboxes.length == 0 || checkboxes.length > 1) {
             $('body').loadModalBootbox("Para subir cursos debe seleccionar una venta", false, 'btn-primry');
         } else {
             $('#uploadfile').modal('show');
         }
     });
-    
 
-    $('#export-report').click(function() {
+
+    $('#export-report').click(function () {
         var empresa = "{{ empresa }}";
         $('#form1').attr('action', '/' + empresa + '/manager/sales/exportreport');
         $('#form1').submit();
         $('#form1').attr('action', '/' + empresa + 'manages/sales');
-    });    
+    });
 
 });
 
 
-     $('.search').click(function(){
-        
-        if ( $.fn.DataTable.isDataTable('#table-sale') ) {
-            $('#table-sale').DataTable().clear();
-            $('#table-sale').DataTable().destroy();
-        }
-        $('body').loadDataTableDocs();
-        /*
-       var table = $("#table-sale").DataTable();
-       table.ajax.reload();
+$('.search').click(function () {
+
+    if ($.fn.DataTable.isDataTable('#table-sale')) {
+        $('#table-sale').DataTable().clear();
+        $('#table-sale').DataTable().destroy();
+    }
+    $('body').loadDataTableDocs();
+    /*
+   var table = $("#table-sale").DataTable();
+   table.ajax.reload();
 */
-    })
-    
-    jQuery(document).on("click", ".cancel-register", function(e) {
+})
+
+jQuery(document).on("click", ".cancel-register", function (e) {
     e.preventDefault(); // Evita que el link navegue a "#"
     var id = jQuery(this).attr('data-id');
     var empresa = "{{ empresa }}";
@@ -147,57 +167,57 @@ jQuery( document ).ready( function( $ ) {
 
     let url = `${baseUrl}${id}`;
 
-        Swal.fire({
+    Swal.fire({
         title: "Eliminar Registro",
-        text: "¿Está seguro que desea Rechazar la Venta Nro: "+id,
+        text: "¿Está seguro que desea Rechazar la Venta Nro: " + id,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#43c613ff",
         cancelButtonColor: "#d33",
         confirmButtonText: "Si",
         cancelButtonText: "No"
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = url;        
+            window.location.href = url;
         }
-        });
     });
+});
 
-    jQuery(document).on("click", ".change-status", function(e) {
-        e.preventDefault(); // Evita que el link navegue a "#"
-        var id = jQuery(this).attr('data-id');
+jQuery(document).on("click", ".change-status", function (e) {
+    e.preventDefault(); // Evita que el link navegue a "#"
+    var id = jQuery(this).attr('data-id');
 
-        const swalWithBootstrapButtons = Swal.mixin({
+    const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: "btn btn-success",
             cancelButton: "btn btn-danger"
         },
         buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
+    });
+    swalWithBootstrapButtons.fire({
         title: "Ventas",
-        text: "Cambiar estado de la Venta Nro: "+id,
+        text: "Cambiar estado de la Venta Nro: " + id,
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Venta Cerrada",
         cancelButtonText: "Venta Rechazada",
         reverseButtons: true
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-           changesStatus(id,"C")  
+            changesStatus(id, "C")
         } else if (
             /* Read more about handling dismissals below */
             result.dismiss === Swal.DismissReason.cancel
         ) {
-           changesStatus(id,"R")  
+            changesStatus(id, "R")
         }
-        });        
-        
-    })
+    });
 
-    
+})
 
-jQuery(document).on("change", "select[name=vendedor]", function() {
+
+
+jQuery(document).on("change", "select[name=vendedor]", function () {
     /*
     if ( $.fn.DataTable.isDataTable('#table-sale') ) {
         $('#table-sale').DataTable().clear();
@@ -206,11 +226,11 @@ jQuery(document).on("change", "select[name=vendedor]", function() {
     $('body').loadDataTableDocs();
     */
     var table = $("#table-sale").DataTable();
-     table.ajax.reload();
+    table.ajax.reload();
 });
 
 
-jQuery(document).on("change", "select[name=colegio]", function() {
+jQuery(document).on("change", "select[name=colegio]", function () {
     /*
     if ( $.fn.DataTable.isDataTable('#table-sale') ) {
         $('#table-sale').DataTable().clear();
@@ -219,13 +239,13 @@ jQuery(document).on("change", "select[name=colegio]", function() {
     $('body').loadDataTableDocs();
     */
     var table = $("#table-sale").DataTable();
-     table.ajax.reload();
+    table.ajax.reload();
 
 });
 
-function changesStatus(id,new_status){
+function changesStatus(id, new_status) {
     var empresa = "{{ empresa }}";
-    let baseUrl = "/"+ empresa +"/manager/sales/setstatus/";
+    let baseUrl = "/" + empresa + "/manager/sales/setstatus/";
 
     let url = `${baseUrl}`;
 
@@ -233,48 +253,48 @@ function changesStatus(id,new_status){
         status: new_status,
         id_sale: id,
     }
-    
+
     $.ajax({
         type: "POST",
         encoding: "UTF-8",
         url: url,
         data: data,
         dataType: 'json',
-        beforeSend: function(){
-          //  $("body").prepend(ajax_loader);
-    
-              //  table.reload();
-         },
-        success:function(response){
-            if(response.error == 0){
+        beforeSend: function () {
+            //  $("body").prepend(ajax_loader);
+
+            //  table.reload();
+        },
+        success: function (response) {
+            if (response.error == 0) {
                 Swal.fire({
                     title: "Ventas",
                     text: response.message,
                     icon: "success"
                 });
-                window.location.href = '/'+ empresa + '/manager/sales'; 
+                window.location.href = '/' + empresa + '/manager/sales';
             } else {
                 Swal.fire({
                     title: "Ventas",
                     text: "Se produjo un error, vuelve a actualizar la pagina",
                     icon: "error"
                 });
-                window.location.href ='/' + empresa +'/manager/sales'; 
+                window.location.href = '/' + empresa + '/manager/sales';
             }
         },
-        error: function() {
+        error: function () {
             Swal.fire({
                 title: "Ventas",
                 text: "se produjo un error, vuelve a actualizar la pagina",
                 icon: "error"
             });
-            window.location.href ='/' + empresa + '/manager/sales'; 
+            window.location.href = '/' + empresa + '/manager/sales';
         }
-     });
+    });
 
- }
+}
 
- jQuery(document).on("click", ".list-pdf", function() {
+jQuery(document).on("click", ".list-pdf", function () {
     var $element = jQuery(this);
     var id = $element.attr('id');
     var empresa = document.getElementById('empresa').value;
@@ -286,13 +306,13 @@ function changesStatus(id,new_status){
     $('#loading-overlay').removeClass('d-none');
     jQuery.ajax({
         type: "POST",
-        encoding:"UTF-8",
+        encoding: "UTF-8",
         url: url,
         data: data,
-        dataType:'json',
-        success: function(response){
+        dataType: 'json',
+        success: function (response) {
             $('#loading-overlay').addClass('d-none');
-            if(response.status == 1){
+            if (response.status == 1) {
                 const url = response.ruta;
                 // crear anchor y forzar descarga
                 const a = document.createElement('a');

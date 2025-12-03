@@ -1,16 +1,16 @@
 const language_datatable = {
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sSearch":         "Buscar:",
+    "sProcessing": "Procesando...",
+    "sLengthMenu": "Mostrar _MENU_ registros",
+    "sZeroRecords": "No se encontraron resultados",
+    "sEmptyTable": "Ningún dato disponible en esta tabla",
+    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+    "sSearch": "Buscar:",
     "oPaginate": {
-        "sFirst":    "<<",
-        "sLast":     ">>",
-        "sNext":     ">",
+        "sFirst": "<<",
+        "sLast": ">>",
+        "sNext": ">",
         "sPrevious": "<"
     },
 };
@@ -77,17 +77,17 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 */
 
-jQuery( document ).ready( function( $ ) {
+jQuery(document).ready(function ($) {
 
-    $.fn.loadDataTableDocs = function(){
+    $.fn.loadDataTableDocs = function () {
         var empresa = "{{ empresa }}";
-        var url =  '/' + empresa + '/manager/pasajeros/gettable';
+        var url = '/' + empresa + '/manager/pasajeros/gettable';
         var data = {
             venta: $('[name=ventas]').find(':selected').val(),
         }
         var $table_fixed = $("#table-course");
 
-        var table_fixed = $table_fixed.DataTable( {
+        var table_fixed = $table_fixed.DataTable({
             "ajax": {
                 "url": url,
                 "type": "POST",
@@ -98,53 +98,64 @@ jQuery( document ).ready( function( $ ) {
             "pageLength": 50,
             "oLanguage": language_datatable,
             "columnDefs": [
-                {targets: 0, className: 'cell-right'},
-                {targets: 1, className: 'cell-right'},
+                { targets: 0, className: 'cell-right' },
+                { targets: 1, className: 'cell-right' },
                 {
                     targets: 2, className: 'cell-left',
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
-                        return `${row[2]}  ${row[3]}`;
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `${row[2]} <br> ${row[3]}`;
                     }
                 },
-                { 
-                  targets: 3, // Especifica las columnas 8, 9 y 10
+                {
+                    targets: 3, // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 3, className: 'cell-right'},
-                {targets: 4, className: 'cell-left',
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
-                        return `${row[4]}  ${row[5]}`;
+                { targets: 3, className: 'cell-right' },
+                {
+                    targets: 4, className: 'cell-left',
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `${row[4]}  <br> ${row[5]}`;
                     }
 
                 },
-                { 
-                  targets: 5, // Especifica las columnas 8, 9 y 10
+                {
+                    targets: 5, // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 5, className: 'cell-left'},
-                {targets: 6, className: 'cell-left'},
-                {targets: 7, className: 'cell-right'},
-                { 
+                { targets: 5, className: 'cell-left' },
+                {
+                    targets: 6, className: 'cell-left',
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                        return `Fono :${row[6]} <br> Email : ${row[7]}`;
+                    }
+                },
+                {
+                    targets: 7, // Especifica las columnas 8, 9 y 10
+                    "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
+                },
+                { targets: 7, className: 'cell-right' },
+                {
                     targets: 8, className: 'cell-left', // El target debe ser la columna en la que quieres mostrar el contenido combinado
-                    "render": function(data, type, row, meta) {
-                           // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
+                    "render": function (data, type, row, meta) {
+                        // Combina las columnas 8, 9 y 10 (recuerda que los índices comienzan en 0)
                         return `Subtotal: ${row[8]}  Descuento: ${row[9]} <br> Total: ${row[10]}`;
                     }
                 },
-                { 
-                  targets: [9, 10], // Especifica las columnas 8, 9 y 10
+                {
+                    targets: [9, 10], // Especifica las columnas 8, 9 y 10
                     "visible": false  // Esto oculta las columnas 8, 9 y 10 en la tabla
                 },
-                {targets: 9, className: 'cell-right'},
-                {targets: 10, className: 'cell-center'},
-                {targets: 11, className: 'cell-center'},
-                {targets: 12, className: 'cell-center'},
-                {targets: 13, className: 'cell-center'},
-                {targets: 14, className: 'cell-center'}            
+                { targets: 9, className: 'cell-right' },
+                { targets: 10, className: 'cell-center' },
+                { targets: 11, className: 'cell-center' },
+                { targets: 12, className: 'cell-center' },
+                { targets: 13, className: 'cell-center' },
+                { targets: 14, className: 'cell-center' }
             ],
-            "initComplete": function(settings, json) {
+            "initComplete": function (settings, json) {
 
             }
         });
@@ -156,7 +167,7 @@ jQuery( document ).ready( function( $ ) {
 
 })
 
-jQuery(document).on("click", ".delete-register", function() {
+jQuery(document).on("click", ".delete-register", function () {
 
     e.preventDefault(); // Evita que el link navegue a "#"
     var id = jQuery(this).attr('data-id');
@@ -165,7 +176,7 @@ jQuery(document).on("click", ".delete-register", function() {
 
     let url = `${baseUrl}${id}`;
 
-        Swal.fire({
+    Swal.fire({
         title: "Eliminar Registro",
         text: "¿Está seguro que desea eliminar el registro seleccionado?",
         icon: "warning",
@@ -174,23 +185,23 @@ jQuery(document).on("click", ".delete-register", function() {
         cancelButtonColor: "#d33",
         confirmButtonText: "Si",
         cancelButtonText: "No"
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = url;        
+            window.location.href = url;
         }
-        });
+    });
 });
 
-jQuery(document).on("change", "select[name=ventas]", function() {
-    
-    if ( $.fn.DataTable.isDataTable('#table-course') ) {
+jQuery(document).on("change", "select[name=ventas]", function () {
+
+    if ($.fn.DataTable.isDataTable('#table-course')) {
         $('#table-course').DataTable().clear();
         $('#table-course').DataTable().destroy();
     }
     $('body').loadDataTableDocs();
-    
-   /*
-    var table = $("#table-course").DataTable();
-     table.ajax.reload();
-     */
+
+    /*
+     var table = $("#table-course").DataTable();
+      table.ajax.reload();
+      */
 });

@@ -1,12 +1,14 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
-   <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    html, body {
+    html,
+    body {
       height: 100%;
       margin: 0;
     }
@@ -17,7 +19,8 @@
       flex-direction: row;
     }
 
-    .left-panel, .right-panel {
+    .left-panel,
+    .right-panel {
       flex: 1;
       display: flex;
       align-items: center;
@@ -71,6 +74,7 @@
         opacity: 0;
         transform: translateY(-20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -89,81 +93,86 @@
     }
   </style>
 </head>
-<body class="bg-light">  
-<div class="split-container">
-  <!-- Columna izquierda: Imagen -->
-  <div class="left-panel">
-    <img src="{{ ruta_image }}" width="600" height="600" alt="Imagen empresa" class="img-fluid">
-  </div>
 
-  <!-- Columna derecha: Login -->
-  <div class="right-panel">
-    <div class="form-wrapper">
-      <h1 class="form-header">Bienvenido</h1>
-
-      <!-- Selección inicial -->
-      <div id="selectionCard" class="card fade-in">
-        <div class="text-center mb-4">
-          <p>¿Cómo deseas ingresar?</p>
-        </div>
-        <div class="d-grid gap-2">
-          <button type="button" class="btn btn-primary" id="btnUserPass">Ingresar con Usuario y Clave</button>
-          <button type="button" class="btn btn-secondary" id="btnAccessCode">Ingresar con Código de Acceso</button>
-        </div>
-      </div>
-
-      <!-- Formulario usuario + clave -->
-      <form id="form_login" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
-        <div id="userCard" class="card fade-in">
-          <div class="mb-3">
-            <label for="username" class="form-label">Usuario</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-person"></i></span>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario" required>
-            </div>
-          </div>
-          <div class="d-grid">
-            <button type="button" class="btn btn-primary" id="toPasswordCard">Siguiente</button>
-          </div>
-        </div>
-
-        <div id="passwordCard" class="card" style="display:none;">
-          <div class="mb-3">
-            <label for="password" class="form-label">Clave</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-lock"></i></span>
-              <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu clave" required>
-            </div>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-success">Ingresar</button>
-          </div>
-        </div>
-        <br>
-        <div class="enlace-gris text-center">
-          <a href="#">¿Olvidaste tu clave de acceso?</a>
-        </div>     
-      </form>
-
-      <!-- Formulario código de acceso -->
-      <form id="form_access_code" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
-        <div id="accessCodeCard" class="card fade-in">
-          <div class="mb-3">
-            <label for="accesscode" class="form-label">Código de acceso</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-lock"></i></span>
-              <input type="text" class="form-control" id="accesscode" name="accesscode" placeholder="Código de acceso" required>
-            </div>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-success">Ingresar</button>
-          </div>
-        </div>
-      </form>
+<body class="bg-light">
+  <div class="split-container">
+    <!-- Columna izquierda: Imagen -->
+    <div class="left-panel">
+      <img src="{{ ruta_image }}" width="600" height="600" alt="Imagen empresa" class="img-fluid">
     </div>
-  </div> 
-</div>
+
+    <!-- Columna derecha: Login -->
+    <div class="right-panel">
+      <div class="form-wrapper">
+        <h1 class="form-header">Bienvenido</h1>
+
+        <!-- Selección inicial -->
+        <div id="selectionCard" class="card fade-in">
+          <div class="text-center mb-4">
+            <p>¿Cómo deseas ingresar?</p>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary" id="btnUserPass">Ingresar con Usuario y Clave</button>
+            <button type="button" class="btn btn-secondary" id="btnAccessCode">Ingresar con Código de Acceso</button>
+          </div>
+        </div>
+
+        <!-- Formulario usuario + clave -->
+        <form id="form_login" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
+          <div id="userCard" class="card fade-in">
+            <div class="mb-3">
+              <label for="username" class="form-label">Usuario</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario"
+                  required>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button type="button" class="btn btn-primary" id="toPasswordCard">Siguiente</button>
+            </div>
+          </div>
+
+          <div id="passwordCard" class="card" style="display:none;">
+            <div class="mb-3">
+              <label for="password" class="form-label">Clave</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu clave"
+                  required>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Ingresar</button>
+            </div>
+          </div>
+          <br>
+          <div class="enlace-gris text-center">
+            <a href="/{{ empresa }}/manager/forgot-password">¿Olvidaste tu clave de acceso?</a>
+          </div>
+        </form>
+
+        <!-- Formulario código de acceso -->
+        <form id="form_access_code" method="post" action="/{{ empresa }}/manager/login" style="display:none;">
+          <div id="accessCodeCard" class="card fade-in">
+            <div class="mb-3">
+              <label for="accesscode" class="form-label">Código de acceso</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="text" class="form-control" id="accesscode" name="accesscode" placeholder="Código de acceso"
+                  required>
+              </div>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Ingresar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

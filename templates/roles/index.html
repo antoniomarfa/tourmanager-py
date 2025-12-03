@@ -30,7 +30,7 @@
   <!-- Page Header -->
   <div class="page-header">
     <h2>
-      <i class="fas fa-money-bill-wave"></i>
+      <i class="fas fa-user-slash"></i>
       Listado de Roles
     </h2>
     <p class="subtitle">Gestión y seguimiento de todos los roles registrados</p>
@@ -64,14 +64,13 @@
         <td width="15%">{{ rol.author }}</td>
         <td width="10%">
           {% if cant_access["can_update"] %}
-          <a href="/{{ empresa }}/manager/roles/edit/{{ rol.id }}" class="btn btn-sm btn-outline-warning"
+          <a href="/{{ empresa }}/manager/roles/edit/{{ rol.id }}" class="btn btn-sm btn-warning"
             data-bs-toggle="tooltip" title="Editar"><i class="fa fa-edit"></i></a>
           {% endif %}
           {% if rol.description != 'Vendedor' and rol.description != "Administrador" %}
           {% if cant_access["can_delete"] %}
-          <a href="#" class="btn btn-sm btn-outline-danger delete-register" title="eliminar"
-            data-original-title="Eliminar" data-id="{{ rol.id }}" data-bs-toggle="tooltip" title="Eliminatr"><i
-              class="fa fa-trash"></i></a>
+          <a href="#" class="btn btn-sm btn-danger delete-register" title="eliminar" data-original-title="Eliminar"
+            data-id="{{ rol.id }}" data-bs-toggle="tooltip" title="Eliminatr"><i class="fa fa-trash"></i></a>
           {% endif %}
           {% endif %}
         </td>
