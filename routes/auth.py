@@ -73,7 +73,6 @@ async def login(
             request.session["company"] = user["company_id"]
             request.session["schema"] = schema_name
             request.session['plancode'] = plan
-            request.session["rol"] = user["rol"]["description"]
 
             login_status = "success"
 
@@ -239,13 +238,14 @@ async def forgot_password_form(request: Request):
     # Obtener información de la empresa para la imagen
     consulta = f"identificador={empresa}"
     respuesta = await api.get_data("company", query=consulta, schema="global")
-    
-    ruta_image = "/statics/images/default-login.png"  # Imagen por defecto
+    ruta_image = "uploads/company/logo/login_logo_GRL_999.png"  # Imagen por defecto
+    ruta_image = os.path.abspath(ruta_image)
     if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
         company = respuesta['data'][0]
-        if company.get('logo'):
-            ruta_image = f"/statics/uploads/{company['logo']}"
-    
+        if len(company) > 1:
+            ruta_image = f"/uploads/company/logo/login_logo_{company['identificador']}.png"
+            ruta_image = os.path.abspath(ruta_image)
+
     return templates.TemplateResponse("auth/forgot_password.html", {
         "request": request,
         "empresa": empresa,
@@ -262,7 +262,8 @@ async def forgot_password_send_code(request: Request, email: str = Form("")):
     consulta = f"identificador={empresa}"
     respuesta = await api.get_data("company", query=consulta, schema="global")
     
-    ruta_image = "/statics/images/default-login.png"
+    ruta_image = f"/uploads/company/logo/login_logo_GRL_999.png"
+    ruta_image = os.path.abspath(ruta_image)
     company_name = "Sistema"
     company_id = 0
     
@@ -271,8 +272,9 @@ async def forgot_password_send_code(request: Request, email: str = Form("")):
         company_id = company['id']
         schema_name = company['schema_name']
         company_name = company['nomfantasia']
-        if company.get('logo'):
-            ruta_image = f"/statics/uploads/{company['logo']}"
+        if company:
+            ruta_image = f"/uploads/company/logo/login_logo_{company['identificador']}.png"
+            ruta_image = os.path.abspath(ruta_image)
     
     email = email.strip().lower()
     
@@ -284,11 +286,27 @@ async def forgot_password_send_code(request: Request, email: str = Form("")):
             "error": "Debes ingresar un correo electrónico."
         })
     
-    # Buscar usuario por email
+    # Buscar usuario por email en la tabla users
     query_params = f"email={email}&company_id={company_id}"
     response = await api.get_data("users", query=query_params, schema=schema_name)
     
-    if response["status"] != "success" or len(response["data"]) == 0:
+    user = None
+    user_type = None  # 'user' o 'passenger'
+    
+    if response["status"] == "success" and len(response["data"]) > 0:
+        user = response["data"][0]
+        user_type = "user"
+    else:
+        # Si no se encuentra en users, buscar en cursos (pasajeros)
+        query_params = f"correo={email}&company_id={company_id}"
+        response = await api.get_data("curso/informe", query=query_params, schema=schema_name)
+        
+        if response["status"] == "success" and len(response["data"]) > 0:
+            user = response["data"][0]
+            user_type = "passenger"
+    
+    # Si no se encontró en ninguna tabla
+    if user is None:
         return templates.TemplateResponse("auth/forgot_password.html", {
             "request": request,
             "empresa": empresa,
@@ -296,15 +314,14 @@ async def forgot_password_send_code(request: Request, email: str = Form("")):
             "error": "No se encontró ninguna cuenta asociada a este correo electrónico."
         })
     
-    user = response["data"][0]
-    
     # Generar código aleatorio de 6 dígitos
     verification_code = str(random.randint(100000, 999999))
     
-    # Guardar en sesión el código, email y tiempo de expiración
+    # Guardar en sesión el código, email, tipo de usuario y tiempo de expiración
     request.session["reset_code"] = verification_code
     request.session["reset_email"] = email
     request.session["reset_user_id"] = user["id"]
+    request.session["reset_user_type"] = user_type  # 'user' o 'passenger'
     request.session["reset_expires"] = (datetime.now() + timedelta(minutes=15)).isoformat()
     
     # Enviar código por correo
@@ -334,11 +351,12 @@ async def verify_code_form(request: Request):
     consulta = f"identificador={empresa}"
     respuesta = await api.get_data("company", query=consulta, schema="global")
     
-    ruta_image = "/statics/images/default-login.png"
+    ruta_image = "/statics/images/login_logo_GRL_999.png"
     if respuesta['status'] == 'success' and len(respuesta['data']) > 0:
         company = respuesta['data'][0]
-        if company.get('logo'):
-            ruta_image = f"/statics/uploads/{company['logo']}"
+        if len(company) > 1:
+            ruta_image = f"/uploads/company/logo/login_logo_{request.session.get('code_company', 'GRL_999')}.png"
+            ruta_image = os.path.abspath(ruta_image)
     
     return templates.TemplateResponse("auth/verify_code.html", {
         "request": request,
@@ -357,7 +375,7 @@ async def verify_code_process(request: Request, code: str = Form("")):
     consulta = f"identificador={empresa}"
     respuesta = await api.get_data("company", query=consulta, schema="global")
     
-    ruta_image = "/statics/images/default-login.png"
+    ruta_image = "/uploads/company/logo/login_logo_GRL_999.png"
     company_id = 0
     plan = None
     
@@ -367,8 +385,8 @@ async def verify_code_process(request: Request, code: str = Form("")):
         schema_name = company['schema_name']
         plan = company['plancode_id']
         request.session['company_name'] = company['nomfantasia']
-        if company.get('logo'):
-            ruta_image = f"/statics/uploads/{company['logo']}"
+        if company:
+            ruta_image = f"/uploads/company/logo/login_logo_{company['identificador']}.png"
     
     # Verificar que exista una sesión de recuperación activa
     if "reset_code" not in request.session or "reset_email" not in request.session:
@@ -406,37 +424,94 @@ async def verify_code_process(request: Request, code: str = Form("")):
             "error": "Código incorrecto. Por favor, verifica e intenta nuevamente."
         })
     
-    # Código correcto - Obtener información del usuario
+    # Código correcto - Obtener información del usuario según el tipo
     user_id = request.session.get("reset_user_id")
-    response = await api.get_data("users", id=user_id, schema=schema_name)
+    user_type = request.session.get("reset_user_type")
     
-    if response["status"] != "success":
+    if user_type == "user":
+        # Buscar en la tabla users
+        response = await api.get_data("users", id=user_id, schema=schema_name)
+        
+        if response["status"] != "success":
+            return templates.TemplateResponse("auth/verify_code.html", {
+                "request": request,
+                "empresa": empresa,
+                "ruta_image": ruta_image,
+                "email": request.session.get("reset_email"),
+                "error": "Error al recuperar información del usuario."
+            })
+        
+        user = response["data"]
+        
+        # Limpiar datos de recuperación
+        request.session.pop("reset_code", None)
+        request.session.pop("reset_email", None)
+        request.session.pop("reset_user_id", None)
+        request.session.pop("reset_user_type", None)
+        request.session.pop("reset_expires", None)
+        
+        # Iniciar sesión automáticamente como usuario normal
+        request.session["authenticated"] = True
+        request.session["position"] = "Otro"
+        request.session["id"] = user["id"]
+        request.session["name"] = user["name"]
+        request.session["user_name"] = user["username"]
+        request.session["rol"] = user["rol"]["description"]
+        request.session["company"] = user["company_id"]
+        request.session["schema"] = schema_name
+        request.session['plancode'] = plan
+        
+        # Redirigir al dashboard
+        return RedirectResponse(url=f"/{empresa}/manager/index", status_code=303)
+    
+    elif user_type == "passenger":
+        # Buscar en la tabla curso
+        query_params = f"id={user_id}"
+        response = await api.get_data("curso/informe", query=query_params, schema=schema_name)
+        
+        if response["status"] != "success" or len(response["data"]) == 0:
+            return templates.TemplateResponse("auth/verify_code.html", {
+                "request": request,
+                "empresa": empresa,
+                "ruta_image": ruta_image,
+                "email": request.session.get("reset_email"),
+                "error": "Error al recuperar información del pasajero."
+            })
+        
+        course = response["data"][0]
+        
+        # Limpiar datos de recuperación
+        request.session.pop("reset_code", None)
+        request.session.pop("reset_email", None)
+        request.session.pop("reset_user_id", None)
+        request.session.pop("reset_user_type", None)
+        request.session.pop("reset_expires", None)
+        
+        # Iniciar sesión automáticamente como pasajero/apoderado
+        request.session["authenticated"] = True
+        request.session["id"] = course["id"]
+        request.session["name"] = course["nombreapod"]
+        request.session["position"] = "Apoderado"
+        request.session["company"] = course["company_id"]
+        request.session["schema"] = schema_name
+        request.session["sale"] = course['sale_id']
+        request.session["user_rut"] = course['rutapod']
+        request.session["user_ruta"] = course['rutalumno']
+        request.session["user_name"] = course['nombreapod']
+        request.session["user_id"] = course['id']
+        request.session["typesale"] = course["sale"]["type_sale"]
+        request.session["plancode"] = plan
+    
+        # Redirigir a la página de pagos
+        return RedirectResponse(url=f"/{empresa}/manager/payment", status_code=303)
+    
+    else:
+        # Tipo de usuario desconocido
         return templates.TemplateResponse("auth/verify_code.html", {
             "request": request,
             "empresa": empresa,
             "ruta_image": ruta_image,
             "email": request.session.get("reset_email"),
-            "error": "Error al recuperar información del usuario."
+            "error": "Error: tipo de usuario no válido."
         })
-    
-    user = response["data"]
-    
-    # Limpiar datos de recuperación
-    request.session.pop("reset_code", None)
-    request.session.pop("reset_email", None)
-    request.session.pop("reset_user_id", None)
-    request.session.pop("reset_expires", None)
-    
-    # Iniciar sesión automáticamente
-    request.session["authenticated"] = True
-    request.session["position"] = "Otro"
-    request.session["id"] = user["id"]
-    request.session["name"] = user["name"]
-    request.session["user_name"] = user["username"]
-    request.session["rol"] = user["rol"]["description"]
-    request.session["company"] = user["company_id"]
-    request.session["schema"] = schema_name
-    request.session['plancode'] = plan
-    
-    # Redirigir según el rol
-    return RedirectResponse(url=f"/{empresa}/manager/index", status_code=303)
+

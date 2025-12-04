@@ -529,7 +529,7 @@ class Utilities:
             consulta = int(session.get('user_curso_id'))
         else:
             consulta = int(session.get('id'))
-
+  
         response = await api.get_data("curso",id=consulta,schema=schema_name)
         cursos = response['data'] if response["status"] == "success" else []
 

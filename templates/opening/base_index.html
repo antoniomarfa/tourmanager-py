@@ -4,34 +4,31 @@
 
 {% block content %}
 <!-- Header -->
-<input type="hidden" name="paso" id="paso" value="{{ paso }}"/>
+<input type="hidden" name="paso" id="paso" value="{{ paso }}" />
 <div class="container mt-5" id="features">
   <div class="d-flex justify-content-between align-items-center w-100">
 
-      <!-- Logo izquierda -->
-      <div>
-          <img src="{{ ruta_image }}" width="50" height="50" 
-              alt="Imagen empresa" class="img-fluid" 
-              style="background-color: #f8f9fa;">
-      </div>
+    <!-- Logo izquierda -->
+    <div>
+      <img src="{{ ruta_image }}" width="50" height="50" alt="Imagen empresa" class="img-fluid"
+        style="background-color: #f8f9fa;">
+    </div>
 
-      <!-- Menú usuario (derecha) -->
-      <ul class="navbar-nav ms-auto">
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown"
-                role="button" data-bs-toggle="dropdown">
-                <i class="fa fa-user"></i>  Hola, Usuario Invitado
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                  <li>
-                      <a class="dropdown-item text-danger" 
-                        href="/{{ empresa }}/manager/logout">Cerrar sesión</a>
-                  </li>
-              </ul>
+    <!-- Menú usuario (derecha) -->
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+          <i class="fa fa-user"></i> Hola, Usuario Invitado
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li>
+            <a class="dropdown-item text-danger" href="/{{ request.state.empresa }}/manager/logout">Cerrar sesión</a>
           </li>
-      </ul>
+        </ul>
+      </li>
+    </ul>
 
-  </div>   
+  </div>
   <br>
   <div class="row mb-4">
     <div class="col-md-9">
@@ -44,11 +41,10 @@
       <h4>Fecha Salida <strong>{{ info_index["fechasalida"] }}</strong></h4>
     </div>
   </div>
- <hr style="height: 2px;background-color: black;">
+  <hr style="height: 2px;background-color: black;">
   <!-- Aquí se carga el contenido dinámico -->
   {% block opening_content %}
   {% endblock %}
 
 </div>
 {% endblock %}
-
